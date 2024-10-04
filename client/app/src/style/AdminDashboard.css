@@ -1,0 +1,219 @@
+.admin-dashboard {
+  padding: 5px;
+  font-family: Arial, sans-serif;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: flex-end; /* Align search bar on the left, buttons on the right */
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  padding: 8px; /* Reduce padding */
+  width: 10%; /* Adjust width to make it smaller */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px; /* Slightly smaller font size */
+}
+
+.add-member-btn {
+  padding: 8px 12px; /* Reduce button size */
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 14px; /* Smaller text size for the button */
+  width: 10%;
+  justify-content: right;
+}
+
+.add-member-btn:hover {
+  background-color: #116728; /* Darker shade on hover */
+}
+
+/* Modal styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure modal is on top */
+}
+
+.modal-content {
+  background-color: rgb(255, 255, 255);
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px; /* Set modal width */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Soft shadow */
+}
+
+/* Styles for the modal tabs */
+.tabs {
+  display: flex;
+  border-bottom: 2px solid #ffffff;
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  flex: 1; /* Equal width for all tabs */
+  background-color: #000000;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.tabs button:hover {
+  background-color: #000000; /* Light grey on hover */
+}
+
+.tabs button.active {
+  background-color: #10600d; /* Active tab background color */
+  color: rgb(255, 255, 255); /* Active tab text color */
+  border-bottom: 2px solid transparent; /* Remove bottom border */
+}
+
+/* Tab content styles */
+.tab-content {
+  padding: 10px;
+  border: 1px solid #ccc; /* Border around the content area */
+  border-radius: 4px; /* Rounded corners */
+}
+
+/* Form styles */
+.form-row {
+  margin-bottom: 10px; /* Spacing between form fields */
+}
+
+.form-row label {
+  display: block; /* Labels above input fields */
+  margin-bottom: 5px; /* Space between label and input */
+}
+
+.form-row input {
+  width: 100%; /* Full width for input fields */
+  padding: 8px; /* Padding inside input fields */
+  border: 1px solid #ccc; /* Border around input fields */
+  border-radius: 4px; /* Rounded corners */
+}
+
+/* Button styles */
+.next-btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 30%;
+  justify-content: flex-end;
+}
+.close-modal-btn {
+  margin-top: 5px; /* Spacing above buttons */
+  padding: 10px 15px; /* Button padding */
+  background-color: #000000; /* Button background color */
+  color: rgb(255, 255, 255); /* Button text color */
+  border: none; /* Remove button border */
+  border-radius: 4px; /* Rounded button corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Transition effect */
+  width: 30%;
+}
+.submit-btn {
+  margin-top: 10px; /* Spacing above buttons */
+  padding: 10px 15px; /* Button padding */
+  background-color: #000000; /* Button background color */
+  color: white; /* Button text color */
+  border: none; /* Remove button border */
+  border-radius: 3px; /* Rounded button corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Transition effect */
+  width: 30%;
+}
+.add-job-btn {
+  margin-top: 10px; /* Spacing above buttons */
+  padding: 10px 15px; /* Button padding */
+  background-color: #000000; /* Button background color */
+  color: white; /* Button text color */
+  border: none; /* Remove button border */
+  border-radius: 3px; /* Rounded button corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Transition effect */
+  width: 30%;
+}
+.remove-job-btn {
+  margin-top: 10px; /* Spacing above buttons */
+  padding: 10px 15px; /* Button padding */
+  background-color: #000000; /* Button background color */
+  color: white; /* Button text color */
+  border: none; /* Remove button border */
+  border-radius: 3px; /* Rounded button corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Transition effect */
+  width: 30%;
+}
+
+.next-btn:hover {
+  background-color: #127c12;
+}
+
+.submit-btn:hover {
+  background-color: #127c12; /* Darker shade on hover */
+}
+.close-modal-btn:hover {
+  background-color: #7c1212; /* Darker shade on hover */
+}
+.add-job-btn:hover {
+  background-color: #127c12; /* Darker shade on hover */
+}
+.remove-job-btn:hover {
+  background-color: #730c0c; /* Darker shade on hover */
+}
+
+/* Portfolio card styles */
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid */
+  gap: 20px; /* Gap between cards */
+}
+
+.portfolio-card {
+  border: 1px solid #ccc; /* Border around portfolio cards */
+  border-radius: 8px; /* Rounded corners */
+  padding: 15px; /* Padding inside cards */
+  text-align: center; /* Center text in cards */
+  background-color: #f9f9f9; /* Light background color */
+}
+
+.user-image {
+  width: 100px; /* Set image width */
+  height: 100px; /* Set image height */
+  border-radius: 50%; /* Circular image */
+  margin-bottom: 10px; /* Space below image */
+}
+
+/* Error message styles */
+.error {
+  color: red; /* Error message color */
+  font-size: 14px; /* Error message font size */
+}
+
+/* Additional responsive styles */
+@media (max-width: 600px) {
+  .modal-content {
+    width: 90%; /* Adjust modal width for smaller screens */
+  }
+
+  .search-bar {
+    width: 100%; /* Full width for search bar on smaller screens */
+  }
+}
