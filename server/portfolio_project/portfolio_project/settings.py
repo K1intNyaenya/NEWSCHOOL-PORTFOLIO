@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'portfolio',
     'corsheaders',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -79,12 +80,14 @@ WSGI_APPLICATION = 'portfolio_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',  # Use 'mysql' for mysqlclient
+        'NAME': 'newschool',                    # Replace with your database name
+        'USER': 'root',                         # Replace with your MySQL username
+        'PASSWORD': 'P0werm@n',                 # Replace with your MySQL password
+        'HOST': 'localhost',                    # Set to empty string for localhost
+        'PORT': '3306',                         # Default MySQL port
     }
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -102,6 +105,18 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 900,  # Adjust this to your needs
+}
+
+AUTHENTICATION_BACKENDS = [
+    'portfolio.authentication_backends.MemberBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+
 
 
 # Internationalization

@@ -9,40 +9,41 @@ class NewSchoolMember(models.Model):
     member_title = models.CharField(max_length=75)
     member_years_of_experience = models.IntegerField()
 
-    
+    # Previous Employment Information
     previous_employer1 = models.CharField(max_length=75, blank=True, null=True)
     previous_jobtitle1 = models.CharField(max_length=75, blank=True, null=True)
-    
+
     previous_employer2 = models.CharField(max_length=75, blank=True, null=True)
     previous_jobtitle2 = models.CharField(max_length=75, blank=True, null=True)
 
-    previous_employer3 = models.CharField(max_length=75, blank=True, null=True, default='Third Employer')
-    previous_jobtitle3 = models.CharField(max_length=75, blank=True, null=True, default='Prev Job title3')
+    previous_employer3 = models.CharField(max_length=75, blank=True, null=True)
+    previous_jobtitle3 = models.CharField(max_length=75, blank=True, null=True)
     
-    previous_employer4 = models.CharField(max_length=75, blank=True, null=True, default='Fourth Employer')
-    previous_jobtitle4 = models.CharField(max_length=75, blank=True, null=True, default='Prev job title 4')
-    
-    previous_employer5 = models.CharField(max_length=75, blank=True, null=True, default='Fifth Employer')
-    previous_jobtitle5 = models.CharField(max_length=75, blank=True, null=True, default='Prev Job title5')
+    previous_employer4 = models.CharField(max_length=75, blank=True, null=True)
+    previous_jobtitle4 = models.CharField(max_length=75, blank=True, null=True)
+
+    previous_employer5 = models.CharField(max_length=75, blank=True, null=True)
+    previous_jobtitle5 = models.CharField(max_length=75, blank=True, null=True)
 
     # Contact Information
     member_mobile = models.CharField(
-        max_length=15, 
-        default='No Mobile', 
-        validators=[
-            RegexValidator(
-                regex=r'^\+?1?\d{9,15}$',
-                message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
-            )
-        ]
+        max_length=15,
+        default='No Mobile',
+        validators=[RegexValidator(
+            regex=r'^\+?1?\d{9,15}$',
+            message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
+        )]
     )
+    
     member_email = models.EmailField(max_length=75, default='abc@company.com')
     
-    member_username = models.CharField(max_length=100)
+    member_username = models.CharField(max_length=100, unique=True)  # Unique username
     member_password = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
-        self.member_password = make_password(self.member_password)
+        # Hash the password before saving
+        if not self.member_password.startswith('pbkdf2_sha256$'):  # Check if password is already hashed
+            self.member_password = make_password(self.member_password)
         super(NewSchoolMember, self).save(*args, **kwargs)
 
     def __str__(self) -> str:

@@ -1,27 +1,35 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // Use useNavigate instead
+import { useNavigate } from 'react-router-dom'; 
 import './style/Lform.css';
 
 function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [member_username, setMemberUsername] = useState('');
+  const [member_password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // Change this line
+  const navigate = useNavigate(); 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Replace with real authentication logic (API call)
-    const mockUser = {
-      email: 'abc@ensight.pro',
-      password: 'abc123',
-    };
+    try {
+      const response = await fetch('http://localhost:8000/portfolio/api/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ member_username, member_password }),
+      });
 
-    if (email === mockUser.email && password === mockUser.password) {
-      // Login successful, redirect to dashboard
-      navigate('/dashboard'); // Change this line
-    } else {
-      setError('Invalid credentials, please try again.');
+      if (!response.ok) {
+        throw new Error('Invalid credentials, please try again.');
+      }
+
+      const data = await response.json();
+      // Store the token, maybe in localStorage
+      localStorage.setItem('token', data.token);
+      navigate('/dashboard'); // Redirect to the dashboard
+    } catch (err) {
+      setError(err.message);
     }
   };
 
@@ -30,11 +38,11 @@ function LoginForm() {
       <h2>New School HR Login</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Email:</label>
+          <label>Member Username:</label>
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            value={member_username}
+            onChange={(e) => setMemberUsername(e.target.value)}
             required
           />
         </div>
@@ -42,7 +50,7 @@ function LoginForm() {
           <label>Password:</label>
           <input
             type="password"
-            value={password}
+            value={member_password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />

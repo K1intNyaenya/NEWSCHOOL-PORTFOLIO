@@ -7,7 +7,7 @@ function PortfolioCard({ user }) {
       <img src={user.image} alt={user.name} className="user-image" />
       <h2>{user.name}</h2>
       <p>{user.profession}</p>
-      <p>{user.yearsOfExperience} years of experience</p>
+      <p>{user.years_of_experience} years of experience</p>
       <h4>Companies Worked For:</h4>
       <ul>
         {user.companies.map((company, index) => (
@@ -16,38 +16,56 @@ function PortfolioCard({ user }) {
           </li>
         ))}
       </ul>
-      <button type="view">view</button>
+      <button type="button">View</button>
     </div>
   );
 }
 
 function Dashboard() {
   const [portfolios, setPortfolios] = useState([]);
-  const [error, setError] = useState(null); // To handle errors
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true); // New loading state
 
   useEffect(() => {
     const fetchPortfolios = async () => {
+      setLoading(true); // Set loading to true when fetching starts
       try {
         const response = await fetch("http://127.0.0.1:8000/portfolio/NewSchoolMember/");
         
-        // Check if the response is ok (status code 200-299)
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
+
         const data = await response.json();
-        setPortfolios(data); // Update state with the fetched portfolios
+        setPortfolios(data);
       } catch (err) {
         setError("Failed to fetch portfolios. Please try again later.");
+      } finally {
+        setLoading(false); // Set loading to false when fetching ends
       }
     };
 
     fetchPortfolios();
   }, []);
+
+  // Handle loading and error states
+  if (loading) {
+    return <div className="loading">Loading...</div>; // You can style this as needed
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>; // Display error message
+  }
+
   return (
     <div className="dashboard">
-      {portfolios.map((user) => (
-        <PortfolioCard key={user.id} user={user} />
-      ))}
+      {portfolios.length > 0 ? (
+        portfolios.map((user) => (
+          <PortfolioCard key={user.id} user={user} />
+        ))
+      ) : (
+        <p>No portfolios available.</p> // Message for when there are no portfolios
+      )}
     </div>
   );
 }
