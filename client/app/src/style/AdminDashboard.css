@@ -170,13 +170,13 @@
   background-color: #127c12; /* Darker shade on hover */
 }
 .close-modal-btn:hover {
-  background-color: #7c1212; /* Darker shade on hover */
+  background-color: red; /* Darker shade on hover */
 }
 .add-job-btn:hover {
   background-color: #127c12; /* Darker shade on hover */
 }
 .remove-job-btn:hover {
-  background-color: #730c0c; /* Darker shade on hover */
+  background-color: red; /* Darker shade on hover */
 }
 
 /* Portfolio card styles */
