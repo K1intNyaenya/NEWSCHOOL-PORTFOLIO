@@ -1,48 +1,50 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
-import './style/Lform.css';
+import './style/Lform.css'; // Your CSS file with themes
+import { login } from './authService';
 
 function LoginForm() {
-  const [member_username, setMemberUsername] = useState('');
-  const [member_password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [theme, setTheme] = useState('light-theme'); // Theme state
   const navigate = useNavigate(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(''); // Clear any existing errors
 
     try {
-      const response = await fetch('http://localhost:8000/portfolio/api/login/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ member_username, member_password }),
-      });
+      await login(username, password); // Use the login function from authService
 
-      if (!response.ok) {
-        throw new Error('Invalid credentials, please try again.');
-      }
+      // Clear form fields
+      setUsername('');
+      setPassword('');
 
-      const data = await response.json();
-      // Store the token, maybe in localStorage
-      localStorage.setItem('token', data.token);
-      navigate('/dashboard'); // Redirect to the dashboard
-    } catch (err) {
-      setError(err.message);
+      // Redirect to dashboard or home page
+      navigate('/dashboard');
+
+    } catch (error) {
+      console.error('Login error:', error.message);
+      setError(error.message);
     }
   };
 
+  // Function to toggle themes
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === 'light-theme' ? 'dark-theme' : 'light-theme'));
+  };
+
   return (
-    <div className="login-container">
+    <div className={`login-container ${theme}`}>
       <h2>New School HR Login</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Member Username:</label>
           <input
             type="text"
-            value={member_username}
-            onChange={(e) => setMemberUsername(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             required
           />
         </div>
@@ -50,7 +52,7 @@ function LoginForm() {
           <label>Password:</label>
           <input
             type="password"
-            value={member_password}
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
@@ -58,6 +60,13 @@ function LoginForm() {
         {error && <p className="error">{error}</p>}
         <button type="submit">Login</button>
       </form>
+
+      {/* Theme switch button */}
+      <div className="theme-toggle">
+        <button onClick={toggleTheme}>
+          Switch to {theme === 'light-theme' ? 'Dark' : 'Light'} Theme
+        </button>
+      </div>
     </div>
   );
 }

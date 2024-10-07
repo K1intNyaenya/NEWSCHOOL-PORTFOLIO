@@ -1,34 +1,63 @@
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from .models import NewSchoolMember
+from django.contrib.auth import authenticate
 
 class NewSchoolMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewSchoolMember
-        fields = ['first_name', 'second_name', 'family_name', 'member_title', 
-                  'member_years_of_experience', 'previous_employer1', 
-                  'previous_jobtitle1', 'previous_employer2', 'previous_jobtitle2',
-                  'previous_employer3', 'previous_jobtitle3', 
-                  'previous_employer4', 'previous_jobtitle4', 
-                  'previous_employer5', 'previous_jobtitle5', 
-                  'member_mobile', 'member_email', 'member_username', 
-                  'member_password']  # member_password included for input only
+        fields = [
+            'first_name', 'second_name', 'family_name', 'member_title', 
+            'member_years_of_experience', 'previous_employer1', 
+            'previous_jobtitle1', 'previous_employer2', 'previous_jobtitle2',
+            'previous_employer3', 'previous_jobtitle3', 
+            'previous_employer4', 'previous_jobtitle4', 
+            'previous_employer5', 'previous_jobtitle5', 
+            'member_mobile', 'member_email', 'username', 
+            'password'  # member_password included for input only
+        ]
         extra_kwargs = {
-            'member_password': {'write_only': True}  # Hide password in the response
+            'password': {'write_only': True}  # Hide password in the response
         }
 
     def create(self, validated_data):
         # Hash the password before saving it
-        validated_data['member_password'] = make_password(validated_data['member_password'])
+        validated_data['member_password'] = make_password(validated_data['password'])
         return NewSchoolMember.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         # Hash the password only if it's provided in the update request
-        if 'member_password' in validated_data:
-            validated_data['member_password'] = make_password(validated_data['member_password'])
+        if 'password' in validated_data:
+            validated_data['password'] = make_password(validated_data['password'])
         return super(NewSchoolMemberSerializer, self).update(instance, validated_data)
 
     def validate_member_username(self, value):
-        if NewSchoolMember.objects.filter(member_username=value).exists():
+        if NewSchoolMember.objects.filter(username=value).exists():
             raise serializers.ValidationError("This username is already taken.")
         return value
+    
+    def validate_member_email(self, value):
+        if NewSchoolMember.objects.filter(member_email=value).exists():
+            raise serializers.ValidationError("This email is already registered.")
+        return value
+
+    def validate_member_mobile(self, value):
+        if len(value) < 10:  # Assuming a minimum length for mobile numbers
+            raise serializers.ValidationError("Mobile number must be at least 10 digits long.")
+        return value
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        username = attrs.get("username")
+        password = attrs.get("password")
+
+        if username and password:
+            user = authenticate(request=self.context.get('request'), 
+                                username=username, password=password)
+            if not user:
+                raise serializers.ValidationError("Invalid credentials")
+        else:
+            raise serializers.ValidationError("Must include 'username' and 'password'")
+
+        return super().validate(attrs)

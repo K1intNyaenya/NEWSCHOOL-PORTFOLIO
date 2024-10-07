@@ -1,38 +1,39 @@
 .admin-dashboard {
-  padding: 5px;
-  font-family: Arial, sans-serif;
+  padding: 20px; /* Increased padding for better spacing */
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4; /* Light background for better contrast */
+  border-radius: 8px; /* Rounded corners for the dashboard */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
 }
 
 .dashboard-header {
   display: flex;
-  justify-content: flex-end; /* Align search bar on the left, buttons on the right */
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
 
 .search-bar {
-  padding: 8px; /* Reduce padding */
-  width: 10%; /* Adjust width to make it smaller */
+  padding: 12px; /* Adjusted padding */
+  width: 30%; /* Increased width for better usability */
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 14px; /* Slightly smaller font size */
+  font-size: 16px; /* Increased font size */
 }
 
 .add-member-btn {
-  padding: 8px 12px; /* Reduce button size */
-  background-color: #000000;
+  padding: 10px 15px; /* Adjusted padding */
+  background-color: #0066cc; /* Primary color for better visibility */
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  font-size: 14px; /* Smaller text size for the button */
-  width: 10%;
-  justify-content: right;
+  font-size: 16px; /* Increased font size */
 }
 
 .add-member-btn:hover {
-  background-color: #116728; /* Darker shade on hover */
+  background-color: #005bb5; /* Darker shade on hover */
 }
 
 /* Modal styles */
@@ -42,7 +43,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.7); /* Darker semi-transparent background */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -50,38 +51,37 @@
 }
 
 .modal-content {
-  background-color: rgb(255, 255, 255);
+  background-color: #fff; /* White background for modal */
   padding: 20px;
   border-radius: 8px;
-  width: 400px; /* Set modal width */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Soft shadow */
+  width: 500px; /* Increased modal width */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* More prominent shadow */
 }
 
 /* Styles for the modal tabs */
 .tabs {
   display: flex;
-  border-bottom: 2px solid #ffffff;
+  border-bottom: 2px solid #eee; /* Subtle border for tabs */
   margin-bottom: 20px;
 }
 
 .tabs button {
   flex: 1; /* Equal width for all tabs */
-  background-color: #000000;
+  background-color: #0066cc; /* Consistent primary color */
   border: none;
-  padding: 10px;
+  padding: 12px; /* Adjusted padding */
   cursor: pointer;
   font-size: 16px;
+  color: white; /* White text for tabs */
   transition: background-color 0.3s ease;
 }
 
 .tabs button:hover {
-  background-color: #000000; /* Light grey on hover */
+  background-color: #005bb5; /* Darker shade on hover */
 }
 
 .tabs button.active {
-  background-color: #10600d; /* Active tab background color */
-  color: rgb(255, 255, 255); /* Active tab text color */
-  border-bottom: 2px solid transparent; /* Remove bottom border */
+  background-color: #004a99; /* Active tab background color */
 }
 
 /* Tab content styles */
@@ -89,11 +89,12 @@
   padding: 10px;
   border: 1px solid #ccc; /* Border around the content area */
   border-radius: 4px; /* Rounded corners */
+  margin-top: 10px; /* Space above the tab content */
 }
 
 /* Form styles */
 .form-row {
-  margin-bottom: 10px; /* Spacing between form fields */
+  margin-bottom: 15px; /* Increased spacing between form fields */
 }
 
 .form-row label {
@@ -103,80 +104,26 @@
 
 .form-row input {
   width: 100%; /* Full width for input fields */
-  padding: 8px; /* Padding inside input fields */
+  padding: 10px; /* Increased padding */
   border: 1px solid #ccc; /* Border around input fields */
   border-radius: 4px; /* Rounded corners */
 }
 
 /* Button styles */
-.next-btn {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 30%;
-  justify-content: flex-end;
-}
-.close-modal-btn {
-  margin-top: 5px; /* Spacing above buttons */
+.submit-btn, .add-job-btn, .remove-job-btn {
+  margin-top: 15px; /* Spacing above buttons */
   padding: 10px 15px; /* Button padding */
-  background-color: #000000; /* Button background color */
-  color: rgb(255, 255, 255); /* Button text color */
+  background-color: #0066cc; /* Button background color */
+  color: white; /* Button text color */
   border: none; /* Remove button border */
   border-radius: 4px; /* Rounded button corners */
   cursor: pointer; /* Pointer cursor on hover */
   transition: background-color 0.3s ease; /* Transition effect */
-  width: 30%;
-}
-.submit-btn {
-  margin-top: 10px; /* Spacing above buttons */
-  padding: 10px 15px; /* Button padding */
-  background-color: #000000; /* Button background color */
-  color: white; /* Button text color */
-  border: none; /* Remove button border */
-  border-radius: 3px; /* Rounded button corners */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s ease; /* Transition effect */
-  width: 30%;
-}
-.add-job-btn {
-  margin-top: 10px; /* Spacing above buttons */
-  padding: 10px 15px; /* Button padding */
-  background-color: #000000; /* Button background color */
-  color: white; /* Button text color */
-  border: none; /* Remove button border */
-  border-radius: 3px; /* Rounded button corners */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s ease; /* Transition effect */
-  width: 30%;
-}
-.remove-job-btn {
-  margin-top: 10px; /* Spacing above buttons */
-  padding: 10px 15px; /* Button padding */
-  background-color: #000000; /* Button background color */
-  color: white; /* Button text color */
-  border: none; /* Remove button border */
-  border-radius: 3px; /* Rounded button corners */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s ease; /* Transition effect */
-  width: 30%;
+  width: 100%; /* Full width for buttons */
 }
 
-.next-btn:hover {
-  background-color: #127c12;
-}
-
-.submit-btn:hover {
-  background-color: #127c12; /* Darker shade on hover */
-}
-.close-modal-btn:hover {
-  background-color: red; /* Darker shade on hover */
-}
-.add-job-btn:hover {
-  background-color: #127c12; /* Darker shade on hover */
-}
-.remove-job-btn:hover {
-  background-color: red; /* Darker shade on hover */
+.submit-btn:hover, .add-job-btn:hover, .remove-job-btn:hover {
+  background-color: #005bb5; /* Darker shade on hover */
 }
 
 /* Portfolio card styles */
@@ -184,6 +131,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid */
   gap: 20px; /* Gap between cards */
+  margin-top: 20px; /* Space above portfolio cards */
 }
 
 .portfolio-card {
@@ -192,6 +140,11 @@
   padding: 15px; /* Padding inside cards */
   text-align: center; /* Center text in cards */
   background-color: #f9f9f9; /* Light background color */
+  transition: transform 0.3s ease; /* Smooth hover effect */
+}
+
+.portfolio-card:hover {
+  transform: translateY(-5px); /* Lift effect on hover */
 }
 
 .user-image {
@@ -215,5 +168,9 @@
 
   .search-bar {
     width: 100%; /* Full width for search bar on smaller screens */
+  }
+
+  .admin-dashboard {
+    padding: 10px; /* Adjust padding for smaller screens */
   }
 }

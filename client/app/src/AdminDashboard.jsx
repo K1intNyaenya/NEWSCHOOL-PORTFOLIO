@@ -1,24 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './style/AdminDashboard.css';
-
-function PortfolioCard({ user }) {
-  return (
-    <div className="portfolio-card">
-      <img src={user.image} alt={user.name} className="user-image" />
-      <h2>{user.name}</h2>
-      <p>{user.profession}</p>
-      <p>{user.yearsOfExperience} years of experience</p>
-      <h4>Companies Worked For:</h4>
-      <ul>
-        {user.companies.map((company, index) => (
-          <li key={index}>
-            {company.name} - {company.title}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+import PortfolioCard from './PortfolioCard'; // Import the PortfolioCard component
 
 function AdminDashboard() {
   const [portfolios, setPortfolios] = useState([]);
@@ -38,42 +20,41 @@ function AdminDashboard() {
   });
   const [errors, setErrors] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('personalDetails'); // Tracks the active tab
-  const [isSubmitting, setIsSubmitting] = useState(false); // Track if form is submitting
-  const [error, setError] = useState(''); // Store any error message
+  const [activeTab, setActiveTab] = useState('personalDetails');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     const fetchPortfolios = async () => {
+      setLoading(true); // Set loading to true before fetching
       try {
-        const response = await fetch("http://127.0.0.1:8000/portfolio/NewSchoolMember/");
-        
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} - ${response.statusText}`);
-        }
-
+        const response = await fetch("http://127.0.0.1:8080/portfolio/NewSchoolMember/");
+        if (!response.ok) throw new Error(`Error: ${response.status} - ${response.statusText}`);
         const data = await response.json();
-        setPortfolios(data); 
+        setPortfolios(data);
       } catch (error) {
         console.error("Failed to fetch portfolios:", error);
+        setError("Failed to load portfolios. Please try again later.");
+      } finally {
+        setLoading(false); // Set loading to false after fetching
       }
     };
 
     fetchPortfolios();
   }, []);
 
-  if (!Array.isArray(portfolios) || portfolios.length === 0) {
-    return <p>No portfolios available</p>;
-  }
-
   const validateForm = () => {
-    let formErrors = {};
-
+    const formErrors = {};
     if (!newUser.first_name) formErrors.first_name = 'First Name is required';
     if (!newUser.member_title) formErrors.member_title = 'Profession is required';
-    if (newUser.member_email && !/\S+@\S+\.\S+/.test(newUser.member_email))
+    if (newUser.member_email && !/\S+@\S+\.\S+/.test(newUser.member_email)) {
       formErrors.member_email = 'Email is invalid';
-    if (newUser.member_mobile && !/^\d{10}$/.test(newUser.member_mobile))
+    }
+    if (newUser.member_mobile && !/^\d{10}$/.test(newUser.member_mobile)) {
       formErrors.member_mobile = 'Mobile should be 10 digits';
+    }
 
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;
@@ -82,29 +63,21 @@ function AdminDashboard() {
   const handleAddUser = async () => {
     if (!validateForm()) return;
 
-    setIsSubmitting(true); // Set submitting state to true
-    setError(''); // Reset any existing error
+    setIsSubmitting(true);
+    setError('');
+    setSuccessMessage('');
 
     const updatedCompanies = newUser.previous_jobs.filter(
       (job) => job.employer && job.jobtitle
     );
 
     const payload = {
-      first_name: newUser.first_name,
-      second_name: newUser.second_name,
-      family_name: newUser.family_name,
-      member_title: newUser.member_title,
-      member_years_of_experience: newUser.member_years_of_experience,
+      ...newUser,
       previous_jobs: updatedCompanies,
-      member_mobile: newUser.member_mobile,
-      member_email: newUser.member_email,
-      member_address: newUser.member_address,
-      member_linkedin: newUser.member_linkedin,
-      member_twitter: newUser.member_twitter,
     };
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/portfolio/NewSchoolMember/add", {
+      const response = await fetch("http://127.0.0.1:8080/portfolio/NewSchoolMember/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -118,8 +91,8 @@ function AdminDashboard() {
 
       const newPortfolio = await response.json();
 
-      setPortfolios([
-        ...portfolios,
+      setPortfolios((prev) => [
+        ...prev,
         {
           id: newPortfolio.id,
           name: `${newPortfolio.first_name} ${newPortfolio.second_name} ${newPortfolio.family_name}`,
@@ -127,8 +100,6 @@ function AdminDashboard() {
           yearsOfExperience: newPortfolio.member_years_of_experience,
           companies: newPortfolio.previous_jobs,
           image: 'https://via.placeholder.com/150', // Placeholder image
-          mobile: newPortfolio.member_mobile,
-          email: newPortfolio.member_email,
         },
       ]);
 
@@ -146,13 +117,13 @@ function AdminDashboard() {
         member_twitter: '',
       });
 
-      setIsModalOpen(false); // Close modal after adding user
-
+      setIsModalOpen(false);
+      setSuccessMessage("New member added successfully!");
     } catch (error) {
-      console.error("Failed to add new portfolio:", error);
-      setError('Failed to add new member. Please try again later.');
+      console.error("Failed to add user:", error);
+      setError("Failed to add user. Please try again later.");
     } finally {
-      setIsSubmitting(false); // Reset submitting state
+      setIsSubmitting(false);
     }
   };
 
@@ -179,14 +150,6 @@ function AdminDashboard() {
     setIsModalOpen(!isModalOpen);
   };
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Handle file upload logic here, e.g., preview image or send to server
-      console.log('Image file selected:', file);
-    }
-  };
-
   return (
     <div className="admin-dashboard">
       <h1>Admin Dashboard</h1>
@@ -197,19 +160,32 @@ function AdminDashboard() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="search-bar"
+          aria-label="Search for users"
         />
         <button className="add-member-btn" onClick={toggleModal}>
           Add User
         </button>
       </div>
 
-      {/* Modal for adding new users */}
+      {loading ? (
+        <p>Loading portfolios...</p>
+      ) : (
+        <div className="portfolios">
+          {portfolios
+            .filter((user) => {
+              const userName = user.name ? user.name.toLowerCase() : ''; // Guard against undefined
+              return userName.includes(searchTerm.toLowerCase());
+            })
+            .map((user) => (
+              <PortfolioCard key={user.id} user={user} />
+            ))}
+        </div>
+      )}
+
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content">
             <h3>Add New Member</h3>
-
-            {/* Tab Navigation */}
             <div className="tabs">
               <button
                 className={activeTab === 'personalDetails' ? 'active' : ''}
@@ -231,7 +207,6 @@ function AdminDashboard() {
               </button>
             </div>
 
-            {/* Tab Contents */}
             <div className="tab-content">
               {activeTab === 'personalDetails' && (
                 <div>
@@ -279,15 +254,11 @@ function AdminDashboard() {
                       <label>Email</label>
                       <input
                         type="email"
-                        placeholder="Email Address"
+                        placeholder="Email"
                         value={newUser.member_email}
                         onChange={(e) => setNewUser({ ...newUser, member_email: e.target.value })}
                       />
                       {errors.member_email && <span className="error">{errors.member_email}</span>}
-                    </div>
-                    <div className="form-row">
-                      <label>Upload Profile Image</label>
-                      <input type="file" onChange={handleImageUpload} />
                     </div>
                   </fieldset>
                 </div>
@@ -298,27 +269,37 @@ function AdminDashboard() {
                   <fieldset>
                     <legend>Employment History</legend>
                     {newUser.previous_jobs.map((job, index) => (
-                      <div key={index} className="form-row">
-                        <label>Employer</label>
-                        <input
-                          type="text"
-                          placeholder="Employer"
-                          value={job.employer}
-                          onChange={(e) => handleJobChange(index, 'employer', e.target.value)}
-                        />
-                        <label>Job Title</label>
-                        <input
-                          type="text"
-                          placeholder="Job Title"
-                          value={job.jobtitle}
-                          onChange={(e) => handleJobChange(index, 'jobtitle', e.target.value)}
-                        />
-                        {newUser.previous_jobs.length > 1 && (
-                          <button onClick={() => removeJobField(index)}>Remove</button>
-                        )}
+                      <div key={index}>
+                        <div className="form-row">
+                          <label>Employer</label>
+                          <input
+                            type="text"
+                            placeholder="Employer"
+                            value={job.employer}
+                            onChange={(e) => handleJobChange(index, 'employer', e.target.value)}
+                          />
+                        </div>
+                        <div className="form-row">
+                          <label>Job Title</label>
+                          <input
+                            type="text"
+                            placeholder="Job Title"
+                            value={job.jobtitle}
+                            onChange={(e) => handleJobChange(index, 'jobtitle', e.target.value)}
+                          />
+                        </div>
+                        <div className="form-row">
+                          <button type="button" onClick={() => removeJobField(index)}>
+                            Remove
+                          </button>
+                        </div>
                       </div>
                     ))}
-                    <button onClick={addJobField}>Add Another Job</button>
+                    <div className="form-row">
+                      <button type="button" onClick={addJobField}>
+                        Add Job
+                      </button>
+                    </div>
                   </fieldset>
                 </div>
               )}
@@ -331,7 +312,7 @@ function AdminDashboard() {
                       <label>LinkedIn</label>
                       <input
                         type="text"
-                        placeholder="LinkedIn Profile"
+                        placeholder="LinkedIn URL"
                         value={newUser.member_linkedin}
                         onChange={(e) => setNewUser({ ...newUser, member_linkedin: e.target.value })}
                       />
@@ -340,7 +321,7 @@ function AdminDashboard() {
                       <label>Twitter</label>
                       <input
                         type="text"
-                        placeholder="Twitter Profile"
+                        placeholder="Twitter URL"
                         value={newUser.member_twitter}
                         onChange={(e) => setNewUser({ ...newUser, member_twitter: e.target.value })}
                       />
@@ -350,32 +331,30 @@ function AdminDashboard() {
               )}
             </div>
 
-            {error && <div className="error-message">{error}</div>} {/* Error message */}
+            {error && <div className="error">{error}</div>}
+            {successMessage && <div className="success">{successMessage}</div>}
 
             <div className="modal-footer">
-              <button className="close-btn" onClick={toggleModal}>
-                Close
+              <button
+                type="button"
+                className="cancel-btn"
+                onClick={toggleModal}
+                disabled={isSubmitting}
+              >
+                Cancel
               </button>
-              <button className="submit-btn" onClick={handleAddUser} disabled={isSubmitting}>
-                {isSubmitting ? 'Adding...' : 'Add Member'}
+              <button
+                type="button"
+                className="submit-btn"
+                onClick={handleAddUser}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Adding...' : 'Add User'}
               </button>
             </div>
           </div>
         </div>
       )}
-
-      {/* Displaying the portfolios */}
-      <div className="portfolio-grid">
-        {portfolios
-          .filter(
-            (user) =>
-              user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              user.profession.toLowerCase().includes(searchTerm.toLowerCase())
-          )
-          .map((user) => (
-            <PortfolioCard key={user.id} user={user} />
-          ))}
-      </div>
     </div>
   );
 }

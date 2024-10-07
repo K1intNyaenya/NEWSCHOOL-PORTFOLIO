@@ -1,50 +1,120 @@
+/* General reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
+}
+
 .login-container {
+  background-color: var(--bg-color);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
   max-width: 400px;
-  margin: 50px auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  background-color: #fff; /* White background */
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 h2 {
   text-align: center;
-  color: #333; /* Dark color for headings */
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 1.5rem;
 }
 
-label {
+.form-group label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
 }
 
-input[type='email'],
-input[type='password'] {
+.form-group input {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 0.75rem;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--input-bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--input-focus-border-color);
 }
 
 button {
   width: 100%;
-  padding: 10px;
-  background-color: #000; /* Black button */
-  color: white; /* White text */
+  padding: 0.75rem;
+  background-color: var(--button-bg-color);
+  color: var(--button-text-color);
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
+  font-size: 1rem;
   cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 button:hover {
-  background-color: #444; /* Darker shade on hover */
+  background-color: var(--button-hover-bg-color);
 }
 
 .error {
-  color: red; /* Red color for error messages */
+  color: var(--error-color);
   text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.theme-toggle button {
+  padding: 0.5rem 1rem;
+  background-color: var(--button-bg-color);
+  color: var(--button-text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Light theme */
+.light-theme {
+  --bg-color: #fff;
+  --text-color: #333;
+  --input-bg-color: #f9f9f9;
+  --border-color: #ccc;
+  --input-focus-border-color: #333;
+  --button-bg-color: #333;
+  --button-text-color: #fff;
+  --button-hover-bg-color: #555;
+  --error-color: #ff4f4f;
+}
+
+/* Dark theme */
+.dark-theme {
+  --bg-color: #2c2c2c;
+  --text-color: #f1f1f1;
+  --input-bg-color: #444;
+  --border-color: #555;
+  --input-focus-border-color: #f1f1f1;
+  --button-bg-color: #f1f1f1;
+  --button-text-color: #333;
+  --button-hover-bg-color: #ccc;
+  --error-color: #ff6b6b;
 }

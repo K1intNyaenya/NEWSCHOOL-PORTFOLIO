@@ -37,14 +37,14 @@ class NewSchoolMember(models.Model):
     
     member_email = models.EmailField(max_length=75, default='abc@company.com')
     
-    member_username = models.CharField(max_length=100, unique=True)  # Unique username
-    member_password = models.CharField(max_length=100)
+    username = models.CharField(max_length=100, unique=True)  # Unique username
+    password = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
         # Hash the password before saving
-        if not self.member_password.startswith('pbkdf2_sha256$'):  # Check if password is already hashed
-            self.member_password = make_password(self.member_password)
+        if not self.password.startswith('pbkdf2_sha256$'):  # Check if password is already hashed
+            self.password = make_password(self.password)
         super(NewSchoolMember, self).save(*args, **kwargs)
 
     def __str__(self) -> str:
-        return f"{self.first_name} {self.second_name} {self.family_name} ({self.member_username})"
+        return f"{self.first_name} {self.second_name} {self.family_name} ({self.username})"

@@ -1,23 +1,33 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
-from django.contrib.auth.hashers import make_password
-from .models import NewSchoolMember
-from .serializer import NewSchoolMemberSerializer
 from django.contrib.auth import authenticate
-from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
+from .models import NewSchoolMember
+from .serializer import NewSchoolMemberSerializer, CustomTokenObtainPairSerializer
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.hashers import make_password
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 
 @api_view(['GET'])
 def get_newschoolmember(request):
+    members = NewSchoolMember.objects.all()
     paginator = PageNumberPagination()
-    members = NewSchoolMember.objects.all()  # Fetch all members
-    paginated_members = paginator.paginate_queryset(members, request)  # Paginate the queryset
-    serializer = NewSchoolMemberSerializer(paginated_members, many=True)  # for multiple members
-    return paginator.get_paginated_response(serializer.data)  # Return paginated response
+    page = paginator.paginate_queryset(members, request)
+    if page is not None:
+        serializer = NewSchoolMemberSerializer(page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+    serializer = NewSchoolMemberSerializer(members, many=True)
+    return Response(serializer.data)
 
 @api_view(['POST'])
 def add_newschoolmember(request):
@@ -41,9 +51,10 @@ def member_detail(request, pk):
     elif request.method == 'PUT':
         serializer = NewSchoolMemberSerializer(member, data=request.data)
         if serializer.is_valid():
-            if 'member_password' in request.data:
-                member_password = request.data['member_password']
-                serializer.validated_data['member_password'] = make_password(member_password)
+            # If updating password, ensure it's hashed
+            if 'password' in request.data:
+                password = request.data['password']
+                serializer.validated_data['password'] = make_password(password)
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -52,16 +63,37 @@ def member_detail(request, pk):
         member.delete()  # Use the member instance
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+@csrf_exempt
 @api_view(['POST'])
+@permission_classes([AllowAny])  # Allow any user to access this endpoint
 def login_view(request):
-    member_username = request.data.get('member_username')  # Get username
+    username = request.data.get('username')
     password = request.data.get('password')
 
-    # Authenticate using the custom backend with member_username
-    user = authenticate(request, username=member_username, password=password)
+    if not username or not password:
+        return Response({'message': 'Please provide both username and password'}, 
+                        status=status.HTTP_400_BAD_REQUEST)
+
+    # Authenticate using member_username and member_password
+    user = authenticate(request, username=username, password=password)
 
     if user is not None:
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key}, status=status.HTTP_200_OK)
+        # Create JWT tokens
+        refresh = RefreshToken.for_user(user)
+
+        return Response({
+            'refresh': str(refresh),  # Return the refresh token
+            'access': str(refresh.access_token),  # Return the access token
+            'user_id': user.id,
+            'username': user.username,  # Use the correct field
+            'email': user.member_email,  # Use the correct field
+        }, status=status.HTTP_200_OK)
     else:
-        return Response({'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({'message': 'Invalid credentials'}, 
+                        status=status.HTTP_401_UNAUTHORIZED)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def protected_view(request):
+    # This view is protected and requires a valid JWT
+    return Response({'message': 'This is a protected view!'})
