@@ -1,8 +1,8 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
-from .models import NewSchoolMember
 from django.contrib.auth import authenticate
+from .models import NewSchoolMember
 
 class NewSchoolMemberSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,7 +15,7 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
             'previous_employer4', 'previous_jobtitle4', 
             'previous_employer5', 'previous_jobtitle5', 
             'member_mobile', 'member_email', 'username', 
-            'password'  # member_password included for input only
+            'password'  # Include password for input only
         ]
         extra_kwargs = {
             'password': {'write_only': True}  # Hide password in the response
@@ -23,7 +23,7 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # Hash the password before saving it
-        validated_data['member_password'] = make_password(validated_data['password'])
+        validated_data['password'] = make_password(validated_data['password'])
         return NewSchoolMember.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
@@ -32,20 +32,24 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
             validated_data['password'] = make_password(validated_data['password'])
         return super(NewSchoolMemberSerializer, self).update(instance, validated_data)
 
-    def validate_member_username(self, value):
+    def validate_username(self, value):
+        # Check if username is already taken
         if NewSchoolMember.objects.filter(username=value).exists():
             raise serializers.ValidationError("This username is already taken.")
         return value
     
     def validate_member_email(self, value):
+        # Check if email is already registered
         if NewSchoolMember.objects.filter(member_email=value).exists():
             raise serializers.ValidationError("This email is already registered.")
         return value
 
     def validate_member_mobile(self, value):
+        # Validate length of mobile number
         if len(value) < 10:  # Assuming a minimum length for mobile numbers
             raise serializers.ValidationError("Mobile number must be at least 10 digits long.")
         return value
+
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):

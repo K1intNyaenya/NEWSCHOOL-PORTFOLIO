@@ -7,12 +7,14 @@ function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // Loading state
   const [theme, setTheme] = useState('light-theme'); // Theme state
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(''); // Clear any existing errors
+    setLoading(true); // Set loading to true when login starts
 
     try {
       await login(username, password); // Use the login function from authService
@@ -23,10 +25,11 @@ function LoginForm() {
 
       // Redirect to dashboard or home page
       navigate('/dashboard');
-
     } catch (error) {
       console.error('Login error:', error.message);
       setError(error.message);
+    } finally {
+      setLoading(false); // Set loading to false once login is done
     }
   };
 
@@ -46,6 +49,7 @@ function LoginForm() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
+            disabled={loading} // Disable input during loading
           />
         </div>
         <div className="form-group">
@@ -55,15 +59,21 @@ function LoginForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={loading} // Disable input during loading
           />
         </div>
         {error && <p className="error">{error}</p>}
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}> {/* Disable button while loading */}
+          {loading ? 'Logging in...' : 'Login'} {/* Change button text when loading */}
+        </button>
       </form>
+
+      {/* Loading bar or spinner */}
+      {loading && <div className="loading-bar">Loading...</div>} {/* Display loading bar when loading */}
 
       {/* Theme switch button */}
       <div className="theme-toggle">
-        <button onClick={toggleTheme}>
+        <button onClick={toggleTheme} disabled={loading}>
           Switch to {theme === 'light-theme' ? 'Dark' : 'Light'} Theme
         </button>
       </div>

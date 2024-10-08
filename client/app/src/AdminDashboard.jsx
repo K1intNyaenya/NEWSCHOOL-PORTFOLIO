@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './style/AdminDashboard.css';
-import PortfolioCard from './PortfolioCard'; // Import the PortfolioCard component
+import PortfolioCard from './dashboard'; // Import the dashboard component
 
 function AdminDashboard() {
-  const [portfolios, setPortfolios] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [newUser, setNewUser] = useState({
     first_name: '',
@@ -25,20 +24,23 @@ function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [portfolios, setPortfolios] = useState([]);
 
   useEffect(() => {
+    // Fetch portfolios data from the API
     const fetchPortfolios = async () => {
-      setLoading(true); // Set loading to true before fetching
       try {
-        const response = await fetch("http://127.0.0.1:8080/portfolio/NewSchoolMember/");
-        if (!response.ok) throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        const response = await fetch('http://127.0.0.1:8080/portfolio/NewSchoolMember/');
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
         const data = await response.json();
         setPortfolios(data);
       } catch (error) {
-        console.error("Failed to fetch portfolios:", error);
-        setError("Failed to load portfolios. Please try again later.");
+        console.error('Failed to fetch portfolios:', error);
+        setError('Failed to fetch portfolios. Please try again later.');
       } finally {
-        setLoading(false); // Set loading to false after fetching
+        setLoading(false);
       }
     };
 
@@ -76,6 +78,17 @@ function AdminDashboard() {
       previous_jobs: updatedCompanies,
     };
 
+    // Check for duplicate email before sending request
+    const isDuplicateEmail = portfolios.some(
+      (member) => member.member_email === payload.member_email
+    );
+
+    if (isDuplicateEmail) {
+      setError('Email already exists. Please use a different email address.');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const response = await fetch("http://127.0.0.1:8080/portfolio/NewSchoolMember/add", {
         method: "POST",
@@ -89,20 +102,10 @@ function AdminDashboard() {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
 
-      const newPortfolio = await response.json();
+      // Refetch portfolios to avoid duplicates
+      await fetchPortfolios();
 
-      setPortfolios((prev) => [
-        ...prev,
-        {
-          id: newPortfolio.id,
-          name: `${newPortfolio.first_name} ${newPortfolio.second_name} ${newPortfolio.family_name}`,
-          profession: newPortfolio.member_title,
-          yearsOfExperience: newPortfolio.member_years_of_experience,
-          companies: newPortfolio.previous_jobs,
-          image: 'https://via.placeholder.com/150', // Placeholder image
-        },
-      ]);
-
+      // Reset the newUser state
       setNewUser({
         first_name: '',
         second_name: '',
@@ -162,9 +165,9 @@ function AdminDashboard() {
           className="search-bar"
           aria-label="Search for users"
         />
-        <button className="add-member-btn" onClick={toggleModal}>
-          Add User
-        </button>
+        <button className="register-member-btn" onClick={toggleModal}>
+          Register
+        </button> 
       </div>
 
       {loading ? (
@@ -185,7 +188,7 @@ function AdminDashboard() {
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content">
-            <h3>Add New Member</h3>
+            <h3>Register New Member</h3>
             <div className="tabs">
               <button
                 className={activeTab === 'personalDetails' ? 'active' : ''}
@@ -274,7 +277,6 @@ function AdminDashboard() {
                           <label>Employer</label>
                           <input
                             type="text"
-                            placeholder="Employer"
                             value={job.employer}
                             onChange={(e) => handleJobChange(index, 'employer', e.target.value)}
                           />
@@ -283,23 +285,14 @@ function AdminDashboard() {
                           <label>Job Title</label>
                           <input
                             type="text"
-                            placeholder="Job Title"
                             value={job.jobtitle}
                             onChange={(e) => handleJobChange(index, 'jobtitle', e.target.value)}
                           />
                         </div>
-                        <div className="form-row">
-                          <button type="button" onClick={() => removeJobField(index)}>
-                            Remove
-                          </button>
-                        </div>
+                        <button onClick={() => removeJobField(index)}>Remove Job</button>
                       </div>
                     ))}
-                    <div className="form-row">
-                      <button type="button" onClick={addJobField}>
-                        Add Job
-                      </button>
-                    </div>
+                    <button onClick={addJobField}>Add Job</button>
                   </fieldset>
                 </div>
               )}
@@ -312,7 +305,7 @@ function AdminDashboard() {
                       <label>LinkedIn</label>
                       <input
                         type="text"
-                        placeholder="LinkedIn URL"
+                        placeholder="LinkedIn Profile URL"
                         value={newUser.member_linkedin}
                         onChange={(e) => setNewUser({ ...newUser, member_linkedin: e.target.value })}
                       />
@@ -321,7 +314,7 @@ function AdminDashboard() {
                       <label>Twitter</label>
                       <input
                         type="text"
-                        placeholder="Twitter URL"
+                        placeholder="Twitter Profile URL"
                         value={newUser.member_twitter}
                         onChange={(e) => setNewUser({ ...newUser, member_twitter: e.target.value })}
                       />
@@ -331,27 +324,12 @@ function AdminDashboard() {
               )}
             </div>
 
-            {error && <div className="error">{error}</div>}
-            {successMessage && <div className="success">{successMessage}</div>}
-
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="cancel-btn"
-                onClick={toggleModal}
-                disabled={isSubmitting}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="submit-btn"
-                onClick={handleAddUser}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Adding...' : 'Add User'}
-              </button>
-            </div>
+            {error && <span className="error">{error}</span>}
+            {successMessage && <span className="success">{successMessage}</span>}
+            <button disabled={isSubmitting} onClick={handleAddUser}>
+              {isSubmitting ? 'Registering...' : 'Register'}
+            </button>
+            <button onClick={toggleModal}>Close</button>
           </div>
         </div>
       )}

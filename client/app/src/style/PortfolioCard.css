@@ -1,4 +1,14 @@
-.portfolio-card {
+/* Portfolio card styling */
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    gap: 20px; /* Space between cards */
+    margin-top: 20px; /* Space above portfolio cards */
+  }
+
+
+  .portfolio-card {
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -12,41 +22,56 @@
     transform: translateY(-5px);
   }
   
+  /* User image styling */
   .user-image {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 15px;
+    width: 120px; /* Larger profile image */
+    height: 120px;
+    border-radius: 0%; /* Circular image */
+    object-fit: cover; /* Ensure the image fits well */
+    margin-bottom: 20px; /* More space below the image */
+    border: 2px solid #e5e5e5; /* Subtle border around the image */
   }
   
+  /* Heading styles */
   h2 {
-    font-size: 1.5rem;
-    margin: 10px 0;
+    font-size: 1.6rem; /* Slightly larger heading */
+    margin: 15px 0; /* More space above and below */
+    font-weight: 600; /* Bolder font weight */
+    color: #333; /* Darker heading for contrast */
   }
   
+  /* Paragraph styles */
   p {
-    margin: 5px 0;
+    margin: 8px 0; /* Increased spacing between paragraphs */
+    color: #666; /* Softer gray for text */
+    font-size: 1rem; /* Slightly larger text for readability */
+    line-height: 1.5; /* Better line spacing */
   }
   
+  /* Button styling */
   button {
-    background-color: #007bff;
+    background-color: #007bff; /* Primary blue button */
     color: white;
     border: none;
-    padding: 10px 20px;
-    margin-top: 10px;
+    padding: 12px 25px; /* Increased padding for a larger button */
+    margin-top: 15px; /* Increased margin for better spacing */
     cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+    border-radius: 6px; /* More rounded corners */
+    font-size: 1rem; /* Slightly larger font size */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
   }
   
   button:hover {
-    background-color: #0056b3;
+    background-color: #0056b3; /* Darker shade of blue on hover */
+    transform: translateY(-3px); /* Slight lift effect on hover */
   }
   
+  /* Employment history section */
   .employment-history {
-    margin-top: 20px;
-    text-align: left;
+    margin-top: 25px; /* More space above the section */
+    text-align: left; /* Align text to the left for better readability */
+    color: #444; /* Darker text for readability */
+    font-size: 1rem;
   }
   
   .employment-history ul {
@@ -55,6 +80,51 @@
   }
   
   .employment-history li {
-    padding: 5px 0;
+    padding: 8px 0; /* Increased padding between items */
+    border-bottom: 1px solid #e5e5e5; /* Subtle bottom border for separation */
+    font-size: 0.95rem; /* Slightly smaller font size for details */
+    color: #555; /* Softer text color for employment details */
   }
   
+  /* Hover effect on list items */
+  .employment-history li:hover {
+    background-color: #f1f1f1; /* Light background highlight on hover */
+  }
+  
+  /* Media query for mobile responsiveness */
+  @media (max-width: 768px) {
+    .portfolio-card {
+      margin: 15px; /* Adjust margin for smaller screens */
+      padding: 20px; /* Adjust padding for smaller screens */
+    }
+  
+    .user-image {
+      width: 100px; /* Reduce image size on mobile */
+      height: 100px;
+    }
+  
+    h2 {
+      font-size: 1.4rem; /* Slightly smaller heading */
+    }
+  
+    button {
+      padding: 10px 20px; /* Adjust button size for mobile */
+      font-size: 0.9rem; /* Reduce font size on smaller screens */
+    }
+  
+    .employment-history li {
+      font-size: 0.9rem; /* Reduce font size on smaller screens */
+    }
+  }
+  
+  @media (max-width: 800px) {
+    .portfolio-grid {
+      grid-template-columns: repeat(3, 1fr); /* 2 columns on smaller screens */
+    }
+  }
+  
+  @media (max-width: 500px) {
+    .portfolio-grid {
+      grid-template-columns: 1fr; /* 1 column on extra small screens */
+    }
+  }

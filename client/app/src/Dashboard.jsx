@@ -38,6 +38,7 @@ function Dashboard() {
   }
 
   return (
+    
     <div className="dashboard">
       {portfolios.length > 0 ? (
         portfolios.map((user) => (

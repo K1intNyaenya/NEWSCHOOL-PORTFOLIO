@@ -1,39 +1,53 @@
+/* General admin dashboard styles */
 .admin-dashboard {
-  padding: 20px; /* Increased padding for better spacing */
+  padding: 30px; /* More padding for better spacing */
   font-family: 'Arial', sans-serif;
-  background-color: #f4f4f4; /* Light background for better contrast */
-  border-radius: 8px; /* Rounded corners for the dashboard */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  background-color: #f9fafb; /* Lighter background for a cleaner look */
+  border-radius: 10px; /* Slightly more rounded corners */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Softer shadow */
 }
 
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e5e5e5; /* Subtle bottom border for sectioning */
 }
 
+/* Search bar styles */
 .search-bar {
-  padding: 12px; /* Adjusted padding */
-  width: 30%; /* Increased width for better usability */
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px; /* Increased font size */
+  padding: 14px; /* Better padding */
+  width: 35%; /* Slightly wider */
+  border: 1px solid #d1d5db; /* Softer border color */
+  border-radius: 6px; /* More rounded corners */
+  font-size: 16px;
+  background-color: #f9fafb; /* Consistent background */
+  transition: border-color 0.3s ease;
 }
 
-.add-member-btn {
-  padding: 10px 15px; /* Adjusted padding */
-  background-color: #0066cc; /* Primary color for better visibility */
+.search-bar:focus {
+  border-color: #4f46e5; /* Blue highlight on focus */
+  outline: none;
+}
+
+/* Add member button */
+.register-member-btn {
+  padding: 12px 20px; /* Larger button for easier clicks */
+  background-color: #4f46e5; /* A more vibrant blue */
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 16px; /* Increased font size */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 16px;
+  width: 30%;
 }
 
 .add-member-btn:hover {
-  background-color: #005bb5; /* Darker shade on hover */
+  background-color: #4338ca; /* Darker shade on hover */
+  transform: translateY(-2px); /* Slight lift effect */
 }
 
 /* Modal styles */
@@ -43,134 +57,148 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7); /* Darker semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.6); /* Slightly darker background */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Ensure modal is on top */
+  z-index: 1000;
 }
 
 .modal-content {
-  background-color: #fff; /* White background for modal */
-  padding: 20px;
-  border-radius: 8px;
-  width: 500px; /* Increased modal width */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* More prominent shadow */
+  background-color: #ffffff;
+  padding: 30px; /* More padding */
+  border-radius: 12px; /* Softer rounded corners */
+  width: 550px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
-/* Styles for the modal tabs */
+/* Tab styles */
 .tabs {
   display: flex;
-  border-bottom: 2px solid #eee; /* Subtle border for tabs */
+  border-bottom: 2px solid #e5e7eb;
   margin-bottom: 20px;
 }
 
 .tabs button {
-  flex: 1; /* Equal width for all tabs */
-  background-color: #0066cc; /* Consistent primary color */
+  flex: 1;
+  background-color: #e0e7ff; /* Softer background for inactive tabs */
   border: none;
-  padding: 12px; /* Adjusted padding */
+  padding: 14px;
   cursor: pointer;
   font-size: 16px;
-  color: white; /* White text for tabs */
+  color: #374151; /* Darker text for better contrast */
   transition: background-color 0.3s ease;
 }
 
 .tabs button:hover {
-  background-color: #005bb5; /* Darker shade on hover */
+  background-color: #c7d2fe; /* Lighter hover effect */
 }
 
 .tabs button.active {
-  background-color: #004a99; /* Active tab background color */
+  background-color: #4f46e5; /* Active tab background */
+  color: white;
 }
 
-/* Tab content styles */
+/* Tab content */
 .tab-content {
-  padding: 10px;
-  border: 1px solid #ccc; /* Border around the content area */
-  border-radius: 4px; /* Rounded corners */
-  margin-top: 10px; /* Space above the tab content */
+  padding: 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #f9fafb; /* Subtle background */
 }
 
 /* Form styles */
 .form-row {
-  margin-bottom: 15px; /* Increased spacing between form fields */
+  margin-bottom: 20px;
 }
 
 .form-row label {
-  display: block; /* Labels above input fields */
-  margin-bottom: 5px; /* Space between label and input */
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151; /* Darker label color */
 }
 
 .form-row input {
-  width: 100%; /* Full width for input fields */
-  padding: 10px; /* Increased padding */
-  border: 1px solid #ccc; /* Border around input fields */
-  border-radius: 4px; /* Rounded corners */
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #f9fafb;
+  transition: border-color 0.3s ease;
 }
 
-/* Button styles */
+.form-row input:focus {
+  border-color: #4f46e5;
+  outline: none;
+}
+
+/* Buttons */
 .submit-btn, .add-job-btn, .remove-job-btn {
-  margin-top: 15px; /* Spacing above buttons */
-  padding: 10px 15px; /* Button padding */
-  background-color: #0066cc; /* Button background color */
-  color: white; /* Button text color */
-  border: none; /* Remove button border */
-  border-radius: 4px; /* Rounded button corners */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s ease; /* Transition effect */
-  width: 100%; /* Full width for buttons */
+  margin-top: 20px;
+  padding: 12px 20px;
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .submit-btn:hover, .add-job-btn:hover, .remove-job-btn:hover {
-  background-color: #005bb5; /* Darker shade on hover */
+  background-color: #4338ca;
+  transform: translateY(-2px);
 }
 
 /* Portfolio card styles */
 .portfolio-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid */
-  gap: 20px; /* Gap between cards */
-  margin-top: 20px; /* Space above portfolio cards */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Adjusted column width */
+  gap: 25px;
+  margin-top: 25px;
 }
 
 .portfolio-card {
-  border: 1px solid #ccc; /* Border around portfolio cards */
-  border-radius: 8px; /* Rounded corners */
-  padding: 15px; /* Padding inside cards */
-  text-align: center; /* Center text in cards */
-  background-color: #f9f9f9; /* Light background color */
-  transition: transform 0.3s ease; /* Smooth hover effect */
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  background-color: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .portfolio-card:hover {
-  transform: translateY(-5px); /* Lift effect on hover */
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Elevation effect */
 }
 
 .user-image {
-  width: 100px; /* Set image width */
-  height: 100px; /* Set image height */
-  border-radius: 50%; /* Circular image */
-  margin-bottom: 10px; /* Space below image */
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  object-fit: cover; /* Ensure image fits properly */
 }
 
-/* Error message styles */
+/* Error messages */
 .error {
-  color: red; /* Error message color */
-  font-size: 14px; /* Error message font size */
+  color: #d32f2f;
+  font-size: 14px;
+  margin-top: 10px;
 }
 
-/* Additional responsive styles */
-@media (max-width: 600px) {
-  .modal-content {
-    width: 90%; /* Adjust modal width for smaller screens */
+/* Responsive styles */
+@media (max-width: 768px) {
+  .search-bar {
+    width: 100%;
   }
 
-  .search-bar {
-    width: 100%; /* Full width for search bar on smaller screens */
+  .modal-content {
+    width: 90%;
   }
 
   .admin-dashboard {
-    padding: 10px; /* Adjust padding for smaller screens */
+    padding: 15px;
   }
 }
