@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './style/AdminDashboard.css';
-import PortfolioCard from './dashboard'; // Import the dashboard component
+import PortfolioCard from './PortfolioCard';  // Use the updated PortfolioCard component
+import PersonalDetails from './PersonalDetails';
+import EmploymentHistory from './EmploymentHistory';
+import UserCredentials from './UserCredentials';
 
 function AdminDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -9,13 +12,14 @@ function AdminDashboard() {
     second_name: '',
     family_name: '',
     member_title: '',
-    member_years_of_experience: '',
-    previous_jobs: [{ employer: '', jobtitle: '' }],
+    employment_history: [
+      { employer: '', job_title: '' }, // Corrected field name
+      { employer: '', job_title: '' }  // Placeholder for two jobs
+    ],
     member_mobile: '',
     member_email: '',
-    member_address: '',
-    member_linkedin: '',
-    member_twitter: '',
+    username: '',
+    password: '',
   });
   const [errors, setErrors] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,25 +31,26 @@ function AdminDashboard() {
   const [portfolios, setPortfolios] = useState([]);
 
   useEffect(() => {
-    // Fetch portfolios data from the API
-    const fetchPortfolios = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:8080/portfolio/NewSchoolMember/');
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} - ${response.statusText}`);
-        }
-        const data = await response.json();
-        setPortfolios(data);
-      } catch (error) {
-        console.error('Failed to fetch portfolios:', error);
-        setError('Failed to fetch portfolios. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchPortfolios();
   }, []);
+
+  const fetchPortfolios = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8080/portfolio/NewSchoolMember/');
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+      const data = await response.json();
+      console.log('Fetched portfolios:', data);
+      const uniquePortfolios = Array.from(new Map(data.map(item => [item.id, item])).values());
+      setPortfolios(uniquePortfolios);
+    } catch (error) {
+      console.error('Failed to fetch portfolios:', error);
+      setError('Failed to fetch portfolios. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const validateForm = () => {
     const formErrors = {};
@@ -54,10 +59,9 @@ function AdminDashboard() {
     if (newUser.member_email && !/\S+@\S+\.\S+/.test(newUser.member_email)) {
       formErrors.member_email = 'Email is invalid';
     }
-    if (newUser.member_mobile && !/^\d{10}$/.test(newUser.member_mobile)) {
-      formErrors.member_mobile = 'Mobile should be 10 digits';
+    if (newUser.member_mobile && !/^\+?[1-9]\d{1,14}$/.test(newUser.member_mobile)) {
+      formErrors.member_mobile = 'Mobile number is invalid';
     }
-
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;
   };
@@ -69,16 +73,15 @@ function AdminDashboard() {
     setError('');
     setSuccessMessage('');
 
-    const updatedCompanies = newUser.previous_jobs.filter(
-      (job) => job.employer && job.jobtitle
+    const updatedEmploymentHistory = newUser.employment_history.filter(
+      (job) => job.employer && job.job_title // Correct field name
     );
 
     const payload = {
       ...newUser,
-      previous_jobs: updatedCompanies,
+      employment_history: updatedEmploymentHistory,
     };
 
-    // Check for duplicate email before sending request
     const isDuplicateEmail = portfolios.some(
       (member) => member.member_email === payload.member_email
     );
@@ -94,32 +97,32 @@ function AdminDashboard() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Accept": "application/json",
         },
         body: JSON.stringify(payload),
       });
-
+    
       if (!response.ok) {
+        const errorResponse = await response.text();
+        console.error('Error Response:', errorResponse);
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
-
-      // Refetch portfolios to avoid duplicates
-      await fetchPortfolios();
-
-      // Reset the newUser state
+    
+      const newMember = await response.json();
+      setPortfolios(prevPortfolios => [...prevPortfolios, newMember]);
+    
       setNewUser({
         first_name: '',
         second_name: '',
         family_name: '',
         member_title: '',
-        member_years_of_experience: '',
-        previous_jobs: [{ employer: '', jobtitle: '' }],
+        employment_history: [{ employer: '', job_title: '' }], // Reset employment history
         member_mobile: '',
         member_email: '',
-        member_address: '',
-        member_linkedin: '',
-        member_twitter: '',
+        username: '',
+        password: '',
       });
-
+    
       setIsModalOpen(false);
       setSuccessMessage("New member added successfully!");
     } catch (error) {
@@ -130,206 +133,97 @@ function AdminDashboard() {
     }
   };
 
-  const handleJobChange = (index, field, value) => {
-    const updatedJobs = [...newUser.previous_jobs];
-    updatedJobs[index][field] = value;
-    setNewUser({ ...newUser, previous_jobs: updatedJobs });
-  };
+  const handleUpdateUser = async (updatedUser) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8080/portfolio/NewSchoolMember/${updatedUser.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedUser),
+      });
 
-  const addJobField = () => {
-    setNewUser({
-      ...newUser,
-      previous_jobs: [...newUser.previous_jobs, { employer: '', jobtitle: '' }],
-    });
-  };
+      if (!response.ok) {
+        throw new Error('Failed to update user');
+      }
 
-  const removeJobField = (index) => {
-    const updatedJobs = [...newUser.previous_jobs];
-    updatedJobs.splice(index, 1);
-    setNewUser({ ...newUser, previous_jobs: updatedJobs });
+      const updatedData = await response.json();
+      setPortfolios(prevPortfolios => 
+        prevPortfolios.map(user => (user.id === updatedData.id ? updatedData : user))
+      );
+    } catch (error) {
+      console.error("Failed to update user:", error);
+      setError("Failed to update user. Please try again later.");
+    }
   };
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
+    setErrors({});
+    setError('');
+    setSuccessMessage('');
   };
 
   return (
     <div className="admin-dashboard">
       <h1>Admin Dashboard</h1>
-      <div className="dashboard-header">
+      
+      <div className="controls-container">
         <input
           type="text"
-          placeholder="Search for users..."
+          placeholder="Search by name"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-bar"
-          aria-label="Search for users"
+          className="search-input"
         />
-        <button className="register-member-btn" onClick={toggleModal}>
-          Register
-        </button> 
+        <button className="register-member-button" onClick={toggleModal}>Add New Member</button>
       </div>
-
-      {loading ? (
-        <p>Loading portfolios...</p>
-      ) : (
-        <div className="portfolios">
-          {portfolios
-            .filter((user) => {
-              const userName = user.name ? user.name.toLowerCase() : ''; // Guard against undefined
-              return userName.includes(searchTerm.toLowerCase());
+      
+      <div className="portfolio-cards">
+        {loading ? (
+          <p>Loading portfolios...</p>
+        ) : (
+          portfolios
+            .filter(portfolio => {
+              const fullName = `${portfolio.first_name} ${portfolio.second_name} ${portfolio.family_name}`.toLowerCase();
+              return fullName.includes(searchTerm.toLowerCase());
             })
-            .map((user) => (
-              <PortfolioCard key={user.id} user={user} />
-            ))}
-        </div>
-      )}
-
+            .map(portfolio => (
+              <PortfolioCard
+                key={portfolio.id}
+                user={portfolio}
+                onUpdate={handleUpdateUser} // Pass the update handler to each card
+              />
+            ))
+        )}
+      </div>
+      
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content">
-            <h3>Register New Member</h3>
-            <div className="tabs">
-              <button
-                className={activeTab === 'personalDetails' ? 'active' : ''}
-                onClick={() => setActiveTab('personalDetails')}
-              >
-                Personal Details
-              </button>
-              <button
-                className={activeTab === 'employmentHistory' ? 'active' : ''}
-                onClick={() => setActiveTab('employmentHistory')}
-              >
-                Employment History
-              </button>
-              <button
-                className={activeTab === 'socialLinks' ? 'active' : ''}
-                onClick={() => setActiveTab('socialLinks')}
-              >
-                Social Links
-              </button>
-            </div>
-
-            <div className="tab-content">
+            <h2>Add New Member</h2>
+            <form onSubmit={(e) => { e.preventDefault(); handleAddUser(); }}>
+              <div className="tabs">
+                <button type="button" onClick={() => setActiveTab('personalDetails')}>Personal Details</button>
+                <button type="button" onClick={() => setActiveTab('employmentHistory')}>Employment History</button>
+                <button type="button" onClick={() => setActiveTab('userCredentials')}>User Credentials</button>
+              </div>
               {activeTab === 'personalDetails' && (
-                <div>
-                  <fieldset>
-                    <legend>Personal Details</legend>
-                    <div className="form-row">
-                      <label>First Name *</label>
-                      <input
-                        type="text"
-                        placeholder="First Name"
-                        value={newUser.first_name}
-                        onChange={(e) => setNewUser({ ...newUser, first_name: e.target.value })}
-                      />
-                      {errors.first_name && <span className="error">{errors.first_name}</span>}
-                    </div>
-                    <div className="form-row">
-                      <label>Second Name</label>
-                      <input
-                        type="text"
-                        placeholder="Second Name"
-                        value={newUser.second_name}
-                        onChange={(e) => setNewUser({ ...newUser, second_name: e.target.value })}
-                      />
-                    </div>
-                    <div className="form-row">
-                      <label>Family Name</label>
-                      <input
-                        type="text"
-                        placeholder="Family Name"
-                        value={newUser.family_name}
-                        onChange={(e) => setNewUser({ ...newUser, family_name: e.target.value })}
-                      />
-                    </div>
-                    <div className="form-row">
-                      <label>Mobile</label>
-                      <input
-                        type="text"
-                        placeholder="Mobile Number"
-                        value={newUser.member_mobile}
-                        onChange={(e) => setNewUser({ ...newUser, member_mobile: e.target.value })}
-                      />
-                      {errors.member_mobile && <span className="error">{errors.member_mobile}</span>}
-                    </div>
-                    <div className="form-row">
-                      <label>Email</label>
-                      <input
-                        type="email"
-                        placeholder="Email"
-                        value={newUser.member_email}
-                        onChange={(e) => setNewUser({ ...newUser, member_email: e.target.value })}
-                      />
-                      {errors.member_email && <span className="error">{errors.member_email}</span>}
-                    </div>
-                  </fieldset>
-                </div>
+                <PersonalDetails user={newUser} setUser={setNewUser} errors={errors} />
               )}
-
               {activeTab === 'employmentHistory' && (
-                <div>
-                  <fieldset>
-                    <legend>Employment History</legend>
-                    {newUser.previous_jobs.map((job, index) => (
-                      <div key={index}>
-                        <div className="form-row">
-                          <label>Employer</label>
-                          <input
-                            type="text"
-                            value={job.employer}
-                            onChange={(e) => handleJobChange(index, 'employer', e.target.value)}
-                          />
-                        </div>
-                        <div className="form-row">
-                          <label>Job Title</label>
-                          <input
-                            type="text"
-                            value={job.jobtitle}
-                            onChange={(e) => handleJobChange(index, 'jobtitle', e.target.value)}
-                          />
-                        </div>
-                        <button onClick={() => removeJobField(index)}>Remove Job</button>
-                      </div>
-                    ))}
-                    <button onClick={addJobField}>Add Job</button>
-                  </fieldset>
-                </div>
+                <EmploymentHistory user={newUser} setUser={setNewUser} />
               )}
-
-              {activeTab === 'socialLinks' && (
-                <div>
-                  <fieldset>
-                    <legend>Social Links</legend>
-                    <div className="form-row">
-                      <label>LinkedIn</label>
-                      <input
-                        type="text"
-                        placeholder="LinkedIn Profile URL"
-                        value={newUser.member_linkedin}
-                        onChange={(e) => setNewUser({ ...newUser, member_linkedin: e.target.value })}
-                      />
-                    </div>
-                    <div className="form-row">
-                      <label>Twitter</label>
-                      <input
-                        type="text"
-                        placeholder="Twitter Profile URL"
-                        value={newUser.member_twitter}
-                        onChange={(e) => setNewUser({ ...newUser, member_twitter: e.target.value })}
-                      />
-                    </div>
-                  </fieldset>
-                </div>
+              {activeTab === 'userCredentials' && (
+                <UserCredentials user={newUser} setUser={setNewUser} />
               )}
-            </div>
-
-            {error && <span className="error">{error}</span>}
-            {successMessage && <span className="success">{successMessage}</span>}
-            <button disabled={isSubmitting} onClick={handleAddUser}>
-              {isSubmitting ? 'Registering...' : 'Register'}
-            </button>
-            <button onClick={toggleModal}>Close</button>
+              {error && <span className="error">{error}</span>}
+              {successMessage && <span className="success">{successMessage}</span>}
+              <button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Adding...' : 'Add Member'}
+              </button>
+              <button type="button" onClick={toggleModal}>Close</button>
+            </form>
           </div>
         </div>
       )}

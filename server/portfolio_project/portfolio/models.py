@@ -7,28 +7,16 @@ class NewSchoolMember(models.Model):
     second_name = models.CharField(max_length=45)
     family_name = models.CharField(max_length=45)
     member_title = models.CharField(max_length=75)
-    member_years_of_experience = models.IntegerField()
-
-    # Previous Employment Information
-    previous_employer1 = models.CharField(max_length=75, blank=True, null=True)
-    previous_jobtitle1 = models.CharField(max_length=75, blank=True, null=True)
-
-    previous_employer2 = models.CharField(max_length=75, blank=True, null=True)
-    previous_jobtitle2 = models.CharField(max_length=75, blank=True, null=True)
-
-    previous_employer3 = models.CharField(max_length=75, blank=True, null=True)
-    previous_jobtitle3 = models.CharField(max_length=75, blank=True, null=True)
-    
-    previous_employer4 = models.CharField(max_length=75, blank=True, null=True)
-    previous_jobtitle4 = models.CharField(max_length=75, blank=True, null=True)
-
-    previous_employer5 = models.CharField(max_length=75, blank=True, null=True)
-    previous_jobtitle5 = models.CharField(max_length=75, blank=True, null=True)
+    member_industry = models.CharField(
+        blank=True,
+        null=True,
+        max_length=75)  # New field for industry
 
     # Contact Information
     member_mobile = models.CharField(
         max_length=15,
-        default='No Mobile',
+        blank=True,
+        null=True,
         validators=[RegexValidator(
             regex=r'^\+?1?\d{9,15}$',
             message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
@@ -48,3 +36,12 @@ class NewSchoolMember(models.Model):
 
     def __str__(self) -> str:
         return f"{self.first_name} {self.second_name} {self.family_name} ({self.username})"
+
+
+class EmploymentHistory(models.Model):
+    member = models.ForeignKey(NewSchoolMember, on_delete=models.CASCADE, related_name="employment_history")
+    employer = models.CharField(max_length=75, blank=True, null=True)
+    job_title = models.CharField(max_length=75, blank=True, null=True)
+    
+    def __str__(self):
+        return f"{self.member.first_name} {self.member.family_name} - {self.job_title} at {self.employer}"

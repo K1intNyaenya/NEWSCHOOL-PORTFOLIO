@@ -24,7 +24,7 @@ function LoginForm() {
       setPassword('');
 
       // Redirect to dashboard or home page
-      navigate('/dashboard');
+      navigate('/admin-dashboard');
     } catch (error) {
       console.error('Login error:', error.message);
       setError(error.message);
@@ -33,35 +33,33 @@ function LoginForm() {
     }
   };
 
-  // Function to toggle themes
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light-theme' ? 'dark-theme' : 'light-theme'));
-  };
-
   return (
     <div className={`login-container ${theme}`}>
       <h2>New School HR Login</h2>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Member Username:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            disabled={loading} // Disable input during loading
-          />
-        </div>
-        <div className="form-group">
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            disabled={loading} // Disable input during loading
-          />
-        </div>
+      <div className="form-group">
+              <label>Member Username:</label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                disabled={loading} 
+              />
+              <span className="input-icon">👤</span>
+            </div>
+            <div className="form-group">
+              <label>Password:</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={loading} 
+              />
+              <span className="input-icon">🔒</span>
+            </div>
+
         {error && <p className="error">{error}</p>}
         <button type="submit" disabled={loading}> {/* Disable button while loading */}
           {loading ? 'Logging in...' : 'Login'} {/* Change button text when loading */}
@@ -71,12 +69,6 @@ function LoginForm() {
       {/* Loading bar or spinner */}
       {loading && <div className="loading-bar">Loading...</div>} {/* Display loading bar when loading */}
 
-      {/* Theme switch button */}
-      <div className="theme-toggle">
-        <button onClick={toggleTheme} disabled={loading}>
-          Switch to {theme === 'light-theme' ? 'Dark' : 'Light'} Theme
-        </button>
-      </div>
     </div>
   );
 }

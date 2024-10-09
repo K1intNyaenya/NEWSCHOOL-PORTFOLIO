@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import PortfolioCard from './PortfolioCard'; // Import the PortfolioCard component
-import './style/Dboard.css'; // Ensure correct file extension
+import PortfolioCard from './PortfolioCard';
+import './style/Dboard.css';
 
 function Dashboard() {
   const [portfolios, setPortfolios] = useState([]);
@@ -18,8 +18,13 @@ function Dashboard() {
         }
 
         const data = await response.json();
-        setPortfolios(data);
+
+        // Remove duplicates based on a unique identifier
+        const uniquePortfolios = Array.from(new Map(data.map(item => [item.id, item])).values());
+
+        setPortfolios(uniquePortfolios);
       } catch (err) {
+        console.error(err); // Log the error for debugging
         setError("Failed to fetch portfolios. Please try again later.");
       } finally {
         setLoading(false);
@@ -38,11 +43,10 @@ function Dashboard() {
   }
 
   return (
-    
     <div className="dashboard">
       {portfolios.length > 0 ? (
         portfolios.map((user) => (
-          <PortfolioCard key={user.username} user={user} />
+          <PortfolioCard key={user.id} user={user} />
         ))
       ) : (
         <p>No portfolios available.</p>

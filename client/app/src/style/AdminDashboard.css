@@ -1,63 +1,77 @@
-/* General admin dashboard styles */
+/* General styling for the admin dashboard */
 .admin-dashboard {
-  padding: 30px; /* More padding for better spacing */
-  font-family: 'Arial', sans-serif;
-  background-color: #f9fafb; /* Lighter background for a cleaner look */
-  border-radius: 10px; /* Slightly more rounded corners */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Softer shadow */
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f0f7ff;
+  min-height: 100vh;
 }
 
-.dashboard-header {
+/* Header styling */
+.admin-dashboard h1 {
+  font-size: 2em;
+  color: #1E90FF;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Controls container for the search bar and add button */
+.controls-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #e5e5e5; /* Subtle bottom border for sectioning */
+  margin-bottom: 20px;
+  padding: 10px;
 }
 
-/* Search bar styles */
-.search-bar {
-  padding: 14px; /* Better padding */
-  width: 35%; /* Slightly wider */
-  border: 1px solid #d1d5db; /* Softer border color */
-  border-radius: 6px; /* More rounded corners */
+/* Search input styling */
+.search-input {
+  width: 60%;
+  padding: 12px;
   font-size: 16px;
-  background-color: #f9fafb; /* Consistent background */
+  border: 1px solid #d1e3f8;
+  border-radius: 8px;
   transition: border-color 0.3s ease;
 }
 
-.search-bar:focus {
-  border-color: #4f46e5; /* Blue highlight on focus */
+.search-input:focus {
+  border-color: #1E90FF;
   outline: none;
 }
 
-/* Add member button */
-.register-member-btn {
-  padding: 12px 20px; /* Larger button for easier clicks */
-  background-color: #4f46e5; /* A more vibrant blue */
+/* Button styling */
+.register-member-button {
+  padding: 10px 20px;
+  font-size: 16px;
   color: white;
+  background-color: #1E90FF;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
-  font-size: 16px;
-  width: 30%;
 }
 
-.add-member-btn:hover {
-  background-color: #4338ca; /* Darker shade on hover */
-  transform: translateY(-2px); /* Slight lift effect */
+.register-member-button:hover {
+  background-color: #007acc;
+  transform: translateY(-2px);
 }
 
-/* Modal styles */
+/* Portfolio cards container */
+.portfolio-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-around;
+  padding: 10px;
+}
+
+/* Modal overlay for adding a new member */
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6); /* Slightly darker background */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -66,139 +80,132 @@
 
 .modal-content {
   background-color: #ffffff;
-  padding: 30px; /* More padding */
-  border-radius: 12px; /* Softer rounded corners */
-  width: 550px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  padding: 25px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Tab styles */
+.modal h2 {
+  color: #1E90FF;
+  margin-bottom: 15px;
+}
+
+/* Tabs for switching between sections */
 .tabs {
   display: flex;
-  border-bottom: 2px solid #e5e7eb;
-  margin-bottom: 20px;
+  justify-content: space-around;
+  margin-bottom: 15px;
 }
 
 .tabs button {
-  flex: 1;
-  background-color: #e0e7ff; /* Softer background for inactive tabs */
-  border: none;
-  padding: 14px;
-  cursor: pointer;
+  padding: 10px;
   font-size: 16px;
-  color: #374151; /* Darker text for better contrast */
-  transition: background-color 0.3s ease;
+  border: none;
+  background: none;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.3s;
 }
 
-.tabs button:hover {
-  background-color: #c7d2fe; /* Lighter hover effect */
-}
-
+.tabs button:hover,
 .tabs button.active {
-  background-color: #4f46e5; /* Active tab background */
-  color: white;
+  color: #1E90FF;
+  font-weight: bold;
+  border-bottom: 2px solid #1E90FF;
 }
 
-/* Tab content */
-.tab-content {
-  padding: 15px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  background-color: #f9fafb; /* Subtle background */
-}
-
-/* Form styles */
+/* Form row styling inside the modal */
 .form-row {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .form-row label {
   display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: #374151; /* Darker label color */
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
 }
 
 .form-row input {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #d1d5db;
+  padding: 10px;
+  border: 1px solid #d1e3f8;
   border-radius: 6px;
   font-size: 16px;
-  background-color: #f9fafb;
   transition: border-color 0.3s ease;
 }
 
 .form-row input:focus {
-  border-color: #4f46e5;
+  border-color: #1E90FF;
   outline: none;
 }
 
-/* Buttons */
-.submit-btn, .add-job-btn, .remove-job-btn {
-  margin-top: 20px;
-  padding: 12px 20px;
-  background-color: #4f46e5;
-  color: white;
+/* Buttons for save and close actions in the modal */
+.modal button {
+  padding: 10px 20px;
+  margin-top: 10px;
+  font-size: 14px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.submit-btn:hover, .add-job-btn:hover, .remove-job-btn:hover {
-  background-color: #4338ca;
+.modal button:disabled {
+  background-color: #b0c4de;
+  cursor: not-allowed;
+}
+
+.modal button:not(:disabled):hover {
   transform: translateY(-2px);
 }
 
-/* Portfolio card styles */
-.portfolio-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Adjusted column width */
-  gap: 25px;
-  margin-top: 25px;
+button.save-button {
+  background-color: #1E90FF;
+  color: white;
+  margin-right: 10px;
 }
 
-.portfolio-card {
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 20px;
-  text-align: center;
-  background-color: white;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+button.save-button:hover {
+  background-color: #007acc;
 }
 
-.portfolio-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Elevation effect */
+button.close-button {
+  background-color: #d9534f;
+  color: white;
 }
 
-.user-image {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  margin-bottom: 15px;
-  object-fit: cover; /* Ensure image fits properly */
+button.close-button:hover {
+  background-color: #c9302c;
 }
 
-/* Error messages */
-.error {
-  color: #d32f2f;
-  font-size: 14px;
+/* Success and error messages */
+.success {
+  color: #28a745;
+  font-weight: bold;
   margin-top: 10px;
 }
 
-/* Responsive styles */
+.error {
+  color: #d9534f;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .search-bar {
+  .controls-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .search-input {
     width: 100%;
   }
 
-  .modal-content {
-    width: 90%;
-  }
-
-  .admin-dashboard {
-    padding: 15px;
+  .portfolio-cards {
+    justify-content: center;
   }
 }
