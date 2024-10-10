@@ -171,7 +171,7 @@ function AdminDashboard() {
       <div className="controls-container">
         <input
           type="text"
-          placeholder="Search by name"
+          placeholder="Search by name or industry..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="search-input"
@@ -185,7 +185,8 @@ function AdminDashboard() {
         ) : (
           portfolios
             .filter(portfolio => {
-              const fullName = `${portfolio.first_name} ${portfolio.second_name} ${portfolio.family_name}`.toLowerCase();
+              const fullName = `${portfolio.first_name} ${portfolio.second_name} ${portfolio.family_name} 
+              ${portfolio.member_industry}`.toLowerCase();
               return fullName.includes(searchTerm.toLowerCase());
             })
             .map(portfolio => (

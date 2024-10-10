@@ -38,7 +38,8 @@ function Dashboard() {
   const filteredPortfolios = portfolios.filter((user) => 
     user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.family_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.member_title.toLowerCase().includes(searchTerm.toLowerCase())
+    user.member_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.member_industry.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) {
@@ -54,7 +55,7 @@ function Dashboard() {
       <div className="search-container">
         <input 
           type="text" 
-          placeholder="Search by name or title..." 
+          placeholder="Search by name, industry, title..." 
           value={searchTerm} 
           onChange={(e) => setSearchTerm(e.target.value)} 
           className="search-bar"

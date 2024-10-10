@@ -33,12 +33,12 @@ const PersonalDetails = ({ user, setUser, errors }) => {
         />
       </div>
       <div className="form-row">
-        <label>Years of Experience</label>
+        <label>Industry</label>
         <input
-          type="number"
-          placeholder="Years of Experience"
-          value={user.member_years_of_experience}
-          onChange={(e) => setUser({ ...user, member_years_of_experience: e.target.value })}
+          type="text"
+          placeholder="Industry"
+          value={user.member_industry}
+          onChange={(e) => setUser({ ...user, member_industry: e.target.value })}
         />
       </div>
       <div className="form-row">
