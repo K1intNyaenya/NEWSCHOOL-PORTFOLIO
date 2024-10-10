@@ -2,8 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginForm from './LoginForm';
-import Dashboard from './dashboard';
+import Dashboard from './Dashboard';
 import AdminDashboard from './AdminDashboard';
+import ApplicationForm from './ApplicationForm';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,6 +14,7 @@ root.render(
         <Route path="/" element={<LoginForm />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/ApplicationForm" element={<ApplicationForm />} />
       </Routes>
     </Router>
   </React.StrictMode>

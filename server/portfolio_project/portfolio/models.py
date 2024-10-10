@@ -45,3 +45,41 @@ class EmploymentHistory(models.Model):
     
     def __str__(self):
         return f"{self.member.first_name} {self.member.family_name} - {self.job_title} at {self.employer}"
+    
+class ApplicationForm(models.Model):
+    # Applicant's Information
+    first_name = models.CharField(max_length=45)
+    second_name = models.CharField(max_length=45)
+    family_name = models.CharField(max_length=45)
+    mobile_number = models.CharField(
+        max_length=15,
+        validators=[RegexValidator(
+            regex=r'^\+?1?\d{9,15}$',
+            message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
+        )]
+    )
+    member_title = models.CharField(max_length=75)
+    member_industry = models.CharField(max_length=75, blank=True, null=True)
+    employment_industry = models.CharField(max_length=75)
+    
+    # Application Details
+    date_of_application = models.DateField(auto_now_add=True)
+    reason_for_joining = models.TextField(blank=True, null=True)
+    referred_by_name = models.CharField(max_length=75, blank=True, null=True)
+    referred_by_mobile = models.CharField(
+        max_length=15,
+        blank=True,
+        null=True,
+        validators=[RegexValidator(
+            regex=r'^\+?1?\d{9,15}$',
+            message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
+        )]
+    )
+
+    # Vetting and Approval
+    vetted_by = models.CharField(max_length=100, blank=True, null=True)
+    approved = models.BooleanField(default=False)
+    member_joining_date = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Application by {self.first_name} {self.second_name} {self.family_name}"

@@ -5,12 +5,17 @@ from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import NewSchoolMember
+from .models import NewSchoolMember, ApplicationForm
 from .serializer import NewSchoolMemberSerializer, CustomTokenObtainPairSerializer
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
+from django.http import JsonResponse
+import json
+from django.utils import timezone
+from django.shortcuts import get_object_or_404
+
 
 
 
@@ -106,3 +111,39 @@ def login_view(request):
 def protected_view(request):
     # This view is protected and requires a valid JWT
     return Response({'message': 'This is a protected view!'})
+
+
+@csrf_exempt
+def submit_application_form(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        application = ApplicationForm.objects.create(
+            first_name=data['first_name'],
+            second_name=data['second_name'],
+            family_name=data['family_name'],
+            mobile_number=data['mobile_number'],
+            member_title=data['member_title'],
+            member_industry=data['member_industry'],
+            employment_industry=data['employment_industry'],
+            reason_for_joining=data['reason_for_joining'],
+            referred_by_name=data['referred_by_name'],
+            referred_by_mobile=data['referred_by_mobile']
+        )
+        return JsonResponse({"message": "Application submitted successfully."}, status=201)
+    
+    # Return a 405 Method Not Allowed response if the request method is not POST
+    return JsonResponse({"error": "Method not allowed. Use POST to submit the form."}, status=405)
+    
+
+@csrf_exempt
+def review_application(request, application_id):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        application = get_object_or_404(ApplicationForm, id=application_id)
+        
+        application.vetted_by = data.get('vetted_by', application.vetted_by)
+        application.approved = data.get('approved', False)
+        application.member_joining_date = data.get('member_joining_date', None)
+        application.save()
+        
+        return JsonResponse({"message": "Application reviewed and updated successfully."})
