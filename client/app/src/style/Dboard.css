@@ -1,9 +1,42 @@
 .dashboard {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f4f4f4;
+}
+
+.search-container {
+  position: sticky;
+  width: 50%;
+  max-width: 800px;
+  display: flex;
+  justify-content: left;
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 400px; /* Set a maximum width for the search bar */
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s;
+}
+
+.search-bar:focus {
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.portfolio-cards-container {
+  display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 20px;
-  background-color: #f4f4f4; /* Light grey background */
+  gap: 15px;
+  width: 100%;
 }
 
 .portfolio-card {
@@ -11,45 +44,43 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin: 15px;
   padding: 15px;
-  width: 300px; /* Fixed width */
-  transition: transform 0.2s; /* Animation effect */
+  width: 300px;
+  transition: transform 0.2s;
 }
 
 .portfolio-card:hover {
-  transform: scale(1.02); /* Slightly enlarge on hover */
+  transform: scale(1.02);
 }
 
 .user-image {
-  border-radius: 50%; /* Circular image */
-  width: 100px; /* Fixed width */
-  height: 100px; /* Fixed height */
-  object-fit: cover; /* Crop image nicely */
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
 }
 
 h2 {
-  font-size: 1.5em; /* Adjust heading size */
+  font-size: 1.5em;
   margin: 10px 0;
 }
 
 h4 {
-  margin-top: 15px; /* Margin for the subtitle */
+  margin-top: 15px;
 }
 
 ul {
-  padding-left: 20px; /* Indentation for list */
+  padding-left: 20px;
 }
 
 li {
-  margin: 5px 0; /* Space between list items */
+  margin: 5px 0;
 }
 
 .employment-history {
   margin-top: 10px;
   padding: 10px;
-  border: 1px solid #ccc; /* Add border */
-  border-radius: 5px; /* Rounded corners */
-  background-color: #f9f9f9; /* Light background */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
 }
-

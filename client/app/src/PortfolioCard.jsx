@@ -83,6 +83,7 @@ const PortfolioCard = ({ user, onUpdate }) => {
           <div className="info">
             <p><strong>Mobile:</strong> {user.member_mobile}</p>
             <p><strong>Email:</strong> {user.member_email}</p>
+            <p><strong>Industry:</strong> {user.member_industry}</p>
           </div>
           <h4>Employment History:</h4>
           {user.employment_history && user.employment_history.length > 0 ? (
