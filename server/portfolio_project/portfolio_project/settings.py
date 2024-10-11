@@ -122,17 +122,21 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'C:\\Users\\Klint\\OneDrive\\Documents\\Nyaenya-WorkSpace\\NEWSCHOOL-PORTFOLIO\\server\\serverlog.log',
         },
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
-            'level': 'DEBUG' if DEBUG else 'ERROR',
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
         },
     },
 }
+
 
 CORS_ALLOW_ALL_ORIGINS = True
 

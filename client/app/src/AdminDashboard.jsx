@@ -1,35 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import './style/AdminDashboard.css';
-import PortfolioCard from './PortfolioCard';  // Use the updated PortfolioCard component
+import PortfolioCard from './PortfolioCard';
 import PersonalDetails from './PersonalDetails';
 import EmploymentHistory from './EmploymentHistory';
 import UserCredentials from './UserCredentials';
-import ApplicationForm from './ApplicationForm'; // Import ApplicationForm component
+import ApplicationForm from './ApplicationForm';
+
+const initialNewUser = {
+  first_name: '',
+  second_name: '',
+  family_name: '',
+  member_title: '',
+  employment_history: [{ employer: '', job_title: '' }],
+  member_mobile: '',
+  member_email: '',
+  username: '',
+  password: '',
+};
 
 function AdminDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [newUser, setNewUser] = useState({
-    first_name: '',
-    second_name: '',
-    family_name: '',
-    member_title: '',
-    employment_history: [
-      { employer: '', job_title: '' }, // Placeholder for two jobs
-    ],
-    member_mobile: '',
-    member_email: '',
-    username: '',
-    password: '',
-  });
+  const [newUser, setNewUser] = useState(initialNewUser);
   const [errors, setErrors] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isApplicationFormOpen, setIsApplicationFormOpen] = useState(false); // State for Application Form modal
+  const [isApplicationFormOpen, setIsApplicationFormOpen] = useState(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [email, setEmail] = useState('');
   const [activeTab, setActiveTab] = useState('personalDetails');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [portfolios, setPortfolios] = useState([]);
+  const [isPendingModalOpen, setIsPendingModalOpen] = useState(false);
+  const [pendingApplications, setPendingApplications] = useState([]);
 
   useEffect(() => {
     fetchPortfolios();
@@ -49,6 +53,24 @@ function AdminDashboard() {
       setError('Failed to fetch portfolios. Please try again later.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const togglePendingApplicationsModal = async () => {
+    setIsPendingModalOpen(!isPendingModalOpen);
+
+    if (!isPendingModalOpen) {
+      try {
+        const response = await fetch("http://127.0.0.1:8080/portfolio/pending-applications/");
+        if (response.ok) {
+          const data = await response.json();
+          setPendingApplications(data);
+        } else {
+          console.error("Failed to fetch pending applications");
+        }
+      } catch (error) {
+        console.error("Error fetching pending applications:", error);
+      }
     }
   };
 
@@ -100,28 +122,18 @@ function AdminDashboard() {
         },
         body: JSON.stringify(payload),
       });
-    
+
       if (!response.ok) {
         const errorResponse = await response.text();
         console.error('Error Response:', errorResponse);
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
-    
+
       const newMember = await response.json();
       setPortfolios(prevPortfolios => [...prevPortfolios, newMember]);
-    
-      setNewUser({
-        first_name: '',
-        second_name: '',
-        family_name: '',
-        member_title: '',
-        employment_history: [{ employer: '', job_title: '' }],
-        member_mobile: '',
-        member_email: '',
-        username: '',
-        password: '',
-      });
-    
+
+      setNewUser(initialNewUser);
+
       setIsModalOpen(false);
       setSuccessMessage("New member added successfully!");
     } catch (error) {
@@ -164,7 +176,38 @@ function AdminDashboard() {
   };
 
   const toggleApplicationFormModal = () => {
-    setIsApplicationFormOpen(!isApplicationFormOpen); // Toggle Application Form modal
+    setIsApplicationFormOpen(!isApplicationFormOpen);
+  };
+
+  const toggleEmailModal = () => {
+    setIsEmailModalOpen(!isEmailModalOpen);
+    setEmail('');
+  };
+
+  const handleSendApplicationForm = () => {
+    toggleApplicationFormModal();
+    toggleEmailModal();
+  };
+
+  const handleSendEmail = async () => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8080/portfolio/send-application/${email}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email })
+      });
+
+      if (response.ok) {
+        alert(`Application form sent to ${email}`);
+        toggleEmailModal();
+      } else {
+        alert('Failed to send application form.');
+      }
+    } catch (error) {
+      console.error("Error sending application form:", error);
+    }
   };
 
   return (
@@ -181,6 +224,7 @@ function AdminDashboard() {
         />
         <button className="register-member-button" onClick={toggleModal}>Add New Member</button>
         <button className="open-application-form-button" onClick={toggleApplicationFormModal}>Open Application Form</button>
+        <button className="view-pending-applications-button" onClick={togglePendingApplicationsModal}>View Pending Applications</button>
       </div>
       
       <div className="portfolio-cards">
@@ -201,7 +245,29 @@ function AdminDashboard() {
             ))
         )}
       </div>
-      
+
+      {isPendingModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Pending Applications</h2>
+            {pendingApplications.length > 0 ? (
+              <ul className="pending-list">
+                {pendingApplications.map((application) => (
+                  <li key={application.id}>
+                    <strong>{application.first_name} {application.second_name} {application.family_name}</strong><br />
+                    Email: {application.email}<br />
+                    Date of Application: {application.date_of_application}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No pending applications found.</p>
+            )}
+            <button className="close-button" onClick={togglePendingApplicationsModal}>Close</button>
+          </div>
+        </div>
+      )}
+
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content">
@@ -237,7 +303,26 @@ function AdminDashboard() {
           <div className="modal-content">
             <h2>Application Form</h2>
             <ApplicationForm />
-            <button type="button" onClick={toggleApplicationFormModal}>Close</button>
+            <div className="button-container">
+              <button type="button" className="close-button" onClick={toggleApplicationFormModal}>Close</button>
+              <button type="button" className="send-button" onClick={handleSendApplicationForm}>Send Form</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isEmailModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Send Application Form</h2>
+            <label>
+              Email:
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            </label>
+            <div className="button-container">
+              <button type="button" className="cancel-button" onClick={toggleEmailModal}>Cancel</button>
+              <button type="button" className="send-button" onClick={handleSendEmail}>Send</button>
+            </div>
           </div>
         </div>
       )}

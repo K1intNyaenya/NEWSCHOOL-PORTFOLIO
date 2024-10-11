@@ -17,6 +17,7 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
 from django.conf import settings
+import logging
 
 
 
@@ -150,18 +151,45 @@ def review_application(request, application_id):
         
         return JsonResponse({"message": "Application reviewed and updated successfully."})
     
-def get_pending_applications(request):
-    pending_applications = ApplicationForm.objects.filter(approved=False)
-    applications_data = [{
-        'id': app.id,
-        'first_name': app.first_name,
-        'second_name': app.second_name,
-        'family_name': app.family_name,
-        'email': app.email,
-        'date_of_application': app.date_of_application,
-    } for app in pending_applications]
+logger = logging.getLogger(__name__)
 
-    return JsonResponse(applications_data, safe=False)
+@api_view(['GET'])  # Ensures this view only handles GET requests
+def get_pending_applications(request):
+    try:
+        # Query for pending applications
+        pending_applications = ApplicationForm.objects.filter(approved=False)
+        
+        # Prepare the data to be serialized
+        applications_data = [{
+            'id': app.id,
+            'first_name': app.first_name,
+            'second_name': app.second_name,
+            'family_name': app.family_name,
+            'date_of_application': app.date_of_application,
+            'mobile_number': app.mobile_number,
+            'member_title': app.member_title,
+            'member_industry': app.member_industry,
+            'employment_industry': app.employment_industry,
+            'reason_for_joining': app.reason_for_joining,
+            'referred_by_name': app.referred_by_name,
+            'referred_by_mobile': app.referred_by_mobile,
+            'vetted_by': app.vetted_by,
+            'approved': app.approved,
+            
+        } for app in pending_applications]
+
+        # Return the data as JSON
+        return JsonResponse(applications_data, safe=False)
+    
+    except ApplicationForm.DoesNotExist:
+        # Log a specific error if there are no pending applications
+        logger.error("No pending applications found.")
+        return JsonResponse({"error": "No pending applications found."}, status=404)
+    
+    except Exception as e:
+        # Log the exception and return an error response
+        logger.error(f"Error retrieving pending applications: {e}")
+        return JsonResponse({"error": "An error occurred while fetching pending applications."}, status=500)
 
 
 def send_application_form_email(request, applicant_email):

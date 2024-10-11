@@ -1,226 +1,55 @@
-/* General styling for the admin dashboard */
+/* Main container for the admin dashboard */
 .admin-dashboard {
   padding: 20px;
   font-family: Arial, sans-serif;
-  background-color: #1a1a1a; /* Dark background */
-  min-height: 100vh;
+  background-color: #1a1a1a;
   color: #d1d1d1;
+  min-height: 100vh;
 }
 
 /* Header styling */
 .admin-dashboard h1 {
   font-size: 2em;
-  color: #b8860b; /* Dark gold */
+  color: #b8860b;
   text-align: center;
   margin-bottom: 20px;
 }
 
-/* Controls container for the search bar and add button */
+/* Controls container for search and buttons */
 .controls-container {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  padding: 10px;
+  gap: 10px;
 }
 
 /* Search input styling */
 .search-input {
-  width: 60%;
+  flex: 1;
   padding: 12px;
   font-size: 16px;
-  color: #d1d1d1;
-  background-color: #333333;
-  border: 1px solid #666;
-  border-radius: 8px;
-  transition: border-color 0.3s ease;
-}
-
-.search-input:focus {
-  border-color: #b8860b; /* Dark gold */
-  outline: none;
-}
-
-/* Button styling */
-.register-member-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  color: black;
-  background-color: #b8860b; /* Dark gold */
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.register-member-button:hover {
-  background-color: #8b6508; /* Darker shade of dark gold */
-  transform: translateY(-2px);
-}
-
-/* Portfolio cards container */
-.portfolio-cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: space-around;
-  padding: 10px;
-}
-
-/* Modal overlay for adding a new member */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background-color: #2c2c2c; /* Dark background */
-  padding: 25px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 600px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-}
-
-.modal h2 {
-  color: #b8860b; /* Dark gold */
-  margin-bottom: 15px;
-}
-
-/* Tabs for switching between sections */
-.tabs {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 15px;
-}
-
-.tabs button {
-  padding: 10px;
-  font-size: 16px;
-  border: none;
-  background: none;
-  color: #999;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-.tabs button:hover,
-.tabs button.active {
-  color: #b8860b; /* Dark gold */
-  font-weight: bold;
-  border-bottom: 2px solid #b8860b;
-}
-
-/* Form row styling inside the modal */
-.form-row {
-  margin-bottom: 15px;
-}
-
-.form-row label {
-  display: block;
-  font-weight: bold;
-  color: #d1d1d1;
-  margin-bottom: 5px;
-}
-
-.form-row input {
-  width: 100%;
-  padding: 10px;
   background-color: #333;
   color: #d1d1d1;
   border: 1px solid #666;
-  border-radius: 6px;
-  font-size: 16px;
+  border-radius: 8px;
   transition: border-color 0.3s ease;
+  max-width: 400px;
 }
 
-.form-row input:focus {
-  border-color: #b8860b; /* Dark gold */
-  outline: none;
+.search-input:focus {
+  border-color: #b8860b;
 }
 
-/* Buttons for save and close actions in the modal */
-.modal button {
-  padding: 10px 20px;
-  margin-top: 10px;
-  font-size: 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.modal button:disabled {
-  background-color: #666;
-  color: #999;
-  cursor: not-allowed;
-}
-
-.modal button:not(:disabled):hover {
-  transform: translateY(-2px);
-}
-
-button.save-button {
-  background-color: #b8860b; /* Dark gold */
-  color: black;
-  margin-right: 10px;
-}
-
-button.save-button:hover {
-  background-color: #8b6508; /* Darker shade of dark gold */
-}
-
-button.close-button {
-  background-color: #d9534f;
-  color: white;
-}
-
-button.close-button:hover {
-  background-color: #c9302c;
-}
-
-/* Success and error messages */
-.success {
-  color: #28a745;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-.error {
-  color: #d9534f;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .controls-container {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .search-input {
-    width: 100%;
-  }
-
-  .portfolio-cards {
-    justify-content: center;
-  }
-}
-
+/* Button styling */
+.register-member-button,
+.view-pending-applications-button,
 .open-application-form-button {
   padding: 10px 20px;
   font-size: 16px;
-  color: black;
-  background-color: #b8860b; /* Dark gold */
+  color: #fff;
+  background-color: #b8860b;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -228,8 +57,146 @@ button.close-button:hover {
   margin-left: 10px;
 }
 
+.register-member-button:hover,
+.view-pending-applications-button:hover,
 .open-application-form-button:hover {
   background-color: #8b6508;
   transform: translateY(-2px);
 }
 
+/* Portfolio cards */
+.portfolio-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* Modal overlay */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+/* Modal content */
+.modal-content {
+  background-color: #2c2c2c;
+  padding: 25px;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+/* Modal heading */
+.modal-content h2 {
+  color: #b8860b;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Button container for modal actions */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Specific button styles */
+.close-button, .cancel-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #d9534f;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.close-button:hover, .cancel-button:hover {
+  background-color: #c9302c;
+}
+
+.send-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #5cb85c;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.send-button:hover {
+  background-color: #4cae4c;
+}
+
+/* Form input styles in modal */
+.modal-content input[type="text"],
+.modal-content input[type="email"],
+.modal-content textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #666;
+  border-radius: 5px;
+  background-color: #333;
+  color: #d1d1d1;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.modal-content input[type="text"]:focus,
+.modal-content input[type="email"]:focus,
+.modal-content textarea:focus {
+  border-color: #b8860b;
+  outline: none;
+}
+
+/* Pending list styling */
+.pending-list {
+  list-style: none;
+  padding: 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.pending-list li {
+  padding: 10px;
+  border-bottom: 1px solid #444;
+  color: #d1d1d1;
+}
+
+.pending-list li:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 768px) {
+  .controls-container {
+    flex-direction: column;
+  }
+
+  .button-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .search-input {
+    max-width: 100%;
+  }
+}
