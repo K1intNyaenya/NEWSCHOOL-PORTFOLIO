@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './style/ApplicationForm.css'; // Assuming you create a CSS file for styles
 
 function ApplicationForm() {
   const [formData, setFormData] = useState({
@@ -22,7 +23,7 @@ function ApplicationForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://127.0.0.1:8080/submit-application-form', {
+      const response = await fetch('http://127.0.0.1:8080/portfolio/submit-application-form/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -40,18 +41,54 @@ function ApplicationForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="application-form" onSubmit={handleSubmit}>
       <h2>Application Form</h2>
-      <input type="text" name="first_name" placeholder="First Name" value={formData.first_name} onChange={handleChange} required />
-      <input type="text" name="second_name" placeholder="Second Name" value={formData.second_name} onChange={handleChange} required />
-      <input type="text" name="family_name" placeholder="Family Name" value={formData.family_name} onChange={handleChange} required />
-      <input type="text" name="mobile_number" placeholder="Mobile Number" value={formData.mobile_number} onChange={handleChange} required />
-      <input type="text" name="member_title" placeholder="Member Title" value={formData.member_title} onChange={handleChange} required />
-      <input type="text" name="member_industry" placeholder="Member Industry" value={formData.member_industry} onChange={handleChange} />
-      <input type="text" name="employment_industry" placeholder="Employment Industry" value={formData.employment_industry} onChange={handleChange} required />
-      <textarea name="reason_for_joining" placeholder="Reason for Joining" value={formData.reason_for_joining} onChange={handleChange} />
-      <input type="text" name="referred_by_name" placeholder="Referred By (Name)" value={formData.referred_by_name} onChange={handleChange} />
-      <input type="text" name="referred_by_mobile" placeholder="Referred By (Mobile No)" value={formData.referred_by_mobile} onChange={handleChange} />
+      
+      <fieldset>
+        <legend>Personal Information</legend>
+        <div className="form-grid">
+          <label htmlFor="first_name">First Name</label>
+          <input type="text" id="first_name" name="first_name" placeholder="First Name" value={formData.first_name} onChange={handleChange} required />
+
+          <label htmlFor="second_name">Second Name</label>
+          <input type="text" id="second_name" name="second_name" placeholder="Second Name" value={formData.second_name} onChange={handleChange} required />
+
+          <label htmlFor="family_name">Family Name</label>
+          <input type="text" id="family_name" name="family_name" placeholder="Family Name" value={formData.family_name} onChange={handleChange} required />
+
+          <label htmlFor="mobile_number">Mobile Number</label>
+          <input type="text" id="mobile_number" name="mobile_number" placeholder="Mobile Number" value={formData.mobile_number} onChange={handleChange} required />
+
+          <label htmlFor="member_title">Member Title</label>
+          <input type="text" id="member_title" name="member_title" placeholder="Member Title" value={formData.member_title} onChange={handleChange} required />
+
+          <label htmlFor="member_industry">Member Industry</label>
+          <input type="text" id="member_industry" name="member_industry" placeholder="Member Industry" value={formData.member_industry} onChange={handleChange} />
+
+          <label htmlFor="employment_industry">Employment Industry</label>
+          <input type="text" id="employment_industry" name="employment_industry" placeholder="Employment Industry" value={formData.employment_industry} onChange={handleChange} required />
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Referral Information</legend>
+        <div className="form-grid">
+          <label htmlFor="referred_by_name">Referred By (Name)</label>
+          <input type="text" id="referred_by_name" name="referred_by_name" placeholder="Referred By (Name)" value={formData.referred_by_name} onChange={handleChange} />
+
+          <label htmlFor="referred_by_mobile">Referred By (Mobile No)</label>
+          <input type="text" id="referred_by_mobile" name="referred_by_mobile" placeholder="Referred By (Mobile No)" value={formData.referred_by_mobile} onChange={handleChange} />
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Additional Information</legend>
+        <div className="form-grid">
+          <label htmlFor="reason_for_joining">Reason for Joining</label>
+          <textarea id="reason_for_joining" name="reason_for_joining" placeholder="Reason for Joining" value={formData.reason_for_joining} onChange={handleChange}></textarea>
+        </div>
+      </fieldset>
+
       <button type="submit">Submit Application</button>
     </form>
   );
