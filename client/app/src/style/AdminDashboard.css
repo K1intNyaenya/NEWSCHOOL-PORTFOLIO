@@ -116,7 +116,8 @@
 }
 
 /* Specific button styles */
-.close-button, .cancel-button {
+.close-button, 
+.cancel-button {
   padding: 10px 20px;
   font-size: 16px;
   color: #fff;

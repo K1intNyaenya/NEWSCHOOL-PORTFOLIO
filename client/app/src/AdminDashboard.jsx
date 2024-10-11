@@ -132,6 +132,7 @@ function AdminDashboard() {
       const newMember = await response.json();
       setPortfolios(prevPortfolios => [...prevPortfolios, newMember]);
 
+
       setNewUser(initialNewUser);
 
       setIsModalOpen(false);
