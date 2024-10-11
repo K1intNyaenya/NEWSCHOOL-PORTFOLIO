@@ -2,7 +2,10 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from .views import CustomTokenObtainPairView, get_newschoolmember, add_newschoolmember, member_detail, login_view,submit_application_form, review_application
+from .views import (CustomTokenObtainPairView, 
+                    get_newschoolmember, add_newschoolmember, 
+                    member_detail, login_view,submit_application_form, 
+                    review_application, get_pending_applications, send_application_form_email)
 from django.urls import path
 
 urlpatterns = [
@@ -14,4 +17,6 @@ urlpatterns = [
     path('api/login/', login_view, name='login'),
     path('submit-application-form/', submit_application_form, name='submit_application_form'),
     path('review-application/<int:application_id>/', review_application, name='review_application'),
+    path('pending-applications/', get_pending_applications, name='pending_applications'),
+    path('send-application-email/<str:applicant_email>/', send_application_form_email, name='send_application_email'),
 ]

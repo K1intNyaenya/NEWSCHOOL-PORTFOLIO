@@ -4,6 +4,7 @@ import PortfolioCard from './PortfolioCard';  // Use the updated PortfolioCard c
 import PersonalDetails from './PersonalDetails';
 import EmploymentHistory from './EmploymentHistory';
 import UserCredentials from './UserCredentials';
+import ApplicationForm from './ApplicationForm'; // Import ApplicationForm component
 
 function AdminDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -13,8 +14,7 @@ function AdminDashboard() {
     family_name: '',
     member_title: '',
     employment_history: [
-      { employer: '', job_title: '' }, // Corrected field name
-      { employer: '', job_title: '' }  // Placeholder for two jobs
+      { employer: '', job_title: '' }, // Placeholder for two jobs
     ],
     member_mobile: '',
     member_email: '',
@@ -23,6 +23,7 @@ function AdminDashboard() {
   });
   const [errors, setErrors] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isApplicationFormOpen, setIsApplicationFormOpen] = useState(false); // State for Application Form modal
   const [activeTab, setActiveTab] = useState('personalDetails');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -41,7 +42,6 @@ function AdminDashboard() {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
       const data = await response.json();
-      console.log('Fetched portfolios:', data);
       const uniquePortfolios = Array.from(new Map(data.map(item => [item.id, item])).values());
       setPortfolios(uniquePortfolios);
     } catch (error) {
@@ -74,7 +74,7 @@ function AdminDashboard() {
     setSuccessMessage('');
 
     const updatedEmploymentHistory = newUser.employment_history.filter(
-      (job) => job.employer && job.job_title // Correct field name
+      (job) => job.employer && job.job_title
     );
 
     const payload = {
@@ -97,7 +97,6 @@ function AdminDashboard() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json",
         },
         body: JSON.stringify(payload),
       });
@@ -116,7 +115,7 @@ function AdminDashboard() {
         second_name: '',
         family_name: '',
         member_title: '',
-        employment_history: [{ employer: '', job_title: '' }], // Reset employment history
+        employment_history: [{ employer: '', job_title: '' }],
         member_mobile: '',
         member_email: '',
         username: '',
@@ -164,6 +163,10 @@ function AdminDashboard() {
     setSuccessMessage('');
   };
 
+  const toggleApplicationFormModal = () => {
+    setIsApplicationFormOpen(!isApplicationFormOpen); // Toggle Application Form modal
+  };
+
   return (
     <div className="admin-dashboard">
       <h1>Admin Dashboard</h1>
@@ -177,6 +180,7 @@ function AdminDashboard() {
           className="search-input"
         />
         <button className="register-member-button" onClick={toggleModal}>Add New Member</button>
+        <button className="open-application-form-button" onClick={toggleApplicationFormModal}>Open Application Form</button>
       </div>
       
       <div className="portfolio-cards">
@@ -185,15 +189,14 @@ function AdminDashboard() {
         ) : (
           portfolios
             .filter(portfolio => {
-              const fullName = `${portfolio.first_name} ${portfolio.second_name} ${portfolio.family_name} 
-              ${portfolio.member_industry}`.toLowerCase();
+              const fullName = `${portfolio.first_name} ${portfolio.second_name} ${portfolio.family_name} ${portfolio.member_industry}`.toLowerCase();
               return fullName.includes(searchTerm.toLowerCase());
             })
             .map(portfolio => (
               <PortfolioCard
                 key={portfolio.id}
                 user={portfolio}
-                onUpdate={handleUpdateUser} // Pass the update handler to each card
+                onUpdate={handleUpdateUser}
               />
             ))
         )}
@@ -225,6 +228,16 @@ function AdminDashboard() {
               </button>
               <button type="button" onClick={toggleModal}>Close</button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {isApplicationFormOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Application Form</h2>
+            <ApplicationForm />
+            <button type="button" onClick={toggleApplicationFormModal}>Close</button>
           </div>
         </div>
       )}

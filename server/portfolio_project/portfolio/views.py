@@ -15,6 +15,8 @@ from django.http import JsonResponse
 import json
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 
@@ -147,3 +149,32 @@ def review_application(request, application_id):
         application.save()
         
         return JsonResponse({"message": "Application reviewed and updated successfully."})
+    
+def get_pending_applications(request):
+    pending_applications = ApplicationForm.objects.filter(approved=False)
+    applications_data = [{
+        'id': app.id,
+        'first_name': app.first_name,
+        'second_name': app.second_name,
+        'family_name': app.family_name,
+        'email': app.email,
+        'date_of_application': app.date_of_application,
+    } for app in pending_applications]
+
+    return JsonResponse(applications_data, safe=False)
+
+
+def send_application_form_email(request, applicant_email):
+    subject = 'Complete Your Application Form'
+    application_link = 'http://yourdomain.com/application-form/'  # Replace with actual URL
+    message = f'Please complete your application form at the following link: {application_link}'
+    
+    send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        [applicant_email],
+        fail_silently=False,
+    )
+
+    return JsonResponse({"message": f"Application form sent to {applicant_email} successfully."})
