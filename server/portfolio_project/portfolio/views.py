@@ -39,19 +39,22 @@ def get_newschoolmember(request):
 
 @api_view(['POST'])
 def add_newschoolmember(request):
-    # Logging incoming request data for debugging
     print("Received request data:", request.data)
-    
-    serializer = NewSchoolMemberSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        # Logging successful data processing
-        print("Processed data for serializer:", serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    else:
-        # Logging validation errors
-        print("Validation errors:", serializer.errors)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        serializer = NewSchoolMemberSerializer(data=request.data)
+        if serializer.is_valid():
+            print("Serializer data is valid.")
+            member = serializer.save()
+            print("Member saved successfully.")
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            print("Validation errors:", serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(f"Unexpected error in view: {e}")
+        return Response({"detail": f"An error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 
 
 @api_view(['GET', 'PUT', 'DELETE'])

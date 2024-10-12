@@ -39,9 +39,11 @@ class NewSchoolMember(models.Model):
 
 
 class EmploymentHistory(models.Model):
-    member = models.ForeignKey(NewSchoolMember, on_delete=models.CASCADE, related_name="employment_history")
-    employer = models.CharField(max_length=75, blank=True, null=True)
-    job_title = models.CharField(max_length=75, blank=True, null=True)
+    member = models.ForeignKey(NewSchoolMember, related_name='employment_history', on_delete=models.CASCADE)
+    employer = models.CharField(max_length=100)
+    job_title = models.CharField(max_length=100)
+
+
     
     def __str__(self):
         return f"{self.member.first_name} {self.member.family_name} - {self.job_title} at {self.employer}"

@@ -10,7 +10,7 @@ const EmploymentHistory = ({ user, setUser }) => {
   const handleAddJob = () => {
     setUser({
       ...user,
-      employment_history: [...user.employment_history, { employer: '', jobtitle: '' }]
+      employment_history: [...user.employment_history, { employer: '', job_title: '' }]
     });
   };
 
@@ -28,7 +28,7 @@ const EmploymentHistory = ({ user, setUser }) => {
             <label>Employer *</label>
             <input
               type="text"
-              value={job.employer}
+              value={job.employer || ''}
               onChange={(e) => handleJobChange(index, 'employer', e.target.value)}
             />
           </div>
@@ -36,8 +36,8 @@ const EmploymentHistory = ({ user, setUser }) => {
             <label>Position *</label>
             <input
               type="text"
-              value={job.jobtitle}
-              onChange={(e) => handleJobChange(index, 'jobtitle', e.target.value)}
+              value={job.job_title || ''}
+              onChange={(e) => handleJobChange(index, 'job_title', e.target.value)}
             />
           </div>
           {user.employment_history.length > 1 && (

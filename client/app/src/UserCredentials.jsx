@@ -9,16 +9,18 @@ const UserCredentials = ({ user, setUser }) => {
         <label>Username *</label>
         <input
           type="text"
-          value={user.username}
+          value={user.username || ''}
           onChange={(e) => setUser({ ...user, username: e.target.value })}
+          autoComplete="current-username"
         />
       </div>
       <div className="form-row">
         <label>Password *</label>
         <input
           type="password"
-          value={user.password}
+          value={user.password || ''}
           onChange={(e) => setUser({ ...user, password: e.target.value })}
+          autoComplete="current-password"
         />
       </div>
     </fieldset>

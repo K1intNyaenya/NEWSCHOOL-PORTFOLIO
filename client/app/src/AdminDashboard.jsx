@@ -76,65 +76,96 @@ function AdminDashboard() {
 
   const validateForm = () => {
     const formErrors = {};
-    if (!newUser.first_name) formErrors.first_name = 'First Name is required';
-    if (!newUser.member_title) formErrors.member_title = 'Profession is required';
+  
+    if (!newUser.first_name) {
+      formErrors.first_name = 'First Name is required';
+      console.log("Validation failed: First Name is missing");
+    }
+    
+    if (!newUser.member_title) {
+      formErrors.member_title = 'Profession is required';
+      console.log("Validation failed: Profession is missing");
+    }
+    
     if (newUser.member_email && !/\S+@\S+\.\S+/.test(newUser.member_email)) {
       formErrors.member_email = 'Email is invalid';
+      console.log("Validation failed: Email is invalid");
     }
+    
     if (newUser.member_mobile && !/^\+?[1-9]\d{1,14}$/.test(newUser.member_mobile)) {
       formErrors.member_mobile = 'Mobile number is invalid';
+      console.log("Validation failed: Mobile number is invalid");
     }
+  
     setErrors(formErrors);
-    return Object.keys(formErrors).length === 0;
+    const isValid = Object.keys(formErrors).length === 0;
+  
+    if (isValid) {
+      console.log("Form validation passed");
+    }
+  
+    return isValid;
   };
+  
 
   const handleAddUser = async () => {
-    if (!validateForm()) return;
+    console.log("Add Member button clicked");
 
+    console.log("Current newUser state:", newUser);
+  
+    if (!validateForm()) {
+      console.log("Form validation failed");
+      return;
+    }
+  
     setIsSubmitting(true);
     setError('');
     setSuccessMessage('');
-
+  
     const updatedEmploymentHistory = newUser.employment_history.filter(
       (job) => job.employer && job.job_title
     );
-
+  
     const payload = {
       ...newUser,
       employment_history: updatedEmploymentHistory,
     };
-
+  
+    console.log("Payload being sent to API:", payload);
+  
     const isDuplicateEmail = portfolios.some(
       (member) => member.member_email === payload.member_email
     );
-
+  
     if (isDuplicateEmail) {
       setError('Email already exists. Please use a different email address.');
+      console.log("Duplicate email found");
       setIsSubmitting(false);
       return;
     }
-
+  
     try {
-      const response = await fetch("http://127.0.0.1:8080/portfolio/NewSchoolMember/add", {
+      const response = await fetch("http://127.0.0.1:8080/portfolio/NewSchoolMember/add/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
       });
-
+  
       if (!response.ok) {
         const errorResponse = await response.text();
-        console.error('Error Response:', errorResponse);
+        console.error('Error Response from server:', errorResponse);
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
-
+  
       const newMember = await response.json();
+      console.log("New member added:", newMember);
+  
       setPortfolios(prevPortfolios => [...prevPortfolios, newMember]);
-
-
-      setNewUser(initialNewUser);
-
+  
+      resetForm();
+      
       setIsModalOpen(false);
       setSuccessMessage("New member added successfully!");
     } catch (error) {
@@ -144,7 +175,7 @@ function AdminDashboard() {
       setIsSubmitting(false);
     }
   };
-
+  
   const handleUpdateUser = async (updatedUser) => {
     try {
       const response = await fetch(`http://127.0.0.1:8080/portfolio/NewSchoolMember/${updatedUser.id}`, {
