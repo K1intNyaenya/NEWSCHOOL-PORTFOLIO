@@ -1,203 +1,204 @@
-/* Main container for the admin dashboard */
+/* AdminDashboard.css */
+
 .admin-dashboard {
+  background-color: #1a1a1a; /* Dark background */
+  color: #f5f5f5; /* Light text for contrast */
   padding: 20px;
-  font-family: Arial, sans-serif;
-  background-color: #1a1a1a;
-  color: #d1d1d1;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Header styling */
-.admin-dashboard h1 {
-  font-size: 2em;
-  color: #b8860b;
+h1 {
+  color: #ffd700; /* Gold title color */
+  font-size: 2.2em;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  font-weight: 700;
 }
 
-/* Controls container for search and buttons */
 .controls-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  gap: 10px;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  width: 100%;
+  max-width: 800px;
+  padding: 10px;
 }
 
-/* Search input styling */
 .search-input {
-  flex: 1;
-  padding: 12px;
-  font-size: 16px;
-  background-color: #333;
-  color: #d1d1d1;
-  border: 1px solid #666;
-  border-radius: 8px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ffd700; /* Gold border */
+  background-color: #333; /* Dark input field */
+  color: #f5f5f5;
+  width: 300px;
   transition: border-color 0.3s ease;
-  max-width: 400px;
 }
 
 .search-input:focus {
-  border-color: #b8860b;
+  border-color: #b8860b; /* Darker gold on focus */
+  outline: none;
 }
 
-/* Button styling */
-.register-member-button,
-.view-pending-applications-button,
-.open-application-form-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  color: #fff;
-  background-color: #b8860b;
+button {
+  background-color: #ffd700; /* Gold button color */
+  color: #1a1a1a;
   border: none;
-  border-radius: 8px;
+  padding: 10px 20px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  margin-left: 10px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
-.register-member-button:hover,
-.view-pending-applications-button:hover,
-.open-application-form-button:hover {
-  background-color: #8b6508;
-  transform: translateY(-2px);
+button:hover {
+  background-color: #b8860b; /* Darker gold on hover */
 }
 
-/* Portfolio cards */
+.register-member-button, 
+.open-application-form-button, 
+.view-pending-applications-button {
+  margin: 5px 0;
+}
+
 .portfolio-cards {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
+  width: 100%;
 }
 
-/* Modal overlay */
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   padding: 20px;
-  overflow-y: auto;
-  z-index: 1000;
-}
-
-/* Modal content */
-.modal-content {
-  background-color: #2c2c2c;
-  padding: 25px;
-  width: 100%;
-  max-width: 600px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  overflow-y: auto;
-  max-height: 90vh;
-}
-
-/* Modal heading */
-.modal-content h2 {
-  color: #b8860b;
-  margin-bottom: 15px;
-  text-align: center;
-}
-
-/* Button container for modal actions */
-.button-container {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-/* Specific button styles */
-.close-button, 
-.cancel-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  color: #fff;
-  background-color: #d9534f;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.close-button:hover, .cancel-button:hover {
-  background-color: #c9302c;
-}
-
-.send-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  color: #fff;
-  background-color: #5cb85c;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.send-button:hover {
-  background-color: #4cae4c;
-}
-
-/* Form input styles in modal */
-.modal-content input[type="text"],
-.modal-content input[type="email"],
-.modal-content textarea {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #666;
-  border-radius: 5px;
-  background-color: #333;
-  color: #d1d1d1;
-  font-size: 16px;
   box-sizing: border-box;
 }
 
-.modal-content input[type="text"]:focus,
-.modal-content input[type="email"]:focus,
-.modal-content textarea:focus {
-  border-color: #b8860b;
-  outline: none;
+.modal-content {
+  background-color: #1a1a1a;
+  color: #f5f5f5;
+  padding: 25px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 0 15px #ffd700;
+  transition: all 0.3s ease;
 }
 
-/* Pending list styling */
+.modal-content h2 {
+  color: #ffd700; /* Gold color for modal headers */
+  text-align: left; /* Align headers to the left */
+  font-weight: bold;
+  font-size: 1.8em;
+  margin-bottom: 20px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  background: none;
+  border: none;
+  color: #ffd700;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 10px;
+  transition: color 0.3s ease;
+}
+
+.tabs button.active {
+  color: #b8860b; /* Darker gold for active tab */
+}
+
+.error {
+  color: #ff4d4d;
+}
+
+.success {
+  color: #4dff4d;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
 .pending-list {
   list-style: none;
   padding: 0;
-  max-height: 300px;
-  overflow-y: auto;
 }
 
 .pending-list li {
+  background-color: #333;
   padding: 10px;
-  border-bottom: 1px solid #444;
-  color: #d1d1d1;
+  border-radius: 5px;
+  margin: 5px 0;
+  color: #f5f5f5;
 }
 
-.pending-list li:last-child {
-  border-bottom: none;
+.pending-list li strong {
+  color: #ffd700;
 }
 
+.view-button, .close-button {
+  background-color: #FF6347; /* Red close button */
+  color: #1a1a1a;
+  margin-top: 10px;
+}
+
+.view-button:hover, .close-button:hover {
+  background-color: #B22222; /* Darker red on hover */
+}
+
+/* Save Button - Green */
+.save-button {
+  background-color: #50c878; /* Green save button */
+  color: #1a1a1a;
+}
+
+.save-button:hover {
+  background-color: #4CAF50; /* Darker green on hover */
+}
+
+/* Responsive Adjustments */
 @media (max-width: 768px) {
   .controls-container {
     flex-direction: column;
+    align-items: center;
   }
-
-  .button-container {
-    flex-direction: column;
-    gap: 15px;
-  }
-
+  
   .search-input {
-    max-width: 100%;
+    width: 100%;
+  }
+  
+  button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.8em;
+  }
+
+  .modal-content {
+    padding: 15px;
   }
 }

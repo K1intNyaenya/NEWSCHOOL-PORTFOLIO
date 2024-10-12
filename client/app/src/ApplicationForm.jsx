@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './style/ApplicationForm.css'; // Assuming you create a CSS file for styles
+import './style/ApplicationForm.css';
 
 function ApplicationForm() {
   const [formData, setFormData] = useState({
@@ -41,8 +41,7 @@ function ApplicationForm() {
   };
 
   return (
-    <form className="application-form" onSubmit={handleSubmit}>
-      <h2>Application Form</h2>
+    <form className="application-form-container" onSubmit={handleSubmit}>
       
       <fieldset>
         <legend>Personal Information</legend>
@@ -93,7 +92,7 @@ function ApplicationForm() {
         <legend>For Official Use Only</legend>
         <div className="form-grid">
           <label htmlFor="vetted_by">Vetted By: </label>
-          <input type='text' id="vetted_by" name="vetted_by" placeholder="Vetted By" value={formData.vetted_by} onChange={handleChange} />
+          <input type="text" id="vetted_by" name="vetted_by" placeholder="Vetted By" value={formData.vetted_by} onChange={handleChange} />
         </div>
       </fieldset>
 

@@ -1,64 +1,90 @@
-.application-form {
-    max-width: 600px;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background-color: #f9f9f9;
+/* ApplicationForm.css */
+
+.application-form-container {
+  background-color: #1a1a1a;
+  color: #f5f5f5;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 20px auto;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.application-form-container h2 {
+  color: #ffd700;
+  font-size: 1.8em;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.application-form-container fieldset {
+  border: 1px solid #ffd700;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+}
+
+.application-form-container legend {
+  color: #ffd700;
+  font-weight: bold;
+  padding: 0 10px;
+}
+
+.application-form-container .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px 15px;
+  align-items: center;
+}
+
+.application-form-container label {
+  color: #b8860b;
+  font-weight: bold;
+}
+
+.application-form-container input[type="text"],
+.application-form-container input[type="email"],
+.application-form-container textarea {
+  background-color: #333;
+  color: #f5f5f5;
+  border: 1px solid #666;
+  border-radius: 5px;
+  padding: 8px;
+  width: 100%;
+}
+
+.application-form-container input[type="text"]:focus,
+.application-form-container input[type="email"]:focus,
+.application-form-container textarea:focus {
+  border-color: #ffd700;
+  outline: none;
+}
+
+.application-form-container textarea {
+  resize: vertical;
+}
+
+.application-form-container button[type="submit"] {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: block;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.application-form-container button[type="submit"]:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .application-form-container .form-grid {
+    grid-template-columns: 1fr;
   }
-  
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  fieldset {
-    margin-bottom: 20px;
-    padding: 15px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  legend {
-    font-weight: bold;
-    padding: 0 10px;
-  }
-  
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 10px;
-  }
-  
-  label {
-    font-weight: bold;
-    align-self: center;
-  }
-  
-  input, textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  textarea {
-    resize: vertical;
-    min-height: 60px;
-  }
-  
-  button[type="submit"] {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    color: white;
-    background-color: #4CAF50;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button[type="submit"]:hover {
-    background-color: #45a049;
-  }
-  
+}

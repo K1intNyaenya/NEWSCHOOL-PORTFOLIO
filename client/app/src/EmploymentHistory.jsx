@@ -1,4 +1,5 @@
 import React from 'react';
+import './style/EmploymentHistory.css';
 
 const EmploymentHistory = ({ user, setUser }) => {
   const handleJobChange = (index, field, value) => {
@@ -20,14 +21,15 @@ const EmploymentHistory = ({ user, setUser }) => {
   };
 
   return (
-    <fieldset>
+    <fieldset className="employment-history-fieldset">
       <legend>Employment History</legend>
       {user.employment_history.map((job, index) => (
-        <div key={index}>
+        <div key={index} className="job-container">
           <div className="form-row">
             <label>Employer *</label>
             <input
               type="text"
+              placeholder="Employer Name"
               value={job.employer || ''}
               onChange={(e) => handleJobChange(index, 'employer', e.target.value)}
             />
@@ -36,18 +38,23 @@ const EmploymentHistory = ({ user, setUser }) => {
             <label>Position *</label>
             <input
               type="text"
+              placeholder="Job Title"
               value={job.job_title || ''}
               onChange={(e) => handleJobChange(index, 'job_title', e.target.value)}
             />
           </div>
           {user.employment_history.length > 1 && (
-            <button type="button" onClick={() => handleRemoveJob(index)}>
+            <button
+              type="button"
+              className="remove-job-button"
+              onClick={() => handleRemoveJob(index)}
+            >
               Remove Job
             </button>
           )}
         </div>
       ))}
-      <button type="button" onClick={handleAddJob}>
+      <button type="button" className="add-job-button" onClick={handleAddJob}>
         Add Another Job
       </button>
     </fieldset>
