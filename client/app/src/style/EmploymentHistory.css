@@ -47,9 +47,19 @@
     outline: none;
   }
   
-  .add-job-button,
+  .add-job-button {
+    background-color: #00ff2a96;
+    color: #1a1a1a;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
   .remove-job-button {
-    background-color: #ffd700;
+    background-color: red;
     color: #1a1a1a;
     border: none;
     padding: 8px 15px;
@@ -59,7 +69,10 @@
     transition: background-color 0.3s ease;
   }
   
-  .add-job-button:hover,
+  .add-job-button:hover {
+    background-color: #00ff2a96;
+  }
+
   .remove-job-button:hover {
     background-color: #b8860b;
   }

@@ -1,12 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './style/PendingForm.css';
 
 function PendingForm({ applicantData, onClose, onApprove, onReject }) {
-  if (!applicantData) return null;
+  const [showApprovalForm, setShowApprovalForm] = useState(false);
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+    comments: ''
+  });
+  const [errors, setErrors] = useState({});
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.username) newErrors.username = 'Username is required';
+    if (!formData.password) newErrors.password = 'Password is required';
+    if (!formData.comments) newErrors.comments = 'Comments are required';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleApprovalSubmit = () => {
+    if (validateForm()) {
+      onApprove(applicantData.id, formData);
+      setShowApprovalForm(false); // Close the approval form after submission
+    }
+  };
 
   return (
     <div className="modal">
       <div className="modal-content">
+        <button className="top-close-button" onClick={onClose}>✕</button>
+        
         <h2>Application Details</h2>
         
         <fieldset>
@@ -38,11 +67,54 @@ function PendingForm({ applicantData, onClose, onApprove, onReject }) {
         </fieldset>
         
         <div className="button-container">
-          <button className="approve-button" onClick={() => onApprove(applicantData.id)}>Approve</button>
+          <button className="approve-button" onClick={() => setShowApprovalForm(true)}>Approve</button>
           <button className="reject-button" onClick={() => onReject(applicantData.id)}>Reject</button>
-          <button className="close-button" onClick={onClose}>Close</button>
         </div>
       </div>
+
+      {showApprovalForm && (
+        <div className="approval-overlay">
+          <div className="approval-form">
+            <h3>Approval Details</h3>
+            <label>
+              Username:
+              <input
+                type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleInputChange}
+                required
+              />
+              {errors.username && <span className="error">{errors.username}</span>}
+            </label>
+            <label>
+              Password:
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+              />
+              {errors.password && <span className="error">{errors.password}</span>}
+            </label>
+            <label>
+              Comments:
+              <textarea
+                name="comments"
+                value={formData.comments}
+                onChange={handleInputChange}
+                required
+              ></textarea>
+              {errors.comments && <span className="error">{errors.comments}</span>}
+            </label>
+            <div className="button-container">
+              <button className="approve-button" onClick={handleApprovalSubmit}>Submit Approval</button>
+              <button className="close-button" onClick={() => setShowApprovalForm(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -5,6 +5,8 @@ import PersonalDetails from './PersonalDetails';
 import EmploymentHistory from './EmploymentHistory';
 import UserCredentials from './UserCredentials';
 import ApplicationForm from './ApplicationForm';
+import PendingForm from './PendingForm';
+
 
 const initialNewUser = {
   first_name: '',
@@ -34,6 +36,8 @@ function AdminDashboard() {
   const [portfolios, setPortfolios] = useState([]);
   const [isPendingModalOpen, setIsPendingModalOpen] = useState(false);
   const [pendingApplications, setPendingApplications] = useState([]);
+  const [selectedApplication, setSelectedApplication] = useState(null);
+  const [isPendingFormOpen, setIsPendingFormOpen] = useState(false);
 
   useEffect(() => {
     fetchPortfolios();
@@ -72,6 +76,16 @@ function AdminDashboard() {
         console.error("Error fetching pending applications:", error);
       }
     }
+  };
+
+  const handleViewApplication = (application) => {
+    setSelectedApplication(application);
+    setIsPendingFormOpen(true);
+  };
+
+  const handleCloseForm = () => {
+    setIsPendingFormOpen(false);
+    setSelectedApplication(null);
   };
 
   const validateForm = () => {
@@ -285,50 +299,87 @@ function AdminDashboard() {
             {pendingApplications.length > 0 ? (
               <ul className="pending-list">
                 {pendingApplications.map((application) => (
-                  <li key={application.id}>
-                    <strong>{application.first_name} {application.second_name} {application.family_name}</strong><br />
-                    Email: {application.email}<br />
-                    Date of Application: {application.date_of_application}
+                  <li key={application.id} className="pending-list-item">
+                    <div className="application-info">
+                      <strong>{application.first_name} {application.second_name} {application.family_name}</strong><br />
+                      Email: {application.email}<br />
+                      Date of Application: {application.date_of_application}
+                    </div>
+                    <button className="view-button" onClick={() => handleViewApplication(application)}>View</button>
                   </li>
                 ))}
               </ul>
             ) : (
               <p>No pending applications found.</p>
             )}
+            {isPendingFormOpen && selectedApplication && (
+              <PendingForm
+                applicantData={selectedApplication}
+                onClose={handleCloseForm}
+                onApprove={(id) => console.log('Approved:', id)} // Replace with actual approve logic
+                onReject={(id) => console.log('Rejected:', id)} // Replace with actual reject logic
+              />
+            )}
             <button className="close-button" onClick={togglePendingApplicationsModal}>Close</button>
           </div>
         </div>
       )}
 
-      {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <h2>Add New Member</h2>
-            <form onSubmit={(e) => { e.preventDefault(); handleAddUser(); }}>
-              <div className="tabs">
-                <button type="button" onClick={() => setActiveTab('personalDetails')}>Personal Details</button>
-                <button type="button" onClick={() => setActiveTab('employmentHistory')}>Employment History</button>
-                <button type="button" onClick={() => setActiveTab('userCredentials')}>User Credentials</button>
-              </div>
-              {activeTab === 'personalDetails' && (
-                <PersonalDetails user={newUser} setUser={setNewUser} errors={errors} />
-              )}
-              {activeTab === 'employmentHistory' && (
-                <EmploymentHistory user={newUser} setUser={setNewUser} />
-              )}
-              {activeTab === 'userCredentials' && (
-                <UserCredentials user={newUser} setUser={setNewUser} />
-              )}
-              {error && <span className="error">{error}</span>}
-              {successMessage && <span className="success">{successMessage}</span>}
-              <button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Adding...' : 'Add Member'}
-              </button>
-              <button type="button" onClick={toggleModal}>Close</button>
-            </form>
-          </div>
+{isModalOpen && (
+  <div className="modal">
+    <div className="modal-content">
+      <h2>Add New Member</h2>
+      <form onSubmit={(e) => { e.preventDefault(); handleAddUser(); }}>
+        <div className="tabs">
+          <button
+            type="button"
+            className={activeTab === 'personalDetails' ? 'active' : ''}
+            onClick={() => setActiveTab('personalDetails')}
+          >
+            Personal Details
+          </button>
+          <button
+            type="button"
+            className={activeTab === 'employmentHistory' ? 'active' : ''}
+            onClick={() => setActiveTab('employmentHistory')}
+          >
+            Employment History
+          </button>
+          <button
+            type="button"
+            className={activeTab === 'userCredentials' ? 'active' : ''}
+            onClick={() => setActiveTab('userCredentials')}
+          >
+            User Credentials
+          </button>
         </div>
-      )}
+        
+        {activeTab === 'personalDetails' && (
+          <PersonalDetails user={newUser} setUser={setNewUser} errors={errors} />
+        )}
+        
+        {activeTab === 'employmentHistory' && (
+          <EmploymentHistory user={newUser} setUser={setNewUser} />
+        )}
+        
+        {activeTab === 'userCredentials' && (
+          <div>
+            <UserCredentials user={newUser} setUser={setNewUser} />
+            <button type="submit" disabled={isSubmitting} className="submit-button">
+              {isSubmitting ? 'Adding...' : 'Add Member'}
+            </button>
+          </div>
+        )}
+
+        {error && <span className="error">{error}</span>}
+        {successMessage && <span className="success">{successMessage}</span>}
+        
+        <button type="button" className="close-button" onClick={toggleModal}>Close</button>
+      </form>
+    </div>
+  </div>
+)}
+
 
       {isApplicationFormOpen && (
         <div className="modal">
