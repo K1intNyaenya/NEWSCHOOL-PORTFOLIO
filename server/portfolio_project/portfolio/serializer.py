@@ -1,7 +1,7 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from .models import NewSchoolMember, EmploymentHistory
+from .models import NewSchoolMember, EmploymentHistory, ApplicationForm
 
 class EmploymentHistorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -85,3 +85,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             raise serializers.ValidationError("Must include 'username' and 'password'")
 
         return super().validate(attrs)
+    
+
+class ApplicationFormSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApplicationForm
+        fields = '__all__'

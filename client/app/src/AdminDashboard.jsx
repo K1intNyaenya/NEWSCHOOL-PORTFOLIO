@@ -7,7 +7,6 @@ import UserCredentials from './UserCredentials';
 import ApplicationForm from './ApplicationForm';
 import PendingForm from './PendingForm';
 
-
 const initialNewUser = {
   first_name: '',
   second_name: '',
@@ -88,126 +87,146 @@ function AdminDashboard() {
     setSelectedApplication(null);
   };
 
-  const validateForm = () => {
-    const formErrors = {};
+  const handleApproveApplication = async (application) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8080/review-application/${application.id}/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          approved: true,
+          member_email: application.email,
+          username: application.username,
+          password: 'temporarypassword123'
+        }),
+      });
   
-    if (!newUser.first_name) {
-      formErrors.first_name = 'First Name is required';
-      console.log("Validation failed: First Name is missing");
-    }
-    
-    if (!newUser.member_title) {
-      formErrors.member_title = 'Profession is required';
-      console.log("Validation failed: Profession is missing");
-    }
-    
-    if (newUser.member_email && !/\S+@\S+\.\S+/.test(newUser.member_email)) {
-      formErrors.member_email = 'Email is invalid';
-      console.log("Validation failed: Email is invalid");
-    }
-    
-    if (newUser.member_mobile && !/^\+?[1-9]\d{1,14}$/.test(newUser.member_mobile)) {
-      formErrors.member_mobile = 'Mobile number is invalid';
-      console.log("Validation failed: Mobile number is invalid");
-    }
+      if (response.ok) {
+        console.log(`Application ${application.id} approved successfully`);
+        setPendingApplications(prevApplications => prevApplications.filter(app => app.id !== application.id));
+        setIsPendingFormOpen(false);
+        
+        const newMemberResponse = await response.json();
+        setPortfolios(prevPortfolios => [...prevPortfolios, newMemberResponse]);
+        console.log("New member added from approved application:", newMemberResponse);
   
-    setErrors(formErrors);
-    const isValid = Object.keys(formErrors).length === 0;
-  
-    if (isValid) {
-      console.log("Form validation passed");
+        await sendPasswordResetLink(application.email);
+      } else {
+        console.error(`Failed to approve application ${application.id}`);
+      }
+    } catch (error) {
+      console.error("Error approving application:", error);
     }
+  };
   
-    return isValid;
+  const sendPasswordResetLink = async (email) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8080/portfolio/send-reset-password-link/${email}/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+  
+      if (response.ok) {
+        console.log(`Password reset link sent to ${email}`);
+      } else {
+        console.error(`Failed to send password reset link to ${email}`);
+      }
+    } catch (error) {
+      console.error("Error sending password reset link:", error);
+    }
   };
   
 
-  const handleAddUser = async () => {
-    console.log("Add Member button clicked");
-
-    console.log("Current newUser state:", newUser);
+  const handleRejectApplication = async (id) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8080/review-application/${id}/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          approved: false
+        }),
+      });
   
-    if (!validateForm()) {
-      console.log("Form validation failed");
-      return;
+      if (response.ok) {
+        console.log(`Application ${id} rejected successfully`);
+        setPendingApplications(prevApplications => prevApplications.filter(app => app.id !== id));
+        setIsPendingFormOpen(false);
+      } else {
+        console.error(`Failed to reject application ${id}`);
+      }
+    } catch (error) {
+      console.error("Error rejecting application:", error);
     }
+  };
   
+
+  const validateForm = () => {
+    const formErrors = {};
+    if (!newUser.first_name) {
+      formErrors.first_name = 'First Name is required';
+    }
+    if (!newUser.member_title) {
+      formErrors.member_title = 'Profession is required';
+    }
+    if (newUser.member_email && !/\S+@\S+\.\S+/.test(newUser.member_email)) {
+      formErrors.member_email = 'Email is invalid';
+    }
+    if (newUser.member_mobile && !/^\+?[1-9]\d{1,14}$/.test(newUser.member_mobile)) {
+      formErrors.member_mobile = 'Mobile number is invalid';
+    }
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0;
+  };
+
+  const handleAddUser = async () => {
+    if (!validateForm()) return;
+
     setIsSubmitting(true);
     setError('');
     setSuccessMessage('');
-  
-    const updatedEmploymentHistory = newUser.employment_history.filter(
-      (job) => job.employer && job.job_title
-    );
-  
-    const payload = {
-      ...newUser,
-      employment_history: updatedEmploymentHistory,
-    };
-  
-    console.log("Payload being sent to API:", payload);
-  
-    const isDuplicateEmail = portfolios.some(
-      (member) => member.member_email === payload.member_email
-    );
-  
-    if (isDuplicateEmail) {
+
+    const updatedEmploymentHistory = newUser.employment_history.filter(job => job.employer && job.job_title);
+    const payload = { ...newUser, employment_history: updatedEmploymentHistory };
+
+    if (portfolios.some(member => member.member_email === payload.member_email)) {
       setError('Email already exists. Please use a different email address.');
-      console.log("Duplicate email found");
       setIsSubmitting(false);
       return;
     }
-  
+
     try {
       const response = await fetch("http://127.0.0.1:8080/portfolio/NewSchoolMember/add/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-  
-      if (!response.ok) {
-        const errorResponse = await response.text();
-        console.error('Error Response from server:', errorResponse);
-        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      if (response.ok) {
+        const newMember = await response.json();
+        setPortfolios(prevPortfolios => [...prevPortfolios, newMember]);
+        resetForm();
+        setIsModalOpen(false);
+        setSuccessMessage("New member added successfully!");
+      } else {
+        throw new Error('Failed to add member');
       }
-  
-      const newMember = await response.json();
-      console.log("New member added:", newMember);
-  
-      setPortfolios(prevPortfolios => [...prevPortfolios, newMember]);
-  
-      resetForm();
-      
-      setIsModalOpen(false);
-      setSuccessMessage("New member added successfully!");
-    } catch (error) {
-      console.error("Failed to add user:", error);
-      setError("Failed to add user. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }
   };
-  
+
   const handleUpdateUser = async (updatedUser) => {
     try {
       const response = await fetch(`http://127.0.0.1:8080/portfolio/NewSchoolMember/${updatedUser.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedUser),
       });
 
-      if (!response.ok) {
+      if (response.ok) {
+        const updatedData = await response.json();
+        setPortfolios(prevPortfolios => prevPortfolios.map(user => (user.id === updatedData.id ? updatedData : user)));
+      } else {
         throw new Error('Failed to update user');
       }
-
-      const updatedData = await response.json();
-      setPortfolios(prevPortfolios => 
-        prevPortfolios.map(user => (user.id === updatedData.id ? updatedData : user))
-      );
     } catch (error) {
       console.error("Failed to update user:", error);
       setError("Failed to update user. Please try again later.");
@@ -221,14 +240,8 @@ function AdminDashboard() {
     setSuccessMessage('');
   };
 
-  const toggleApplicationFormModal = () => {
-    setIsApplicationFormOpen(!isApplicationFormOpen);
-  };
-
-  const toggleEmailModal = () => {
-    setIsEmailModalOpen(!isEmailModalOpen);
-    setEmail('');
-  };
+  const toggleApplicationFormModal = () => setIsApplicationFormOpen(!isApplicationFormOpen);
+  const toggleEmailModal = () => { setIsEmailModalOpen(!isEmailModalOpen); setEmail(''); };
 
   const handleSendApplicationForm = () => {
     toggleApplicationFormModal();
@@ -239,9 +252,7 @@ function AdminDashboard() {
     try {
       const response = await fetch(`http://127.0.0.1:8080/portfolio/send-application/${email}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
       });
 
@@ -316,8 +327,8 @@ function AdminDashboard() {
               <PendingForm
                 applicantData={selectedApplication}
                 onClose={handleCloseForm}
-                onApprove={(id) => console.log('Approved:', id)} // Replace with actual approve logic
-                onReject={(id) => console.log('Rejected:', id)} // Replace with actual reject logic
+                onApprove={() => handleApproveApplication(selectedApplication)}
+                onReject={() => handleRejectApplication(selectedApplication.id)}
               />
             )}
             <button className="close-button" onClick={togglePendingApplicationsModal}>Close</button>
@@ -325,61 +336,60 @@ function AdminDashboard() {
         </div>
       )}
 
-{isModalOpen && (
-  <div className="modal">
-    <div className="modal-content">
-      <h2>Add New Member</h2>
-      <form onSubmit={(e) => { e.preventDefault(); handleAddUser(); }}>
-        <div className="tabs">
-          <button
-            type="button"
-            className={activeTab === 'personalDetails' ? 'active' : ''}
-            onClick={() => setActiveTab('personalDetails')}
-          >
-            Personal Details
-          </button>
-          <button
-            type="button"
-            className={activeTab === 'employmentHistory' ? 'active' : ''}
-            onClick={() => setActiveTab('employmentHistory')}
-          >
-            Employment History
-          </button>
-          <button
-            type="button"
-            className={activeTab === 'userCredentials' ? 'active' : ''}
-            onClick={() => setActiveTab('userCredentials')}
-          >
-            User Credentials
-          </button>
-        </div>
-        
-        {activeTab === 'personalDetails' && (
-          <PersonalDetails user={newUser} setUser={setNewUser} errors={errors} />
-        )}
-        
-        {activeTab === 'employmentHistory' && (
-          <EmploymentHistory user={newUser} setUser={setNewUser} />
-        )}
-        
-        {activeTab === 'userCredentials' && (
-          <div>
-            <UserCredentials user={newUser} setUser={setNewUser} />
-            <button type="submit" disabled={isSubmitting} className="submit-button">
-              {isSubmitting ? 'Adding...' : 'Add Member'}
-            </button>
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Add New Member</h2>
+            <form onSubmit={(e) => { e.preventDefault(); handleAddUser(); }}>
+              <div className="tabs">
+                <button
+                  type="button"
+                  className={activeTab === 'personalDetails' ? 'active' : ''}
+                  onClick={() => setActiveTab('personalDetails')}
+                >
+                  Personal Details
+                </button>
+                <button
+                  type="button"
+                  className={activeTab === 'employmentHistory' ? 'active' : ''}
+                  onClick={() => setActiveTab('employmentHistory')}
+                >
+                  Employment History
+                </button>
+                <button
+                  type="button"
+                  className={activeTab === 'userCredentials' ? 'active' : ''}
+                  onClick={() => setActiveTab('userCredentials')}
+                >
+                  User Credentials
+                </button>
+              </div>
+              
+              {activeTab === 'personalDetails' && (
+                <PersonalDetails user={newUser} setUser={setNewUser} errors={errors} />
+              )}
+              
+              {activeTab === 'employmentHistory' && (
+                <EmploymentHistory user={newUser} setUser={setNewUser} />
+              )}
+              
+              {activeTab === 'userCredentials' && (
+                <div>
+                  <UserCredentials user={newUser} setUser={setNewUser} />
+                  <button type="submit" disabled={isSubmitting} className="submit-button">
+                    {isSubmitting ? 'Adding...' : 'Add Member'}
+                  </button>
+                </div>
+              )}
+
+              {error && <span className="error">{error}</span>}
+              {successMessage && <span className="success">{successMessage}</span>}
+              
+              <button type="button" className="close-button" onClick={toggleModal}>Close</button>
+            </form>
           </div>
-        )}
-
-        {error && <span className="error">{error}</span>}
-        {successMessage && <span className="success">{successMessage}</span>}
-        
-        <button type="button" className="close-button" onClick={toggleModal}>Close</button>
-      </form>
-    </div>
-  </div>
-)}
-
+        </div>
+      )}
 
       {isApplicationFormOpen && (
         <div className="modal">
