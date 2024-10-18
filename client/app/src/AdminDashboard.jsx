@@ -94,7 +94,7 @@ function AdminDashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           approved: true,
-          member_email: application.email,
+          member_email: application.member_email,
           username: application.username,
           password: 'temporarypassword123'
         }),
@@ -250,20 +250,17 @@ function AdminDashboard() {
 
   const handleSendEmail = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:8080/portfolio/send-application/${email}`, {
+      const response = await fetch(`http://127.0.0.1:8080/portfolio/send-application/${email}/`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
       });
-
+      
       if (response.ok) {
-        alert(`Application form sent to ${email}`);
-        toggleEmailModal();
+        console.log('Email sent successfully');
       } else {
-        alert('Failed to send application form.');
+        console.error('Failed to send email');
       }
     } catch (error) {
-      console.error("Error sending application form:", error);
+      console.error('Error sending email:', error);
     }
   };
 

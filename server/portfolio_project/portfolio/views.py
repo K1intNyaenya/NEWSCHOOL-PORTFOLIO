@@ -16,6 +16,8 @@ import json
 import logging
 from django.core.mail import send_mail
 from django.conf import settings
+from django.urls import reverse
+
 
 
 
@@ -121,11 +123,13 @@ def submit_application_form(request):
             family_name=data['family_name'],
             mobile_number=data['mobile_number'],
             member_title=data['member_title'],
+            member_email=data['member_email'],
             member_industry=data['member_industry'],
             employment_industry=data['employment_industry'],
             reason_for_joining=data['reason_for_joining'],
             referred_by_name=data['referred_by_name'],
-            referred_by_mobile=data['referred_by_mobile']
+            referred_by_mobile=data['referred_by_mobile'],
+            vetted_by=data['vetted_by']
         )
         return JsonResponse({"message": "Application submitted successfully."}, status=201)
     
@@ -138,9 +142,8 @@ def review_application(request, application_id):
         data = json.loads(request.body)
         application = get_object_or_404(ApplicationForm, id=application_id)
         
-        # Update the application with any new vetting or joining info
-        application.vetted_by = data.get('vetted_by', application.vetted_by)
         application.approved = data.get('approved', False)
+        application.vetted_by = data.get('vetted_by', application.vetted_by)
         application.member_joining_date = data.get('member_joining_date', None)
         application.save()
 
@@ -152,28 +155,22 @@ def review_application(request, application_id):
                 'member_title': application.member_title,
                 'member_industry': application.member_industry,
                 'member_mobile': application.mobile_number,
-                'member_email': data.get('member_email', f"{application.first_name.lower()}@example.com"),
-                'username': data.get('username', f"{application.first_name.lower()}{application.id}"),
-                'password': make_password(data.get('password', 'temporarypassword123')),
+                'member_email': data.get('member_email'),
+                'username': data.get('username'),
+                'password': make_password(data.get('password')),
             }
 
             member_serializer = NewSchoolMemberSerializer(data=member_data)
             if member_serializer.is_valid():
                 member = member_serializer.save()
-                
-                EmploymentHistory.objects.create(
-                    member=member,
-                    employer=application.employment_industry,
-                    job_title=application.member_title,
-                )
-                
-                return JsonResponse({"message": "Application approved and new member added successfully."}, status=201)
+                return JsonResponse(member_serializer.data, status=201)
             else:
                 return JsonResponse(member_serializer.errors, status=400)
 
-        return JsonResponse({"message": "Application reviewed and marked as not approved."}, status=200)
+        return JsonResponse({"message": "Application reviewed successfully."}, status=200)
 
     return JsonResponse({"error": "Method not allowed. Use POST to review the application."}, status=405)
+    
 
 logger = logging.getLogger(__name__)
 
@@ -189,6 +186,7 @@ def get_pending_applications(request):
             'date_of_application': app.date_of_application,
             'mobile_number': app.mobile_number,
             'member_title': app.member_title,
+            'member_email': app.member_email,
             'member_industry': app.member_industry,
             'employment_industry': app.employment_industry,
             'reason_for_joining': app.reason_for_joining,
@@ -209,21 +207,27 @@ def get_pending_applications(request):
         return JsonResponse({"error": "An error occurred while fetching pending applications."}, status=500)
 
 
+@csrf_exempt
 def send_application_form_email(request, applicant_email):
-    subject = 'Complete Your Application Form'
-    application_link = 'http://yourdomain.com/application-form/'  # Replace with the actual URL
-    message = f'Please complete your application form at the following link: {application_link}'
+    try:
+        # The frontend route where the form can be submitted
+        application_link = f"http://localhost:5173/application-form?email={applicant_email}"
+
+        subject = 'Complete Your Application Form'
+        message = f'Please complete your application form at the following link: {application_link}'
+
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [applicant_email],
+            fail_silently=False,
+        )
+
+        return JsonResponse({"message": f"Application form sent to {applicant_email} successfully."}, status=200)
     
-    send_mail(
-        subject,
-        message,
-        settings.DEFAULT_FROM_EMAIL,
-        [applicant_email],
-        fail_silently=False,
-    )
-
-    return JsonResponse({"message": f"Application form sent to {applicant_email} successfully."})
-
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 @csrf_exempt
 def send_password_reset_link(request, email):

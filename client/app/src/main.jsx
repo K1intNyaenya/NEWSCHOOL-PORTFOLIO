@@ -5,7 +5,7 @@ import LoginForm from './LoginForm';
 import Dashboard from './Dashboard';
 import AdminDashboard from './AdminDashboard';
 import ApplicationForm from './ApplicationForm';
-import PendingForm from "./PendingForm"; // Check this path
+import PendingForm from "./PendingForm";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,7 +15,8 @@ root.render(
         <Route path="/" element={<LoginForm />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/ApplicationForm" element={<ApplicationForm />} />
+        <Route path="/application-form" element={<ApplicationForm />} />
+        <Route path="/application-form/:applicationId" element={<ApplicationForm />} />
         <Route path="/Pending-Form" element={<PendingForm />} />
       </Routes>
     </Router>

@@ -61,6 +61,7 @@ class ApplicationForm(models.Model):
         )]
     )
     member_title = models.CharField(max_length=75)
+    member_email = models.EmailField(max_length=75, default='abc@company.com')
     member_industry = models.CharField(max_length=75, blank=True, null=True)
     employment_industry = models.CharField(max_length=75)
     

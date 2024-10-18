@@ -16,6 +16,7 @@ from .views import (
 )
 from django.urls import path
 
+
 urlpatterns = [
     path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
@@ -26,6 +27,6 @@ urlpatterns = [
     path('submit-application-form/', submit_application_form, name='submit_application_form'),
     path('review-application/<int:application_id>/', review_application, name='review_application'),
     path('pending-applications/', get_pending_applications, name='pending_applications'),
-    path('send-application-email/<str:applicant_email>/', send_application_form_email, name='send_application_email'),
-    path('portfolio/send-reset-password-link/<str:email>/', send_password_reset_link, name='send_reset_password_link'),
+    path('send-application/<str:applicant_email>/', send_application_form_email, name='send_application_email'),
+    path('send-reset-password-link/<str:email>/', send_password_reset_link, name='send_reset_password_link'),
 ]

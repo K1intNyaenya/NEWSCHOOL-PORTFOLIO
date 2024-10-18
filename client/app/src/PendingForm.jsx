@@ -44,7 +44,7 @@ function PendingForm({ applicantData, onClose, onApprove, onReject }) {
           <p><strong>Second Name:</strong> {applicantData.second_name}</p>
           <p><strong>Family Name:</strong> {applicantData.family_name}</p>
           <p><strong>Mobile Number:</strong> {applicantData.mobile_number}</p>
-          <p><strong>Email:</strong> {applicantData.email}</p>
+          <p><strong>Applicant Email:</strong> {applicantData.member_email}</p>
         </fieldset>
         
         <fieldset>
