@@ -213,26 +213,47 @@ function AdminDashboard() {
     }
   };
 
-  const handleUpdateUser = async (updatedUser) => {
-    try {
-      const response = await fetch(`http://127.0.0.1:8080/portfolio/NewSchoolMember/${updatedUser.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedUser),
-      });
+  const resetForm = () => {
+    setNewUser(initialNewUser);  // Reset new user to initial state
+    setErrors({});  // Clear any form errors
+    setSuccessMessage('');
+  };
+  
 
+  const handleUpdateUser = async (updatedUser) => {
+    const { password, ...userWithoutPassword } = updatedUser;  // Exclude password if not provided
+  
+    const payload = password ? updatedUser : userWithoutPassword;
+  
+    try {
+      const response = await fetch(`http://127.0.0.1:8080/portfolio/NewSchoolMember/${updatedUser.id}/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),  // Send updated data, excluding password if not set
+      });
+  
       if (response.ok) {
         const updatedData = await response.json();
-        setPortfolios(prevPortfolios => prevPortfolios.map(user => (user.id === updatedData.id ? updatedData : user)));
+  
+        setPortfolios((prevPortfolios) =>
+          prevPortfolios.map((user) =>
+            user.id === updatedData.id ? updatedData : user
+          )
+        );
+        setSuccessMessage('Member updated successfully');
       } else {
         throw new Error('Failed to update user');
       }
     } catch (error) {
-      console.error("Failed to update user:", error);
-      setError("Failed to update user. Please try again later.");
+      console.error('Failed to update user:', error);
+      setError('Failed to update user. Please try again later.');
     }
   };
-
+  
+  
+  
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
     setErrors({});
@@ -341,21 +362,21 @@ function AdminDashboard() {
               <div className="tabs">
                 <button
                   type="button"
-                  className={activeTab === 'personalDetails' ? 'active' : ''}
+                  className={activeTab === 'personalDetails' ? 'active' : ''} 
                   onClick={() => setActiveTab('personalDetails')}
                 >
                   Personal Details
                 </button>
                 <button
                   type="button"
-                  className={activeTab === 'employmentHistory' ? 'active' : ''}
+                  className={activeTab === 'employmentHistory' ? 'active' : ''} 
                   onClick={() => setActiveTab('employmentHistory')}
                 >
                   Employment History
                 </button>
                 <button
                   type="button"
-                  className={activeTab === 'userCredentials' ? 'active' : ''}
+                  className={activeTab === 'userCredentials' ? 'active' : ''} 
                   onClick={() => setActiveTab('userCredentials')}
                 >
                   User Credentials

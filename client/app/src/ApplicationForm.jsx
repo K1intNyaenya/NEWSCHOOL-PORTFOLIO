@@ -110,7 +110,7 @@ function ApplicationForm() {
             value={formData.member_email}
             onChange={handleChange}
             required
-            readOnly={!!formData.member_email} // Prevents editing if email comes from URL
+            readOnly={!!formData.member_email}
           />
 
           <label htmlFor="member_title">Member Title: </label>

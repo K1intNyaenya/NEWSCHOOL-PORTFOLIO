@@ -7,9 +7,13 @@ class EmploymentHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = EmploymentHistory
         fields = ['id', 'employer', 'job_title']
+        extra_kwargs = {
+            'employer': {'required': False, 'allow_blank': True},
+            'job_title': {'required': False, 'allow_blank': True},
+        }
 
 class NewSchoolMemberSerializer(serializers.ModelSerializer):
-    employment_history = EmploymentHistorySerializer(many=True)
+    employment_history = EmploymentHistorySerializer(many=True, required=False)
 
     class Meta:
         model = NewSchoolMember
@@ -19,7 +23,7 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
             'member_mobile', 'member_email', 'username', 'password'
         ]
         extra_kwargs = {
-            'password': {'write_only': True}
+            'password': {'write_only': True, 'required': False},  # Password is not required
         }
 
     def create(self, validated_data):
@@ -41,8 +45,43 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
             print(f"Error while creating NewSchoolMember: {e}")
             raise serializers.ValidationError("An error occurred while creating the member.")
 
+    def update(self, instance, validated_data):
+        # Handle employment history updates
+        employment_history_data = validated_data.pop('employment_history', None)
+        
+        # Update basic fields
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.second_name = validated_data.get('second_name', instance.second_name)
+        instance.family_name = validated_data.get('family_name', instance.family_name)
+        instance.member_title = validated_data.get('member_title', instance.member_title)
+        instance.member_industry = validated_data.get('member_industry', instance.member_industry)
+        instance.member_mobile = validated_data.get('member_mobile', instance.member_mobile)
+        instance.member_email = validated_data.get('member_email', instance.member_email)
+        instance.username = validated_data.get('username', instance.username)
+
+        # Handle password update if provided
+        password = validated_data.pop('password', None)
+        if password:
+            instance.set_password(password)
+
+        instance.save()
+
+        # If employment history data is provided, update it
+        if employment_history_data is not None:
+            # Clear existing employment history
+            EmploymentHistory.objects.filter(member=instance).delete()
+            
+            # Create new employment history records
+            for job in employment_history_data:
+                EmploymentHistory.objects.create(
+                    member=instance,
+                    employer=job.get('employer', ''),
+                    job_title=job.get('job_title', '')
+                )
+
+        return instance
+
     def validate_username(self, value):
-        # Check if self.instance exists before accessing pk
         if self.instance and NewSchoolMember.objects.exclude(pk=self.instance.pk).filter(username=value).exists():
             raise serializers.ValidationError("This username is already taken.")
         elif not self.instance and NewSchoolMember.objects.filter(username=value).exists():
@@ -77,15 +116,14 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         password = attrs.get("password")
 
         if username and password:
-            user = authenticate(request=self.context.get('request'), 
-                                username=username, password=password)
+            user = authenticate(request=self.context.get('request'), username=username, password=password)
             if not user:
                 raise serializers.ValidationError("Invalid credentials")
         else:
             raise serializers.ValidationError("Must include 'username' and 'password'")
 
         return super().validate(attrs)
-    
+
 
 class ApplicationFormSerializer(serializers.ModelSerializer):
     class Meta:

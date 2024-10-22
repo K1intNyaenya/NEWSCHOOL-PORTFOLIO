@@ -9,15 +9,31 @@ const PortfolioCard = ({ user, onUpdate }) => {
     setIsEditing(!isEditing);
   };
 
+  // Handle changes in employment history for each job
   const handleJobChange = (index, field, value) => {
     const updatedJobs = [...editUser.employment_history];
     updatedJobs[index][field] = value;
     setEditUser({ ...editUser, employment_history: updatedJobs });
   };
 
+  // Handle adding a new job entry
+  const handleAddJob = () => {
+    const newJob = { employer: '', job_title: '' }; // New job template
+    setEditUser((prevState) => ({
+      ...prevState,
+      employment_history: [...prevState.employment_history, newJob], // Add new job
+    }));
+  };
+
+  // Handle Save Changes and exclude password if not set
   const handleSaveChanges = () => {
-    onUpdate(editUser);
-    setIsEditing(false);
+    const { password, ...updatedUserWithoutPassword } = editUser;
+
+    // Only include password if it's been set
+    const updatedUser = password ? editUser : updatedUserWithoutPassword;
+
+    onUpdate(updatedUser); // Trigger the onUpdate function passed from the parent component (AdminDashboard)
+    setIsEditing(false); // Close the edit mode
   };
 
   return (
@@ -56,22 +72,28 @@ const PortfolioCard = ({ user, onUpdate }) => {
           />
 
           <h4>Employment History:</h4>
-          {editUser.employment_history.map((job, index) => (
-            <div key={index}>
-              <input
-                type="text"
-                value={job.employer}
-                onChange={(e) => handleJobChange(index, 'employer', e.target.value)}
-                placeholder="Employer"
-              />
-              <input
-                type="text"
-                value={job.jobtitle}
-                onChange={(e) => handleJobChange(index, 'jobtitle', e.target.value)}
-                placeholder="Job Title"
-              />
-            </div>
-          ))}
+          {editUser.employment_history.length > 0 ? (
+            editUser.employment_history.map((job, index) => (
+              <div key={index}>
+                <input
+                  type="text"
+                  value={job.employer}
+                  onChange={(e) => handleJobChange(index, 'employer', e.target.value)}
+                  placeholder="Employer"
+                />
+                <input
+                  type="text"
+                  value={job.job_title}
+                  onChange={(e) => handleJobChange(index, 'job_title', e.target.value)}
+                  placeholder="Job Title"
+                />
+              </div>
+            ))
+          ) : (
+            <p>No employment history available.</p>
+          )}
+
+          <button onClick={handleAddJob}>Add Employment History</button>
 
           <button onClick={handleSaveChanges}>Save</button>
           <button onClick={toggleEditMode}>Cancel</button>
@@ -90,7 +112,7 @@ const PortfolioCard = ({ user, onUpdate }) => {
             <ul>
               {user.employment_history.map((job, index) => (
                 <li key={index}>
-                  {job.employer} - {job.jobtitle}
+                  {job.job_title} at {job.employer}
                 </li>
               ))}
             </ul>

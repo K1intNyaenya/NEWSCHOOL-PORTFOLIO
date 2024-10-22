@@ -60,7 +60,7 @@ def member_detail(request, pk):
     try:
         member = NewSchoolMember.objects.get(pk=pk)
     except NewSchoolMember.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Member not found."}, status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
         serializer = NewSchoolMemberSerializer(member)
@@ -71,14 +71,21 @@ def member_detail(request, pk):
         if serializer.is_valid():
             if 'password' in request.data:
                 password = request.data['password']
-                serializer.validated_data['password'] = make_password(password)
+                # Securely set the password using set_password()
+                member.set_password(password)
+                member.save(update_fields=['password'])
+            
+            # Update the rest of the fields
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        # Return validation errors if any
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     elif request.method == 'DELETE':
         member.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 @csrf_exempt
@@ -142,19 +149,19 @@ def review_application(request, application_id):
     if request.method == "POST":
         data = json.loads(request.body)
         application = get_object_or_404(ApplicationForm, id=application_id)
-        
+
         logger.info(f"Reviewing application ID: {application_id}")
 
+        # Update the application approval status
         application.approved = data.get('approved', False)
         application.vetted_by = data.get('vetted_by', application.vetted_by)
         application.member_joining_date = data.get('member_joining_date', None)
         application.save()
 
         if application.approved:
-            # Log approval step
-            logger.debug(f"Application {application_id} approved. Preparing member data...")
+            logger.debug(f"Application {application_id} approved. Preparing to move applicant to NewSchoolMember...")
 
-            # Prepare member data from the application
+            # Prepare the applicant's data for the NewSchoolMember
             member_data = {
                 'first_name': application.first_name,
                 'second_name': application.second_name,
@@ -162,64 +169,58 @@ def review_application(request, application_id):
                 'member_title': application.member_title,
                 'member_industry': application.member_industry,
                 'member_mobile': application.mobile_number,
-                'member_email': data.get('member_email'),
-                'username': data.get('username'),
-                'password': make_password(data.get('password')),  # Hash the password
+                'member_email': data.get('member_email', application.member_email),  # Ensure email is valid
+                'username': data.get('username', application.member_email),  # Default username to email
+                'password': make_password(data.get('password', 'temporarypassword123')),  # Hash password
+                'employment_history': data.get('employment_history', [])  # Ensure employment history is a list
             }
 
-            # Log member creation
-            logger.debug(f"Creating NewSchoolMember with email {member_data['member_email']}")
-
-            # Create NewSchoolMember from the application data
+            # Create a NewSchoolMember entry using the member data
             member_serializer = NewSchoolMemberSerializer(data=member_data)
             if member_serializer.is_valid():
                 member = member_serializer.save()
-                logger.info(f"Member created successfully for application ID {application_id}")
+                logger.info(f"NewSchoolMember created for application ID {application_id}")
 
-                # Now, create the Django User programmatically using the same details
-                username = data.get('username', application.member_email)  # Default username to email
-                password = data.get('password', 'temporarypassword123')  # Default password or from input
-                if not User.objects.filter(username=username).exists():
+                # Now, create the corresponding Django User account
+                if not User.objects.filter(username=member_data['username']).exists():
                     user = User.objects.create_user(
-                        username=username,
-                        email=application.member_email,
-                        password=password,
+                        username=member_data['username'],
+                        email=member_data['member_email'],
+                        password=data.get('password', 'temporarypassword123'),
                         first_name=application.first_name,
                         last_name=application.family_name
                     )
 
-                    # Optionally, send a password reset link or welcome email here
+                    # Optionally, send a welcome email with login credentials
                     send_mail(
                         'Welcome to the New School Community!',
-                        f'Your account has been created. Your username is: {username} and your temporary password is: {password}. Please log in and change your password.',
-                        'from@example.com',  # Replace with your from email
-                        [application.member_email],
+                        f'Your account has been created. Username: {member_data["username"]}, Temporary Password: {data.get("password", "temporarypassword123")}',
+                        'from@example.com',  # Change to your from email
+                        [member_data['member_email']],
                         fail_silently=False,
                     )
 
-                    logger.info(f"User {username} created and email sent.")
+                    logger.info(f"User created for NewSchoolMember with email {member_data['member_email']}")
+
+                    # Optionally, delete or mark the application as processed
+                    # application.delete()  # Uncomment this to delete the application after approval
 
                     return JsonResponse({
-                        'message': 'Application approved and user created successfully.',
+                        'message': 'Application approved, NewSchoolMember created, and user account created successfully.',
                         'user_id': user.id,
                         'username': user.username,
                         'member_data': member_serializer.data
                     }, status=201)
                 else:
-                    logger.error(f"User with username {username} already exists.")
+                    logger.error(f"User with username {member_data['username']} already exists.")
                     return JsonResponse({'message': 'User with this username already exists.'}, status=400)
-
             else:
-                logger.error(f"Error in NewSchoolMember serializer: {member_serializer.errors}")
+                logger.error(f"NewSchoolMember serializer errors: {member_serializer.errors}")
                 return JsonResponse(member_serializer.errors, status=400)
 
-        logger.info(f"Application {application_id} reviewed successfully.")
         return JsonResponse({"message": "Application reviewed successfully."}, status=200)
 
-    logger.error(f"Invalid request method for review_application. Expected POST, got {request.method}")
     return JsonResponse({"error": "Method not allowed. Use POST to review the application."}, status=405)
-
-    
 
 logger = logging.getLogger(__name__)
 
