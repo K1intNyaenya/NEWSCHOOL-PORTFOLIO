@@ -17,6 +17,7 @@ import logging
 from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 
@@ -142,12 +143,18 @@ def review_application(request, application_id):
         data = json.loads(request.body)
         application = get_object_or_404(ApplicationForm, id=application_id)
         
+        logger.info(f"Reviewing application ID: {application_id}")
+
         application.approved = data.get('approved', False)
         application.vetted_by = data.get('vetted_by', application.vetted_by)
         application.member_joining_date = data.get('member_joining_date', None)
         application.save()
 
         if application.approved:
+            # Log approval step
+            logger.debug(f"Application {application_id} approved. Preparing member data...")
+
+            # Prepare member data from the application
             member_data = {
                 'first_name': application.first_name,
                 'second_name': application.second_name,
@@ -157,19 +164,61 @@ def review_application(request, application_id):
                 'member_mobile': application.mobile_number,
                 'member_email': data.get('member_email'),
                 'username': data.get('username'),
-                'password': make_password(data.get('password')),
+                'password': make_password(data.get('password')),  # Hash the password
             }
 
+            # Log member creation
+            logger.debug(f"Creating NewSchoolMember with email {member_data['member_email']}")
+
+            # Create NewSchoolMember from the application data
             member_serializer = NewSchoolMemberSerializer(data=member_data)
             if member_serializer.is_valid():
                 member = member_serializer.save()
-                return JsonResponse(member_serializer.data, status=201)
+                logger.info(f"Member created successfully for application ID {application_id}")
+
+                # Now, create the Django User programmatically using the same details
+                username = data.get('username', application.member_email)  # Default username to email
+                password = data.get('password', 'temporarypassword123')  # Default password or from input
+                if not User.objects.filter(username=username).exists():
+                    user = User.objects.create_user(
+                        username=username,
+                        email=application.member_email,
+                        password=password,
+                        first_name=application.first_name,
+                        last_name=application.family_name
+                    )
+
+                    # Optionally, send a password reset link or welcome email here
+                    send_mail(
+                        'Welcome to the New School Community!',
+                        f'Your account has been created. Your username is: {username} and your temporary password is: {password}. Please log in and change your password.',
+                        'from@example.com',  # Replace with your from email
+                        [application.member_email],
+                        fail_silently=False,
+                    )
+
+                    logger.info(f"User {username} created and email sent.")
+
+                    return JsonResponse({
+                        'message': 'Application approved and user created successfully.',
+                        'user_id': user.id,
+                        'username': user.username,
+                        'member_data': member_serializer.data
+                    }, status=201)
+                else:
+                    logger.error(f"User with username {username} already exists.")
+                    return JsonResponse({'message': 'User with this username already exists.'}, status=400)
+
             else:
+                logger.error(f"Error in NewSchoolMember serializer: {member_serializer.errors}")
                 return JsonResponse(member_serializer.errors, status=400)
 
+        logger.info(f"Application {application_id} reviewed successfully.")
         return JsonResponse({"message": "Application reviewed successfully."}, status=200)
 
+    logger.error(f"Invalid request method for review_application. Expected POST, got {request.method}")
     return JsonResponse({"error": "Method not allowed. Use POST to review the application."}, status=405)
+
     
 
 logger = logging.getLogger(__name__)

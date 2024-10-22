@@ -1,5 +1,6 @@
 from pathlib import Path
 from decouple import config
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -121,21 +122,38 @@ CORS_ALLOWED_ORIGINS = [
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
         'file': {
-            'level': 'ERROR',
+            'level': 'DEBUG',  # Capture DEBUG and above (INFO, WARNING, ERROR, CRITICAL)
             'class': 'logging.FileHandler',
             'filename': 'C:\\Users\\Klint\\OneDrive\\Documents\\Nyaenya-WorkSpace\\NEWSCHOOL-PORTFOLIO\\server\\serverlog.log',
+            'formatter': 'verbose',  # Use the verbose format
         },
     },
     'loggers': {
         'django': {
             'handlers': ['file'],
-            'level': 'ERROR',
+            'level': 'DEBUG',  # Set this to DEBUG for more detailed logs (use 'ERROR' for only errors)
+            'propagate': True,
+        },
+        'portfolio': {  # This is for your app-specific logging
+            'handlers': ['file'],
+            'level': 'DEBUG',  # Log app-specific information
             'propagate': True,
         },
     },
 }
+
 
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -152,3 +170,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'klint.tasks@gmail.com'
 EMAIL_HOST_PASSWORD = 'odkk rwlm eons ikto'
 DEFAULT_FROM_EMAIL = 'klint.tasks@gmail.com'
+
+LOGS_DIR = os.path.join(BASE_DIR, 'logs')
+if not os.path.exists(LOGS_DIR):
+    os.makedirs(LOGS_DIR)

@@ -27,7 +27,7 @@ function PendingForm({ applicantData, onClose, onApprove, onReject }) {
   const handleApprovalSubmit = () => {
     if (validateForm()) {
       onApprove(applicantData.id, formData);
-      setShowApprovalForm(false); // Close the approval form after submission
+      setShowApprovalForm(true); // Close the approval form after submission
     }
   };
 

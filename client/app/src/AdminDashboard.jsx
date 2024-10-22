@@ -89,7 +89,7 @@ function AdminDashboard() {
 
   const handleApproveApplication = async (application) => {
     try {
-      const response = await fetch(`http://127.0.0.1:8080/review-application/${application.id}/`, {
+      const response = await fetch(`http://127.0.0.1:8080/portfolio/review-application/${application.id}/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -138,7 +138,7 @@ function AdminDashboard() {
 
   const handleRejectApplication = async (id) => {
     try {
-      const response = await fetch(`http://127.0.0.1:8080/review-application/${id}/`, {
+      const response = await fetch(`http://127.0.0.1:8080/portfolio/review-application/${id}/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
