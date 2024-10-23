@@ -174,3 +174,7 @@ DEFAULT_FROM_EMAIL = 'klint.tasks@gmail.com'
 LOGS_DIR = os.path.join(BASE_DIR, 'logs')
 if not os.path.exists(LOGS_DIR):
     os.makedirs(LOGS_DIR)
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'assets/profile_images')

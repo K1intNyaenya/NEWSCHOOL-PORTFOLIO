@@ -15,6 +15,8 @@ from .views import (
     send_password_reset_link,
 )
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -29,4 +31,4 @@ urlpatterns = [
     path('pending-applications/', get_pending_applications, name='pending_applications'),
     path('send-application/<str:applicant_email>/', send_application_form_email, name='send_application_email'),
     path('send-reset-password-link/<str:email>/', send_password_reset_link, name='send_reset_password_link'),
-]
+]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -14,16 +14,18 @@ class EmploymentHistorySerializer(serializers.ModelSerializer):
 
 class NewSchoolMemberSerializer(serializers.ModelSerializer):
     employment_history = EmploymentHistorySerializer(many=True, required=False)
+    profile_image = serializers.ImageField(required=False)
 
     class Meta:
         model = NewSchoolMember
         fields = [
             'id', 'first_name', 'second_name', 'family_name', 'member_title', 
             'member_industry', 'employment_history', 
-            'member_mobile', 'member_email', 'username', 'password'
+            'member_mobile', 'member_email', 'username', 'password', 'profile_image'
         ]
         extra_kwargs = {
             'password': {'write_only': True, 'required': False},  # Password is not required
+            'profile_image': {'required': False, 'allow_null': True},
         }
 
     def create(self, validated_data):
@@ -63,6 +65,9 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password', None)
         if password:
             instance.set_password(password)
+
+        
+        instance.profile_image = validated_data.get('profile_image', instance.profile_image)
 
         instance.save()
 

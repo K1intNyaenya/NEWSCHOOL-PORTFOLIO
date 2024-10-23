@@ -34,6 +34,8 @@ class NewSchoolMember(models.Model):
             self.password = make_password(self.password)
         super(NewSchoolMember, self).save(*args, **kwargs)
 
+    profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
+
     def __str__(self) -> str:
         return f"{self.first_name} {self.second_name} {self.family_name} ({self.username})"
 
