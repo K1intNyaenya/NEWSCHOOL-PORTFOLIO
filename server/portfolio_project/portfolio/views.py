@@ -18,6 +18,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse
 from django.contrib.auth.models import User
+import base64
+from .models import NewSchoolMember, ProfileImage
+from django.core.files.base import ContentFile
 
 
 
@@ -302,3 +305,52 @@ def send_password_reset_link(request, email):
         return JsonResponse({"error": "User with this email does not exist."}, status=404)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+    
+
+
+@api_view(['POST'])
+def upload_profile_image(request):
+    try:
+        member_id = request.data.get('member_id')
+        member = NewSchoolMember.objects.get(id=member_id)
+
+        profile_image_data = request.data.get('profileImage')
+
+        if profile_image_data:
+            # Decode the image
+            format, imgstr = profile_image_data.split(';base64,')
+            ext = format.split('/')[-1]
+            image_data = ContentFile(base64.b64decode(imgstr), name=f"profile_{member.username}.{ext}")
+
+            # Create or update the ProfileImage object
+            profile_image, created = ProfileImage.objects.get_or_create(member=member)
+            profile_image.image.save(image_data.name, image_data)
+            profile_image.save()
+
+            return Response({"message": "Profile image uploaded successfully"}, status=200)
+        else:
+            return Response({"error": "No image data provided"}, status=400)
+
+    except NewSchoolMember.DoesNotExist:
+        return Response({"error": "Member not found"}, status=404)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
+    
+
+@api_view(['GET'])
+def get_profile_image(request, member_id):
+    try:
+        member = NewSchoolMember.objects.get(id=member_id)
+        profile_image = ProfileImage.objects.get(member=member)
+
+        if profile_image and profile_image.image:
+            # Construct the full URL using request.build_absolute_uri
+            image_url = request.build_absolute_uri(profile_image.image.url)
+            return Response({"profile_image_url": image_url}, status=200)
+        else:
+            return Response({"message": "No profile image found"}, status=404)
+
+    except NewSchoolMember.DoesNotExist:
+        return Response({"error": "Member not found"}, status=404)
+    except ProfileImage.DoesNotExist:
+        return Response({"error": "Profile image not found"}, status=404)

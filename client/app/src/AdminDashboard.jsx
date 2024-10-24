@@ -48,9 +48,18 @@ function AdminDashboard() {
       if (!response.ok) {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
-      const data = await response.json();
-      const uniquePortfolios = Array.from(new Map(data.map(item => [item.id, item])).values());
-      setPortfolios(uniquePortfolios);
+      const members = await response.json();
+  
+      // Fetch profile images for each member
+      const membersWithImages = await Promise.all(members.map(async (member) => {
+        const imageResponse = await fetchProfileImage(member.id);
+        if (imageResponse) {
+          return { ...member, profile_image_url: imageResponse }; // Attach the profile image URL to the user
+        }
+        return member; // If image fetching fails, return the member without image
+      }));
+  
+      setPortfolios(membersWithImages);
     } catch (error) {
       console.error('Failed to fetch portfolios:', error);
       setError('Failed to fetch portfolios. Please try again later.');
@@ -58,6 +67,7 @@ function AdminDashboard() {
       setLoading(false);
     }
   };
+  
 
   const togglePendingApplicationsModal = async () => {
     setIsPendingModalOpen(!isPendingModalOpen);
@@ -99,7 +109,7 @@ function AdminDashboard() {
           password: 'temporarypassword123'
         }),
       });
-  
+
       if (response.ok) {
         console.log(`Application ${application.id} approved successfully`);
         setPendingApplications(prevApplications => prevApplications.filter(app => app.id !== application.id));
@@ -108,7 +118,7 @@ function AdminDashboard() {
         const newMemberResponse = await response.json();
         setPortfolios(prevPortfolios => [...prevPortfolios, newMemberResponse]);
         console.log("New member added from approved application:", newMemberResponse);
-  
+
         await sendPasswordResetLink(application.email);
       } else {
         console.error(`Failed to approve application ${application.id}`);
@@ -117,14 +127,14 @@ function AdminDashboard() {
       console.error("Error approving application:", error);
     }
   };
-  
+
   const sendPasswordResetLink = async (email) => {
     try {
       const response = await fetch(`http://127.0.0.1:8080/portfolio/send-reset-password-link/${email}/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
-  
+
       if (response.ok) {
         console.log(`Password reset link sent to ${email}`);
       } else {
@@ -134,7 +144,6 @@ function AdminDashboard() {
       console.error("Error sending password reset link:", error);
     }
   };
-  
 
   const handleRejectApplication = async (id) => {
     try {
@@ -145,7 +154,7 @@ function AdminDashboard() {
           approved: false
         }),
       });
-  
+
       if (response.ok) {
         console.log(`Application ${id} rejected successfully`);
         setPendingApplications(prevApplications => prevApplications.filter(app => app.id !== id));
@@ -157,7 +166,77 @@ function AdminDashboard() {
       console.error("Error rejecting application:", error);
     }
   };
-  
+
+  const uploadProfileImage = async (memberId, base64Image) => {
+    try {
+      const response = await fetch('http://127.0.0.1:8080/portfolio/upload-profile-image/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          member_id: memberId,
+          profileImage: base64Image,
+        }),
+      });
+
+      if (response.ok) {
+        console.log('Profile image uploaded successfully');
+      } else {
+        console.error('Failed to upload profile image');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  };
+
+  const fetchProfileImage = async (memberId) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8080/portfolio/get-profile-image/${memberId}/`);
+      if (response.ok) {
+        const data = await response.json(); // { profile_image_url: 'url_to_image' }
+        return data.profile_image_url; // Return the actual image URL
+      } else {
+        console.error('Failed to fetch profile image');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching profile image:', error);
+      return null;
+    }
+  };
+
+  const handleUpdateUser = async (updatedUser) => {
+    const { password, ...userWithoutPassword } = updatedUser;
+
+    const payload = password ? updatedUser : userWithoutPassword;
+
+    try {
+      const response = await fetch(`http://127.0.0.1:8080/portfolio/NewSchoolMember/${updatedUser.id}/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        const updatedData = await response.json();
+
+        setPortfolios((prevPortfolios) =>
+          prevPortfolios.map((user) =>
+            user.id === updatedData.id ? updatedData : user
+          )
+        );
+        setSuccessMessage('Member updated successfully');
+      } else {
+        throw new Error('Failed to update user');
+      }
+    } catch (error) {
+      console.error('Failed to update user:', error);
+      setError('Failed to update user. Please try again later.');
+    }
+  };
 
   const validateForm = () => {
     const formErrors = {};
@@ -214,46 +293,11 @@ function AdminDashboard() {
   };
 
   const resetForm = () => {
-    setNewUser(initialNewUser);  // Reset new user to initial state
-    setErrors({});  // Clear any form errors
+    setNewUser(initialNewUser);
+    setErrors({});
     setSuccessMessage('');
   };
-  
 
-  const handleUpdateUser = async (updatedUser) => {
-    const { password, ...userWithoutPassword } = updatedUser;  // Exclude password if not provided
-  
-    const payload = password ? updatedUser : userWithoutPassword;
-  
-    try {
-      const response = await fetch(`http://127.0.0.1:8080/portfolio/NewSchoolMember/${updatedUser.id}/`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),  // Send updated data, excluding password if not set
-      });
-  
-      if (response.ok) {
-        const updatedData = await response.json();
-  
-        setPortfolios((prevPortfolios) =>
-          prevPortfolios.map((user) =>
-            user.id === updatedData.id ? updatedData : user
-          )
-        );
-        setSuccessMessage('Member updated successfully');
-      } else {
-        throw new Error('Failed to update user');
-      }
-    } catch (error) {
-      console.error('Failed to update user:', error);
-      setError('Failed to update user. Please try again later.');
-    }
-  };
-  
-  
-  
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
     setErrors({});
@@ -316,11 +360,13 @@ function AdminDashboard() {
                 key={portfolio.id}
                 user={portfolio}
                 onUpdate={handleUpdateUser}
+                uploadProfileImage={uploadProfileImage} // Pass image upload handler
               />
             ))
         )}
       </div>
 
+      {/* Pending Applications Modal */}
       {isPendingModalOpen && (
         <div className="modal">
           <div className="modal-content">
@@ -331,7 +377,7 @@ function AdminDashboard() {
                   <li key={application.id} className="pending-list-item">
                     <div className="application-info">
                       <strong>{application.first_name} {application.second_name} {application.family_name}</strong><br />
-                      Email: {application.email}<br />
+                      Email: {application.member_email}<br />
                       Date of Application: {application.date_of_application}
                     </div>
                     <button className="view-button" onClick={() => handleViewApplication(application)}>View</button>
@@ -354,6 +400,7 @@ function AdminDashboard() {
         </div>
       )}
 
+      {/* Add New Member Modal */}
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content">
@@ -409,6 +456,7 @@ function AdminDashboard() {
         </div>
       )}
 
+      {/* Application Form Modal */}
       {isApplicationFormOpen && (
         <div className="modal">
           <div className="modal-content">
@@ -422,6 +470,7 @@ function AdminDashboard() {
         </div>
       )}
 
+      {/* Email Modal */}
       {isEmailModalOpen && (
         <div className="modal">
           <div className="modal-content">

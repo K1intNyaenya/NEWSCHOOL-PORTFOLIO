@@ -34,7 +34,6 @@ class NewSchoolMember(models.Model):
             self.password = make_password(self.password)
         super(NewSchoolMember, self).save(*args, **kwargs)
 
-    profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
 
     def __str__(self) -> str:
         return f"{self.first_name} {self.second_name} {self.family_name} ({self.username})"
@@ -88,3 +87,15 @@ class ApplicationForm(models.Model):
 
     def __str__(self):
         return f"Application by {self.first_name} {self.second_name} {self.family_name}"
+    
+
+class ProfileImage(models.Model):
+    member = models.OneToOneField(
+        NewSchoolMember, 
+        related_name='profile_image', 
+        on_delete=models.CASCADE
+    )
+    image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
+
+    def __str__(self):
+        return f"Profile image for {self.member.username}"
