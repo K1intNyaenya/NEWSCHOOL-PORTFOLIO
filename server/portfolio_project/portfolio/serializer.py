@@ -2,6 +2,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from .models import NewSchoolMember, EmploymentHistory, ApplicationForm
+from django.contrib.auth.hashers import make_password
 
 class EmploymentHistorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,11 +29,18 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         employment_history_data = validated_data.pop('employment_history', [])
-        try:
-            # Create the NewSchoolMember instance
-            member = NewSchoolMember.objects.create(**validated_data)
-            print("NewSchoolMember created with ID:", member.pk)  # Debug logging
+        
+        # Set default username to member_email if username is not provided
+        validated_data['username'] = validated_data.get('username', validated_data.get('member_email'))
 
+        # Hash password if provided
+        password = validated_data.pop('password', None)
+        member = NewSchoolMember(**validated_data)  # This creates the instance without saving it yet
+        if password:
+            member.set_password(password)  # Properly hash the password
+        member.save()  # Save the member instance to the database
+        
+        try:
             # Create EmploymentHistory instances
             for job in employment_history_data:
                 EmploymentHistory.objects.create(
@@ -42,13 +50,12 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
                 )
             return member
         except Exception as e:
-            print(f"Error while creating NewSchoolMember: {e}")
-            raise serializers.ValidationError("An error occurred while creating the member.")
+            raise serializers.ValidationError(f"Error creating member: {e}")
 
     def update(self, instance, validated_data):
         # Handle employment history updates
         employment_history_data = validated_data.pop('employment_history', None)
-        
+
         # Update basic fields
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.second_name = validated_data.get('second_name', instance.second_name)
@@ -70,7 +77,7 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
         if employment_history_data is not None:
             # Clear existing employment history
             EmploymentHistory.objects.filter(member=instance).delete()
-            
+
             # Create new employment history records
             for job in employment_history_data:
                 EmploymentHistory.objects.create(
@@ -80,6 +87,7 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
                 )
 
         return instance
+
 
     def validate_username(self, value):
         if self.instance and NewSchoolMember.objects.exclude(pk=self.instance.pk).filter(username=value).exists():
@@ -123,7 +131,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             raise serializers.ValidationError("Must include 'username' and 'password'")
 
         return super().validate(attrs)
-
 
 class ApplicationFormSerializer(serializers.ModelSerializer):
     class Meta:

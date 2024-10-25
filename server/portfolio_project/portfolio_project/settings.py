@@ -134,25 +134,30 @@ LOGGING = {
     },
     'handlers': {
         'file': {
-            'level': 'DEBUG',  # Capture DEBUG and above (INFO, WARNING, ERROR, CRITICAL)
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': 'C:\\Users\\Klint\\OneDrive\\Documents\\Nyaenya-WorkSpace\\NEWSCHOOL-PORTFOLIO\\server\\serverlog.log',
-            'formatter': 'verbose',  # Use the verbose format
+            'filename': os.path.join(BASE_DIR, 'serverlog.log'),  # Log file within BASE_DIR
+            'formatter': 'verbose',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
         },
     },
     'loggers': {
         'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',  # Set this to DEBUG for more detailed logs (use 'ERROR' for only errors)
+            'handlers': ['file', 'console'],
+            'level': 'DEBUG',
             'propagate': True,
         },
-        'portfolio': {  # This is for your app-specific logging
+        'portfolio': {
             'handlers': ['file'],
-            'level': 'DEBUG',  # Log app-specific information
+            'level': 'DEBUG',
             'propagate': True,
         },
     },
 }
+
 
 
 
@@ -178,3 +183,6 @@ if not os.path.exists(LOGS_DIR):
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+AUTH_USER_MODEL = 'portfolio.NewSchoolMember'
+

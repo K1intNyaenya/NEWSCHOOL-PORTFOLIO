@@ -102,6 +102,7 @@ def login_view(request):
         return Response({'message': 'Please provide both username and password'}, 
                         status=status.HTTP_400_BAD_REQUEST)
 
+    # Authenticate the user
     user = authenticate(request, username=username, password=password)
 
     if user is not None:
@@ -111,7 +112,7 @@ def login_view(request):
             'access': str(refresh.access_token),
             'user_id': user.id,
             'username': user.username,
-            'email': user.member_email,
+            'email': user.email,
         }, status=status.HTTP_200_OK)
     else:
         return Response({'message': 'Invalid credentials'}, 

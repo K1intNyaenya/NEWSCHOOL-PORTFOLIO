@@ -1,18 +1,34 @@
 from django.db import models
 from django.core.validators import RegexValidator
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
-class NewSchoolMember(models.Model):
+
+class NewSchoolMemberManager(BaseUserManager):
+    def create_user(self, username, member_email, password=None, **extra_fields):
+        if not username:
+            raise ValueError('The Username must be set')
+        if not member_email:
+            raise ValueError('The Email must be set')
+
+        user = self.model(username=username, member_email=member_email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, username, member_email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        return self.create_user(username, member_email, password, **extra_fields)
+
+
+class NewSchoolMember(AbstractBaseUser):
     first_name = models.CharField(max_length=45)
     second_name = models.CharField(max_length=45)
     family_name = models.CharField(max_length=45)
     member_title = models.CharField(max_length=75)
-    member_industry = models.CharField(
-        blank=True,
-        null=True,
-        max_length=75)  # New field for industry
+    member_industry = models.CharField(blank=True, null=True, max_length=75)
 
-    # Contact Information
     member_mobile = models.CharField(
         max_length=15,
         blank=True,
@@ -22,20 +38,19 @@ class NewSchoolMember(models.Model):
             message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
         )]
     )
-    
-    member_email = models.EmailField(max_length=75, default='abc@company.com')
-    
-    username = models.CharField(max_length=100, unique=True)  # Unique username
-    password = models.CharField(max_length=100)
 
-    def save(self, *args, **kwargs):
-        # Hash the password before saving
-        if not self.password.startswith('pbkdf2_sha256$'):  # Check if password is already hashed
-            self.password = make_password(self.password)
-        super(NewSchoolMember, self).save(*args, **kwargs)
+    member_email = models.EmailField(unique=True)
+    username = models.CharField(max_length=100, unique=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
 
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['member_email']
 
-    def __str__(self) -> str:
+    objects = NewSchoolMemberManager()
+
+    def __str__(self):
         return f"{self.first_name} {self.second_name} {self.family_name} ({self.username})"
 
 
