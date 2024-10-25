@@ -267,7 +267,7 @@ def send_application_form_email(request, applicant_email):
         # The frontend route where the form can be submitted
         application_link = f"http://localhost:5173/application-form?email={applicant_email}"
 
-        subject = 'Complete Your Application Form'
+        subject = 'NewSchool HR Application Form'
         message = f'Please complete your application form at the following link: {application_link}'
 
         send_mail(
