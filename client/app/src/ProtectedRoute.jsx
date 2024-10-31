@@ -1,25 +1,20 @@
 import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { isAuthenticated, getUserRole } from './authService';
 
-const ProtectedRoute = ({ component: Component, requiredRole, ...rest }) => {
+const ProtectedRoute = ({ requiredRole }) => {
     const isAuth = isAuthenticated();
     const userRole = getUserRole();
 
-    return (
-        <Route
-            {...rest}
-            element={
-                !isAuth ? (
-                    <Navigate to="/" replace /> // Redirect to login if not authenticated
-                ) : requiredRole && userRole !== requiredRole ? (
-                    <Navigate to="/" replace /> // Redirect if role doesn't match
-                ) : (
-                    <Component {...rest} /> // Render the component if authenticated and role matches
-                )
-            }
-        />
-    );
+    if (!isAuth) {
+        return <Navigate to="/" replace />; // Redirect to login if not authenticated
+    }
+
+    if (requiredRole && userRole !== requiredRole) {
+        return <Navigate to="/" replace />; // Redirect if role doesn't match
+    }
+
+    return <Outlet />; // Render nested routes if authenticated and role matches
 };
 
 export default ProtectedRoute;

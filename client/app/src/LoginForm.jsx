@@ -17,26 +17,27 @@ function LoginForm() {
     setLoading(true);
 
     try {
-      // Call login function and get the user's role
-      const role = await login(username, password);
-      
-      // Clear form inputs
-      setUsername('');
-      setPassword('');
+        // Call login function and get the user's role
+        const role = await login(username, password);
+        
+        // Clear form inputs
+        setUsername('');
+        setPassword('');
 
-      // Navigate to the correct dashboard based on role
-      if (role === 'admin') {
-        navigate('/admin-dashboard');
-      } else {
-        navigate('/dashboard');
-      }
+        // Navigate to the correct dashboard based on role
+        if (role === 'admin') {
+            navigate('/admin-dashboard');
+        } else {
+            navigate('/dashboard');
+        }
     } catch (error) {
-      console.error('Login error:', error.message);
-      setError(error.message);
+        console.error('Login error:', error.message);
+        setError(error.message);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
+
 
   return (
     <div className={`login-container ${theme}`}>

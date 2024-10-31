@@ -6,7 +6,7 @@ import EmploymentHistory from './EmploymentHistory';
 import UserCredentials from './UserCredentials';
 import ApplicationForm from './ApplicationForm';
 import PendingForm from './PendingForm';
-import { fetchWithAuth } from './authService';
+import { fetchWithAuth, isAuthenticated } from './authService';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -44,11 +44,14 @@ function AdminDashboard() {
 
   useEffect(() => {
     if (!isAuthenticated()) {
+      console.log("User not authenticated, redirecting to login.");
       navigate('/');
       return;
     }
+  
     fetchPortfolios();
-  }, []);
+  }, [navigate]);
+  
 
   const fetchPortfolios = async () => {
     try {
