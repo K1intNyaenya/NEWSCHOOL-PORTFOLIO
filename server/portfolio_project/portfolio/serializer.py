@@ -21,10 +21,11 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'first_name', 'second_name', 'family_name', 'member_title', 
             'member_industry', 'employment_history', 
-            'member_mobile', 'member_email', 'username', 'password'
+            'member_mobile', 'member_email', 'username', 'password', 'role'
         ]
         extra_kwargs = {
             'password': {'write_only': True, 'required': False},  # Password is not required
+            'role': {'required': False}
         }
 
     def create(self, validated_data):
@@ -32,6 +33,10 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
         
         # Set default username to member_email if username is not provided
         validated_data['username'] = validated_data.get('username', validated_data.get('member_email'))
+
+        # Role handling (set default as 'member' if not specified)
+        validated_data['role'] = validated_data.get('role', 'member')
+
 
         # Hash password if provided
         password = validated_data.pop('password', None)
@@ -129,8 +134,13 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 raise serializers.ValidationError("Invalid credentials")
         else:
             raise serializers.ValidationError("Must include 'username' and 'password'")
+        
+        # Create token with additional role information
+        data = super().validate(attrs)
+        refresh = self.get_token(user)
+        data["role"] = user.role  # Add role to the token response
 
-        return super().validate(attrs)
+        return data
 
 class ApplicationFormSerializer(serializers.ModelSerializer):
     class Meta:

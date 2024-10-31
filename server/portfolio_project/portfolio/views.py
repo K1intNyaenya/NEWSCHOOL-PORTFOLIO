@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import NewSchoolMember, ApplicationForm, EmploymentHistory
+from .models import NewSchoolMember, ApplicationForm, EmploymentHistory, ProfileImage
 from .serializer import NewSchoolMemberSerializer, CustomTokenObtainPairSerializer
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password
@@ -19,10 +19,21 @@ from django.conf import settings
 from django.urls import reverse
 from django.contrib.auth.models import User
 import base64
-from .models import NewSchoolMember, ProfileImage
 from django.core.files.base import ContentFile
+from rest_framework.permissions import BasePermission
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from .permissions import IsAdminUser, IsSelfOrAdmin
 
+logger = logging.getLogger(__name__)
 
+class IsAdminUser(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_staff or request.user.role == 'admin'
+
+class IsSelfOrAdmin(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return request.user == obj or request.user.is_staff
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -30,6 +41,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def get_newschoolmember(request):
     members = NewSchoolMember.objects.all()
     paginator = PageNumberPagination()
@@ -40,7 +52,9 @@ def get_newschoolmember(request):
     serializer = NewSchoolMemberSerializer(members, many=True)
     return Response(serializer.data)
 
+
 @api_view(['POST'])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def add_newschoolmember(request):
     print("Received request data:", request.data)
     try:
@@ -59,12 +73,15 @@ def add_newschoolmember(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated, IsSelfOrAdmin])
 def member_detail(request, pk):
     try:
         member = NewSchoolMember.objects.get(pk=pk)
+        if request.user != member and not request.user.is_staff:
+            return Response({"error": "Not authorized to access this member."}, status=status.HTTP_403_FORBIDDEN)
     except NewSchoolMember.DoesNotExist:
         return Response({"error": "Member not found."}, status=status.HTTP_404_NOT_FOUND)
-    
+
     if request.method == 'GET':
         serializer = NewSchoolMemberSerializer(member)
         return Response(serializer.data)
@@ -88,7 +105,6 @@ def member_detail(request, pk):
     elif request.method == 'DELETE':
         member.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 
 @csrf_exempt
@@ -126,6 +142,8 @@ def protected_view(request):
 
 
 @csrf_exempt
+@api_view(['POST'])
+@permission_classes([AllowAny])
 def submit_application_form(request):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -149,6 +167,8 @@ def submit_application_form(request):
 
 
 @csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def review_application(request, application_id):
     if request.method == "POST":
         data = json.loads(request.body)
@@ -173,10 +193,10 @@ def review_application(request, application_id):
                 'member_title': application.member_title,
                 'member_industry': application.member_industry,
                 'member_mobile': application.mobile_number,
-                'member_email': data.get('member_email', application.member_email),  # Ensure email is valid
-                'username': data.get('username', application.member_email),  # Default username to email
-                'password': make_password(data.get('password', 'temporarypassword123')),  # Hash password
-                'employment_history': data.get('employment_history', [])  # Ensure employment history is a list
+                'member_email': data.get('member_email', application.member_email),
+                'username': data.get('username', application.member_email),
+                'password': make_password(data.get('password', 'temporarypassword123')),
+                'employment_history': data.get('employment_history', [])
             }
 
             # Create a NewSchoolMember entry using the member data
@@ -199,7 +219,7 @@ def review_application(request, application_id):
                     send_mail(
                         'Welcome to the New School Community!',
                         f'Your account has been created. Username: {member_data["username"]}, Temporary Password: {data.get("password", "temporarypassword123")}',
-                        'from@example.com',  # Change to your from email
+                        'from@example.com',
                         [member_data['member_email']],
                         fail_silently=False,
                     )
@@ -226,9 +246,9 @@ def review_application(request, application_id):
 
     return JsonResponse({"error": "Method not allowed. Use POST to review the application."}, status=405)
 
-logger = logging.getLogger(__name__)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def get_pending_applications(request):
     try:
         pending_applications = ApplicationForm.objects.filter(approved=False)
@@ -262,6 +282,8 @@ def get_pending_applications(request):
 
 
 @csrf_exempt
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def send_application_form_email(request, applicant_email):
     try:
         # The frontend route where the form can be submitted
@@ -282,6 +304,7 @@ def send_application_form_email(request, applicant_email):
     
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+
 
 @csrf_exempt
 def send_password_reset_link(request, email):
@@ -306,7 +329,6 @@ def send_password_reset_link(request, email):
         return JsonResponse({"error": "User with this email does not exist."}, status=404)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
-    
 
 
 @api_view(['POST'])
@@ -336,16 +358,18 @@ def upload_profile_image(request):
         return Response({"error": "Member not found"}, status=404)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
-    
+
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated, IsSelfOrAdmin])
 def get_profile_image(request, member_id):
     try:
         member = NewSchoolMember.objects.get(id=member_id)
+        if request.user != member and not request.user.is_staff:
+            return Response({"error": "Not authorized to view this profile image."}, status=status.HTTP_403_FORBIDDEN)
         profile_image = ProfileImage.objects.get(member=member)
 
         if profile_image and profile_image.image:
-            # Construct the full URL using request.build_absolute_uri
             image_url = request.build_absolute_uri(profile_image.image.url)
             return Response({"profile_image_url": image_url}, status=200)
         else:

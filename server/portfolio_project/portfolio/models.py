@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class NewSchoolMemberManager(BaseUserManager):
@@ -10,6 +12,7 @@ class NewSchoolMemberManager(BaseUserManager):
         if not member_email:
             raise ValueError('The Email must be set')
 
+        extra_fields.setdefault('role', 'member')  # Default role as 'member' for regular users
         user = self.model(username=username, member_email=member_email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
@@ -18,11 +21,18 @@ class NewSchoolMemberManager(BaseUserManager):
     def create_superuser(self, username, member_email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('role', 'admin')  # Set role as 'admin' for superusers
 
         return self.create_user(username, member_email, password, **extra_fields)
 
 
 class NewSchoolMember(AbstractBaseUser):
+    ROLE_CHOICES = [
+        ('admin', 'Admin'),
+        ('member', 'Member'),
+        ('guest', 'Guest'),  # Additional roles can be added as needed
+    ]
+
     first_name = models.CharField(max_length=45)
     second_name = models.CharField(max_length=45)
     family_name = models.CharField(max_length=45)
@@ -44,6 +54,7 @@ class NewSchoolMember(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='member')  # New field for role-based access
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['member_email']
@@ -59,11 +70,10 @@ class EmploymentHistory(models.Model):
     employer = models.CharField(max_length=100)
     job_title = models.CharField(max_length=100)
 
-
-    
     def __str__(self):
         return f"{self.member.first_name} {self.member.family_name} - {self.job_title} at {self.employer}"
-    
+
+
 class ApplicationForm(models.Model):
     # Applicant's Information
     first_name = models.CharField(max_length=45)
@@ -80,7 +90,7 @@ class ApplicationForm(models.Model):
     member_email = models.EmailField(max_length=75, default='abc@company.com')
     member_industry = models.CharField(max_length=75, blank=True, null=True)
     employment_industry = models.CharField(max_length=75)
-    
+
     # Application Details
     date_of_application = models.DateField(auto_now_add=True)
     reason_for_joining = models.TextField(blank=True, null=True)
@@ -102,12 +112,28 @@ class ApplicationForm(models.Model):
 
     def __str__(self):
         return f"Application by {self.first_name} {self.second_name} {self.family_name}"
-    
+
+
+@receiver(post_save, sender=ApplicationForm)
+def create_member_from_application(sender, instance, created, **kwargs):
+    """
+    Signal to create a NewSchoolMember upon application approval.
+    """
+    if created and instance.approved:
+        NewSchoolMember.objects.create_user(
+            username=instance.member_email,
+            member_email=instance.member_email,
+            first_name=instance.first_name,
+            second_name=instance.second_name,
+            family_name=instance.family_name,
+            password=BaseUserManager().make_random_password()
+        )
+
 
 class ProfileImage(models.Model):
     member = models.OneToOneField(
-        NewSchoolMember, 
-        related_name='profile_image', 
+        NewSchoolMember,
+        related_name='profile_image',
         on_delete=models.CASCADE
     )
     image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
