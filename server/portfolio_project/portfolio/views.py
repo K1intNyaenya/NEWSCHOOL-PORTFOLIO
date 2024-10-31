@@ -41,7 +41,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated, IsAdminUser])
+@permission_classes([IsAuthenticated, IsSelfOrAdmin])
 def get_newschoolmember(request):
     members = NewSchoolMember.objects.all()
     paginator = PageNumberPagination()
@@ -379,3 +379,9 @@ def get_profile_image(request, member_id):
         return Response({"error": "Member not found"}, status=404)
     except ProfileImage.DoesNotExist:
         return Response({"error": "Profile image not found"}, status=404)
+
+
+@api_view(['GET'])
+def health_check(request):
+    logger.debug("Health check endpoint reached")
+    return Response({"status": "Server is running"}, status=status.HTTP_200_OK)

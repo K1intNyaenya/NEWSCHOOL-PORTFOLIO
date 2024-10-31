@@ -14,7 +14,8 @@ from .views import (
     send_application_form_email,
     send_password_reset_link,
     upload_profile_image, 
-    get_profile_image
+    get_profile_image,
+    health_check
 )
 from django.urls import path
 
@@ -33,4 +34,6 @@ urlpatterns = [
     path('send-reset-password-link/<str:email>/', send_password_reset_link, name='send_reset_password_link'),
     path('upload-profile-image/', upload_profile_image, name='upload_profile_image'),
     path('get-profile-image/<int:member_id>/', get_profile_image, name='get_profile_image'),
+    path('health-check/', health_check, name='health_check'),
+
 ]
