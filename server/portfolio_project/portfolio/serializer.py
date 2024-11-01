@@ -3,6 +3,9 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 from .models import NewSchoolMember, EmploymentHistory, ApplicationForm
 from django.contrib.auth.hashers import make_password
+import logging
+
+logger = logging.getLogger(__name__)
 
 class EmploymentHistorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,29 +27,22 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
             'member_mobile', 'member_email', 'username', 'password', 'role'
         ]
         extra_kwargs = {
-            'password': {'write_only': True, 'required': False},  # Password is not required
+            'password': {'write_only': True, 'required': False},
             'role': {'required': False}
         }
 
     def create(self, validated_data):
         employment_history_data = validated_data.pop('employment_history', [])
-        
-        # Set default username to member_email if username is not provided
         validated_data['username'] = validated_data.get('username', validated_data.get('member_email'))
-
-        # Role handling (set default as 'member' if not specified)
         validated_data['role'] = validated_data.get('role', 'member')
 
-
-        # Hash password if provided
         password = validated_data.pop('password', None)
-        member = NewSchoolMember(**validated_data)  # This creates the instance without saving it yet
+        member = NewSchoolMember(**validated_data)
         if password:
-            member.set_password(password)  # Properly hash the password
-        member.save()  # Save the member instance to the database
+            member.set_password(password)
+        member.save()
         
         try:
-            # Create EmploymentHistory instances
             for job in employment_history_data:
                 EmploymentHistory.objects.create(
                     member=member,
@@ -55,13 +51,16 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
                 )
             return member
         except Exception as e:
+            logger.error(f"Error creating member: {e}")
             raise serializers.ValidationError(f"Error creating member: {e}")
 
     def update(self, instance, validated_data):
-        # Handle employment history updates
         employment_history_data = validated_data.pop('employment_history', None)
+        role = validated_data.get('role', instance.role)
 
-        # Update basic fields
+        if instance.role != 'admin' and role == 'admin':
+            raise serializers.ValidationError("Only admins can assign the 'admin' role.")
+
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.second_name = validated_data.get('second_name', instance.second_name)
         instance.family_name = validated_data.get('family_name', instance.family_name)
@@ -70,20 +69,16 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
         instance.member_mobile = validated_data.get('member_mobile', instance.member_mobile)
         instance.member_email = validated_data.get('member_email', instance.member_email)
         instance.username = validated_data.get('username', instance.username)
+        instance.role = role
 
-        # Handle password update if provided
         password = validated_data.pop('password', None)
         if password:
             instance.set_password(password)
 
         instance.save()
 
-        # If employment history data is provided, update it
         if employment_history_data is not None:
-            # Clear existing employment history
             EmploymentHistory.objects.filter(member=instance).delete()
-
-            # Create new employment history records
             for job in employment_history_data:
                 EmploymentHistory.objects.create(
                     member=instance,
@@ -92,7 +87,6 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
                 )
 
         return instance
-
 
     def validate_username(self, value):
         if self.instance and NewSchoolMember.objects.exclude(pk=self.instance.pk).filter(username=value).exists():
@@ -131,15 +125,16 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         if username and password:
             user = authenticate(request=self.context.get('request'), username=username, password=password)
             if not user:
+                logger.warning(f"Failed login attempt for username: {username}")
                 raise serializers.ValidationError("Invalid credentials")
         else:
             raise serializers.ValidationError("Must include 'username' and 'password'")
         
-        # Create token with additional role information
         data = super().validate(attrs)
         refresh = self.get_token(user)
-        data["role"] = user.role  # Add role to the token response
+        data["role"] = user.role
 
+        logger.info(f"Login successful for user: {username} with role: {user.role}")
         return data
 
 class ApplicationFormSerializer(serializers.ModelSerializer):
