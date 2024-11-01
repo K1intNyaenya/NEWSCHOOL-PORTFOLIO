@@ -136,7 +136,13 @@ class ProfileImage(models.Model):
         related_name='profile_image',
         on_delete=models.CASCADE
     )
-    image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
+    image = models.ImageField(
+        upload_to='profile_images/', 
+        null=True, 
+        blank=True, 
+        default='profile_images/default.jpg'  # Set the path relative to MEDIA_ROOT
+    )
 
     def __str__(self):
         return f"Profile image for {self.member.username}"
+

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PortfolioViewCard from './PortfolioViewCard';
 import './style/Dboard.css';
+import { fetchWithAuth } from './authService';
 
 function Dashboard() {
   const [portfolios, setPortfolios] = useState([]);
@@ -12,21 +13,23 @@ function Dashboard() {
     const fetchPortfolios = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://127.0.0.1:8080/portfolio/NewSchoolMember/");
+        const response = await fetchWithAuth("http://127.0.0.1:8080/portfolio/NewSchoolMember/");
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
+        console.log("Fetched portfolios successfully:", data);
 
-        // Remove duplicates based on a unique identifier
-        const uniquePortfolios = Array.from(new Map(data.map(item => [item.id, item])).values());
-
+        // Ensure unique portfolios by ID
+        const uniquePortfolios = Array.from(new Set(data.map(item => item.id)))
+          .map(id => data.find(item => item.id === id));
+        
         setPortfolios(uniquePortfolios);
       } catch (err) {
-        console.error(err);
-        setError("Failed to fetch portfolios. Please try again later.");
+        console.error("Fetch error:", err);
+        setError(`Failed to fetch portfolios. Error: ${err.message}`);
       } finally {
         setLoading(false);
       }

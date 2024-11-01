@@ -1,20 +1,32 @@
+// ProtectedRoute.jsx
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { isAuthenticated, getUserRole } from './authService';
 
-const ProtectedRoute = ({ requiredRole }) => {
-    const isAuth = isAuthenticated();
-    const userRole = getUserRole();
+function ProtectedRoute({ requiredRole }) {
+  const isAuth = isAuthenticated();
+  const userRole = getUserRole();
 
-    if (!isAuth) {
-        return <Navigate to="/" replace />; // Redirect to login if not authenticated
+  // Redirect to login if not authenticated
+  if (!isAuth) {
+    console.warn('Access denied: User not authenticated');
+    return <Navigate to="/" replace />;
+  }
+
+  // Role-based redirection
+  if (requiredRole && userRole !== requiredRole) {
+    console.warn(`Access denied: User does not have required role (${requiredRole})`);
+
+    // Redirect admin users to admin dashboard, other users to dashboard
+    if (userRole === 'admin') {
+      return <Navigate to="/admin-dashboard" replace />;
+    } else {
+      return <Navigate to="/dashboard" replace />;
     }
+  }
 
-    if (requiredRole && userRole !== requiredRole) {
-        return <Navigate to="/" replace />; // Redirect if role doesn't match
-    }
-
-    return <Outlet />; // Render nested routes if authenticated and role matches
-};
+  // Render the component if the user has the correct role
+  return <Outlet />;
+}
 
 export default ProtectedRoute;

@@ -15,10 +15,14 @@ function ApplicationForm() {
     referred_by_name: '',
     referred_by_mobile: '',
     vetted_by: '',
-    member_joining_date: ''
+    member_joining_date: '',
   });
+  
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
-  // Extract email from URL if it exists and set in formData
+  // Set email from URL params if available
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const emailFromUrl = urlParams.get('email');
@@ -34,21 +38,36 @@ function ApplicationForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccessMessage('');
+
+    // Client-side validation
+    if (!formData.member_email || !/\S+@\S+\.\S+/.test(formData.member_email)) {
+      setError('Invalid email format');
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch('http://127.0.0.1:8080/portfolio/submit-application-form/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      if (response.ok) {
-        alert('Application submitted successfully!');
-      } else {
-        alert('Failed to submit application.');
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to submit application');
       }
+
+      setSuccessMessage('Application submitted successfully!');
+      setFormData({ ...formData, reason_for_joining: '', vetted_by: '', member_joining_date: '' });
     } catch (error) {
-      console.error('Error submitting application:', error);
+      console.error('Submission error:', error);
+      setError(`Error: ${error.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -210,7 +229,11 @@ function ApplicationForm() {
         </div>
       </fieldset>
 
-      <button type="submit">Submit Application</button>
+      {error && <p className="error">{error}</p>}
+      {successMessage && <p className="success">{successMessage}</p>}
+      <button type="submit" disabled={loading}>
+        {loading ? 'Submitting...' : 'Submit Application'}
+      </button>
     </form>
   );
 }

@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import './style/PortfolioCard.css';
+import { fetchWithAuth } from './authService';
 
 const PortfolioViewCard = ({ user }) => {
-  const [profileImageUrl, setProfileImageUrl] = useState('');
+  const [profileImageUrl, setProfileImageUrl] = useState('https://via.placeholder.com/80');
 
-  // Fetch the profile image when the component loads
   useEffect(() => {
     const fetchProfileImage = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:8080/portfolio/get-profile-image/${user.id}/`);
+        const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/get-profile-image/${user.id}/`);
         if (response.ok) {
           const data = await response.json();
-          setProfileImageUrl(data.profile_image_url); // Set the image URL from backend
+          setProfileImageUrl(data.profile_image_url || 'https://via.placeholder.com/80');
+        } else if (response.status === 404) {
+          console.warn(`Profile image not found for user ID ${user.id}, using default image.`);
         } else {
           console.error('Failed to fetch profile image');
         }
@@ -32,7 +34,7 @@ const PortfolioViewCard = ({ user }) => {
           <div className="profile-image-container">
             {/* Display fetched profile image */}
             <img
-              src={profileImageUrl || 'https://via.placeholder.com/80'}
+              src={profileImageUrl}
               alt={`${user.first_name} ${user.family_name}`}
               className="profile-image"
             />

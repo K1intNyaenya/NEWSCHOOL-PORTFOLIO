@@ -16,7 +16,8 @@ from .models import NewSchoolMember, ApplicationForm, EmploymentHistory, Profile
 from .serializer import NewSchoolMemberSerializer, CustomTokenObtainPairSerializer
 from .permissions import IsAdminUser, IsSelfOrAdmin
 from rest_framework_simplejwt.views import TokenObtainPairView
-from django.contrib.auth.hashers import make_password 
+from django.contrib.auth.hashers import make_password
+from django.templatetags.static import static
 import json
 import base64
 import logging
@@ -234,15 +235,16 @@ def upload_profile_image(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsSelfOrAdmin])
 def get_profile_image(request, member_id):
-    """
-    Retrieves the profile image URL for a specified member.
-    """
-    member = get_object_or_404(NewSchoolMember, id=member_id)
-    profile_image = ProfileImage.objects.get(member=member)
-    if profile_image and profile_image.image:
-        image_url = request.build_absolute_uri(profile_image.image.url)
-        return Response({"profile_image_url": image_url})
-    return Response({"message": "No profile image found"}, status=404)
+    try:
+        member = NewSchoolMember.objects.get(id=member_id)
+        profile_image = ProfileImage.objects.get(member=member)
+        image_url = profile_image.image.url if profile_image.image else 'default_image_url'
+        return Response({"profile_image_url": request.build_absolute_uri(image_url)}, status=200)
+    except NewSchoolMember.DoesNotExist:
+        return Response({"error": "Member not found"}, status=404)
+    except ProfileImage.DoesNotExist:
+        return Response({"profile_image_url": request.build_absolute_uri('default_image_url')}, status=200)
+
 
 @api_view(['GET'])
 def health_check(request):

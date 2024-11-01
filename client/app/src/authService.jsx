@@ -1,39 +1,59 @@
 const API_URL = 'http://localhost:8080/portfolio/token/';
-
 const ACCESS_TOKEN_KEY = 'access_token';
 
-// Helper to get access token
-export const getAccessToken = () => localStorage.getItem('access_token');
+// Unique log identifiers for easier debugging
+const logContext = (functionName) => `[AuthService: ${functionName}]`;
 
-// Check if token is expired (optional, if `exp` claim is included)
+// Helper to get access token
+export const getAccessToken = () => {
+    console.log(`${logContext("getAccessToken")} Retrieving access token from localStorage`);
+    return localStorage.getItem('access_token');
+};
+
+// Check if token is expired
 const isTokenExpired = (token) => {
+    console.log(`${logContext("isTokenExpired")} Checking if token is expired`);
     if (!token) return true;
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.exp * 1000 < Date.now();
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const isExpired = payload.exp * 1000 < Date.now();
+        console.log(`${logContext("isTokenExpired")} Token expired: ${isExpired}`);
+        return isExpired;
+    } catch (error) {
+        console.error(`${logContext("isTokenExpired")} Token parsing error:`, error);
+        return true;
+    }
 };
 
 // Function to handle refreshing access token
 export const refreshAccessToken = async () => {
+    console.log(`${logContext("refreshAccessToken")} Attempting to refresh access token`);
     const refreshToken = localStorage.getItem('refresh_token');
     if (!refreshToken) {
-        console.warn('No refresh token available');
+        console.warn(`${logContext("refreshAccessToken")} No refresh token available`);
         return false;
     }
 
-    const response = await fetch(`${API_URL}refresh/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refresh: refreshToken }),
-    });
+    try {
+        const response = await fetch(`${API_URL}refresh/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refresh: refreshToken }),
+        });
 
-    if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('access_token', data.access);
-        console.log('Access token refreshed');
-        return true;
-    } else {
-        console.error('Failed to refresh access token');
-        logout();  // Clear tokens if refresh fails
+        if (response.ok) {
+            const data = await response.json();
+            localStorage.setItem('access_token', data.access);
+            console.log(`${logContext("refreshAccessToken")} Access token refreshed successfully`);
+            return true;
+        } else {
+            console.error(`${logContext("refreshAccessToken")} Failed to refresh access token`);
+            logout();
+            return false;
+        }
+    } catch (error) {
+        console.error(`${logContext("refreshAccessToken")} Network or server error during token refresh:`, error);
+        logout();
         return false;
     }
 };
@@ -44,76 +64,89 @@ export const fetchWithAuth = async (url, options = {}) => {
     
     // Pre-check if token is expired
     if (isTokenExpired(accessToken)) {
-        console.log('Access token expired, attempting to refresh');
-        const refreshSuccessful = await refreshAccessToken();
-        if (!refreshSuccessful) {
-            throw new Error('Unauthorized: Access token expired and refresh failed');
-        }
-        accessToken = getAccessToken(); // Update with new token after refresh
+      console.log('Access token expired, attempting to refresh');
+      const refreshSuccessful = await refreshAccessToken();
+      if (!refreshSuccessful) {
+        throw new Error('Unauthorized: Access token expired and refresh failed');
+      }
+      accessToken = getAccessToken(); // Update with new token after refresh
     }
-
+  
     options.headers = {
-        ...options.headers,
-        'Authorization': `Bearer ${accessToken}`,
+      ...options.headers,
+      'Authorization': `Bearer ${accessToken}`,
     };
-
-    let response = await fetch(url, options);
-
-    // Retry once if unauthorized
-    if (response.status === 401) {
-        console.log('401 Unauthorized, trying to refresh token');
-        const refreshSuccessful = await refreshAccessToken();
-        if (refreshSuccessful) {
-            options.headers['Authorization'] = `Bearer ${getAccessToken()}`;
-            response = await fetch(url, options);
-        } else {
-            console.error('Token refresh failed, unable to fetch resource');
-            throw new Error('Unauthorized: Token refresh failed');
-        }
+  
+    try {
+      const response = await fetch(url, options);
+  
+      // Check for 404 specifically for profile images
+      if (response.status === 404) {
+        console.warn(`[AuthService: fetchWithAuth] 404 Not Found for URL: ${url}`);
+        return { ok: false, status: 404 }; // Return a controlled response
+      }
+  
+      if (!response.ok) {
+        throw new Error(`Failed request with status ${response.status}: ${response.statusText}`);
+      }
+  
+      return response;
+    } catch (error) {
+      console.error('[AuthService: fetchWithAuth] Error during fetch:', error);
+      throw error;
     }
-
-    return response;
-};
+  };
+  
 
 // Login function to obtain tokens and user role
 export const login = async (username, password) => {
-  const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
-  });
+    console.log(`${logContext("login")} Attempting login with username: ${username}`);
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+        });
 
-    if (!response.ok) {
-        throw new Error('Invalid credentials');
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`${logContext("login")} Login failed: ${errorData.message || 'Invalid credentials'}`);
+        }
+
+        const data = await response.json();
+        localStorage.setItem('access_token', data.access);
+        localStorage.setItem('refresh_token', data.refresh);
+        const role = data.role || 'member'; 
+        localStorage.setItem('user_role', role); 
+
+        console.log(`${logContext("login")} User logged in with role: ${role}`);
+        return role;
+    } catch (error) {
+        console.error(`${logContext("login")} Login error:`, error);
+        throw error;
     }
-
-    const data = await response.json();
-    localStorage.setItem('access_token', data.access);
-    localStorage.setItem('refresh_token', data.refresh);
-
-    // Assuming the response contains the user's role; adjust if needed
-    const role = data.role || 'member'; // default to 'user' if role is not in response
-    localStorage.setItem('user_role', role); // store role in local storage
-
-    console.log('User logged in and tokens stored');
-    return role;
 };
 
 // Logout function to clear tokens
 export const logout = () => {
-    console.log('Logging out and clearing tokens');
+    console.log(`${logContext("logout")} Logging out and clearing tokens`);
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user_role'); // Clear the role on logout
+    localStorage.removeItem('user_role');
 };
 
 // Utility function to check if the user is authenticated
 export const isAuthenticated = () => {
+    console.log(`${logContext("isAuthenticated")} Checking authentication status`);
     const accessToken = getAccessToken();
-    return accessToken && !isTokenExpired(accessToken);
+    const authenticated = accessToken && !isTokenExpired(accessToken);
+    console.log(`${logContext("isAuthenticated")} Authenticated: ${authenticated}`);
+    return authenticated;
 };
 
 // Function to get user role from local storage
 export const getUserRole = () => {
-    return localStorage.getItem('user_role') || null; // Retrieve the user role if available
+    const role = localStorage.getItem('user_role') || null;
+    console.log(`${logContext("getUserRole")} Retrieved user role: ${role}`);
+    return role;
 };

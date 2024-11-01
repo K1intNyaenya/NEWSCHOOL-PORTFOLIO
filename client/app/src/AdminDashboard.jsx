@@ -54,19 +54,22 @@ function AdminDashboard() {
   
 
   const fetchPortfolios = async () => {
+    console.log("Fetching portfolios...");
     try {
       const response = await fetchWithAuth('http://127.0.0.1:8080/portfolio/NewSchoolMember/');
       if (!response.ok) throw new Error('Error fetching portfolios');
       const members = await response.json();
-
-      const membersWithImages = await Promise.all(members.map(async (member) => {
-        const imageResponse = await fetchProfileImage(member.id);
-        return imageResponse ? { ...member, profile_image_url: imageResponse } : member;
-      }));
-
+  
+      const membersWithImages = await Promise.all(
+        members.map(async (member) => {
+          const imageResponse = await fetchProfileImage(member.id);
+          return { ...member, profile_image_url: imageResponse };  // Empty if no image
+        })
+      );
   
       setPortfolios(membersWithImages);
     } catch (error) {
+      console.error("Fetch Portfolios Error:", error);
       setError('Failed to fetch portfolios. Please try again later.');
     } finally {
       setLoading(false);
@@ -75,6 +78,7 @@ function AdminDashboard() {
 
 
   const togglePendingApplicationsModal = async () => {
+    console.log("Toggling pending applications modal");
     setIsPendingModalOpen(!isPendingModalOpen);
     if (!isPendingModalOpen) {
       try {
@@ -99,38 +103,42 @@ function AdminDashboard() {
     setSelectedApplication(null);
   };
 
-  const handleApproveApplication = async (application) => {
+  const handleApplication = async (application, isApproved) => {
     try {
-      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/review-application/${application.id}/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          approved: true,
-          member_email: application.member_email,
-          username: application.username,
-          password: 'temporarypassword123'
-        }),
-      });
+      const response = await fetchWithAuth(
+        `http://127.0.0.1:8080/portfolio/review-application/${application.id}/`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            approved: isApproved,
+            member_email: application.member_email,
+            username: application.username,
+            password: isApproved ? 'temporarypassword123' : null,
+          }),
+        }
+      );
       
       if (response.ok) {
-        console.log(`Application ${application.id} approved successfully`);
-        setPendingApplications(prevApplications => prevApplications.filter(app => app.id !== application.id));
+        setPendingApplications(prev => prev.filter(app => app.id !== application.id));
         setIsPendingFormOpen(false);
-        
-        const newMemberResponse = await response.json();
-        setPortfolios(prevPortfolios => [...prevPortfolios, newMemberResponse]);
-        console.log("New member added from approved application:", newMemberResponse);
 
-        await sendPasswordResetLink(application.email);
+        if (isApproved) {
+          const newMemberResponse = await response.json();
+          setPortfolios(prevPortfolios => [...prevPortfolios, newMemberResponse]);
+          console.log("New member added from approved application:", newMemberResponse);
+          await sendPasswordResetLink(application.member_email);
+        }
       } else {
-        console.error(`Failed to approve application ${application.id}`);
+        console.error(`Failed to ${isApproved ? 'approve' : 'reject'} application ${application.id}`);
       }
     } catch (error) {
-      console.error("Error approving application:", error);
+      console.error(`Error ${isApproved ? 'approving' : 'rejecting'} application:`, error);
     }
   };
 
   const sendPasswordResetLink = async (email) => {
+    console.log(`Sending password reset link to ${email}`);
     try {
       const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/send-reset-password-link/${email}/`, {
         method: 'POST',
@@ -168,6 +176,7 @@ function AdminDashboard() {
   };
 
   const uploadProfileImage = async (memberId, base64Image) => {
+    console.log(`Uploading profile image for member ID ${memberId}`);
     try {
       const response = await fetchWithAuth('http://127.0.0.1:8080/portfolio/upload-profile-image/', {
         method: 'POST',
@@ -193,68 +202,23 @@ function AdminDashboard() {
   const fetchProfileImage = async (memberId) => {
     try {
       const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/get-profile-image/${memberId}/`);
-      if (response.ok) {
-        const data = await response.json(); // { profile_image_url: 'url_to_image' }
-        return data.profile_image_url; // Return the actual image URL
-      } else {
-        console.error('Failed to fetch profile image');
+      if (response.status === 404) {
+        console.warn(`No image found for member ID ${memberId}. Returning blank field.`);
+        return ''; // Return empty string for missing images
+      } else if (!response.ok) {
+        console.error(`Unexpected error fetching profile image for member ID ${memberId}. Status: ${response.status}`);
         return null;
       }
+  
+      const data = await response.json();
+      return data.profile_image_url || '';
     } catch (error) {
-      console.error('Error fetching profile image:', error);
+      console.error(`Error fetching profile image for member ID ${memberId}:`, error);
       return null;
     }
   };
-
-  const handleUpdateUser = async (updatedUser) => {
-    const { password, ...userWithoutPassword } = updatedUser;
-
-    const payload = password ? updatedUser : userWithoutPassword;
-
-    try {
-      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/NewSchoolMember/${updatedUser.id}/`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (response.ok) {
-        const updatedData = await response.json();
-
-        setPortfolios((prevPortfolios) =>
-          prevPortfolios.map((user) =>
-            user.id === updatedData.id ? updatedData : user
-          )
-        );
-        setSuccessMessage('Member updated successfully');
-      } else {
-        throw new Error('Failed to update user');
-      }
-    } catch (error) {
-      console.error('Failed to update user:', error);
-      setError('Failed to update user. Please try again later.');
-    }
-  };
-
-  const validateForm = () => {
-    const formErrors = {};
-    if (!newUser.first_name) {
-      formErrors.first_name = 'First Name is required';
-    }
-    if (!newUser.member_title) {
-      formErrors.member_title = 'Profession is required';
-    }
-    if (newUser.member_email && !/\S+@\S+\.\S+/.test(newUser.member_email)) {
-      formErrors.member_email = 'Email is invalid';
-    }
-    if (newUser.member_mobile && !/^\+?[1-9]\d{1,14}$/.test(newUser.member_mobile)) {
-      formErrors.member_mobile = 'Mobile number is invalid';
-    }
-    setErrors(formErrors);
-    return Object.keys(formErrors).length === 0;
-  };
+  
+  
 
   const handleAddUser = async () => {
     if (!validateForm()) return;
@@ -287,10 +251,50 @@ function AdminDashboard() {
       } else {
         throw new Error('Failed to add member');
       }
+    } catch (error) {
+      console.error("Error adding member:", error);
+      setError('Failed to add member. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const handleUpdateUser = async (updatedUser) => {
+    try {
+      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/NewSchoolMember/${updatedUser.id}/`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedUser),
+      });
+  
+      if (!response.ok) throw new Error('Failed to update user');
+      const updatedData = await response.json();
+  
+      setPortfolios((prevPortfolios) =>
+        prevPortfolios.map((user) => (user.id === updatedData.id ? updatedData : user))
+      );
+  
+      console.log("User updated successfully");
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
+  };
+  
+
+  const validateForm = () => {
+    const formErrors = {};
+    if (!newUser.first_name) formErrors.first_name = 'First Name is required';
+    if (!newUser.member_title) formErrors.member_title = 'Profession is required';
+    if (newUser.member_email && !/\S+@\S+\.\S+/.test(newUser.member_email)) {
+      formErrors.member_email = 'Email is invalid';
+    }
+    if (newUser.member_mobile && !/^\+?[1-9]\d{1,14}$/.test(newUser.member_mobile)) {
+      formErrors.member_mobile = 'Mobile number is invalid';
+    }
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0;
+  };
+
 
   const resetForm = () => {
     setNewUser(initialNewUser);
@@ -314,6 +318,8 @@ function AdminDashboard() {
   };
 
   const handleSendEmail = async () => {
+    setError('');
+    setSuccessMessage('');
     try {
       const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/send-application/${email}/`, {
         method: 'POST',
