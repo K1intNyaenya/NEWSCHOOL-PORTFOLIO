@@ -175,6 +175,27 @@ function AdminDashboard() {
     }
   };
 
+  const handleApproveApplication = async (id) => {
+    try {
+      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/review-application/${id}/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ approved: true }),
+      });
+  
+      if (response.ok) {
+        console.log(`Application ${id} approved successfully`);
+        // Remove the approved application from pending applications list
+        setPendingApplications(prevApplications => prevApplications.filter(app => app.id !== id));
+        setIsPendingFormOpen(false);
+      } else {
+        console.error(`Failed to approve application ${id}`);
+      }
+    } catch (error) {
+      console.error("Error approving application:", error);
+    }
+  };  
+
   const uploadProfileImage = async (memberId, base64Image) => {
     console.log(`Uploading profile image for member ID ${memberId}`);
     try {
@@ -256,7 +277,7 @@ function AdminDashboard() {
       setError('Failed to add member. Please try again.');
     } finally {
       setIsSubmitting(false);
-    }
+    } 
   };
 
   const handleUpdateUser = async (updatedUser) => {
@@ -366,7 +387,7 @@ function AdminDashboard() {
                 key={portfolio.id}
                 user={portfolio}
                 onUpdate={handleUpdateUser}
-                uploadProfileImage={uploadProfileImage} // Pass image upload handler
+                uploadProfileImage={uploadProfileImage}
               />
             ))
         )}
@@ -397,7 +418,7 @@ function AdminDashboard() {
               <PendingForm
                 applicantData={selectedApplication}
                 onClose={handleCloseForm}
-                onApprove={() => handleApproveApplication(selectedApplication)}
+                onApprove={() => handleApproveApplication(selectedApplication.id)}
                 onReject={() => handleRejectApplication(selectedApplication.id)}
               />
             )}
