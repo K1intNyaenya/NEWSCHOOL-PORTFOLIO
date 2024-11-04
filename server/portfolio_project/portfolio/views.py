@@ -13,7 +13,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from .models import NewSchoolMember, ApplicationForm, EmploymentHistory, ProfileImage
-from .serializer import NewSchoolMemberSerializer, CustomTokenObtainPairSerializer
+from .serializer import NewSchoolMemberSerializer, CustomTokenObtainPairSerializer, ApplicationFormSerializer
 from .permissions import IsAdminUser, IsSelfOrAdmin
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
@@ -176,11 +176,11 @@ class PendingApplicationsView(APIView):
     """
     Retrieves all pending applications.
     """
-    permission_classes = [IsAuthenticated, IsAdminUser]
-    
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         pending_applications = ApplicationForm.objects.filter(approved=False)
-        applications_data = [NewSchoolMemberSerializer(app).data for app in pending_applications]
+        applications_data = ApplicationFormSerializer(pending_applications, many=True).data
         return JsonResponse(applications_data, safe=False)
 
 @api_view(['POST'])
