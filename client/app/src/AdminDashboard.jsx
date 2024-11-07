@@ -20,6 +20,8 @@ const initialNewUser = {
   member_email: '',
   username: '',
   password: '',
+  employment_status: '',
+  member_country: '',
 };
 
 function AdminDashboard() {
@@ -63,7 +65,7 @@ function AdminDashboard() {
       const membersWithImages = await Promise.all(
         members.map(async (member) => {
           const imageResponse = await fetchProfileImage(member.id);
-          return { ...member, profile_image_url: imageResponse };  // Empty if no image
+          return { ...member, profile_image_url: imageResponse };
         })
       );
   
@@ -249,7 +251,12 @@ function AdminDashboard() {
     setSuccessMessage('');
 
     const updatedEmploymentHistory = newUser.employment_history.filter(job => job.employer && job.job_title);
-    const payload = { ...newUser, employment_history: updatedEmploymentHistory };
+    const payload = {
+      ...newUser,
+      employment_history: updatedEmploymentHistory,
+      employment_status: newUser.employment_status,
+      member_country: newUser.member_country,
+  };
 
     if (portfolios.some(member => member.member_email === payload.member_email)) {
       setError('Email already exists. Please use a different email address.');

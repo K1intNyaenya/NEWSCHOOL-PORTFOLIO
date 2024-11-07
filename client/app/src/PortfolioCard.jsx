@@ -12,9 +12,9 @@ const PortfolioCard = ({ user, onUpdate, uploadProfileImage, fetchProfileImage }
     const loadProfileImage = async () => {
       try {
         if (!user.profile_image_url) {
-          const response = await fetchProfileImage(editUser.id); // Fetch profile image from backend
+          const response = await fetchProfileImage(editUser.id);
           if (response && response.profile_image_url) {
-            setProfileImageUrl(response.profile_image_url); // Set the fetched profile image URL
+            setProfileImageUrl(response.profile_image_url);
           }
         }
       } catch (error) {
@@ -23,7 +23,7 @@ const PortfolioCard = ({ user, onUpdate, uploadProfileImage, fetchProfileImage }
     };
 
     if (editUser.id && !profileImageUrl) {
-      loadProfileImage(); // Trigger image loading when component is mounted if no image already
+      loadProfileImage();
     }
   }, [editUser.id, fetchProfileImage, profileImageUrl]);
 
@@ -53,10 +53,10 @@ const PortfolioCard = ({ user, onUpdate, uploadProfileImage, fetchProfileImage }
       reader.onloadend = () => {
         setEditUser({
           ...editUser,
-          profile_image: reader.result, // Set Base64 image string for preview
+          profile_image: reader.result,
         });
       };
-      reader.readAsDataURL(file); // Convert image to Base64
+      reader.readAsDataURL(file);
     }
   };
 
@@ -64,10 +64,9 @@ const PortfolioCard = ({ user, onUpdate, uploadProfileImage, fetchProfileImage }
     if (selectedImage) {
       const reader = new FileReader();
       reader.onloadend = async () => {
-        const base64Image = reader.result; // Convert image to Base64
-        const response = await uploadProfileImage(editUser.id, base64Image); // Call the API to upload the image
+        const base64Image = reader.result;
+        const response = await uploadProfileImage(editUser.id, base64Image);
 
-        // After successful upload, update the profile image URL
         if (response && response.profile_image_url) {
           setProfileImageUrl(response.profile_image_url);
         }
@@ -77,8 +76,8 @@ const PortfolioCard = ({ user, onUpdate, uploadProfileImage, fetchProfileImage }
   };
 
   const handleSaveDetails = async () => {
-    onUpdate(editUser); // Trigger the parent component's update function
-    setIsEditing(false); // Exit edit mode
+    onUpdate(editUser);
+    setIsEditing(false);
   };
 
   return (
@@ -87,9 +86,8 @@ const PortfolioCard = ({ user, onUpdate, uploadProfileImage, fetchProfileImage }
         <div className="card-content">
           <div className="left-section">
             <div className="profile-image-container">
-              {/* Display profile image */}
               <img
-                src={editUser.profile_image || profileImageUrl || 'https://via.placeholder.com/80'}
+                src={editUser.profile_image || profileImageUrl || '/images/default.jpg'}
                 alt={`${editUser.first_name} ${editUser.family_name}`}
                 className="profile-image"
               />
@@ -117,6 +115,25 @@ const PortfolioCard = ({ user, onUpdate, uploadProfileImage, fetchProfileImage }
               onChange={(e) => setEditUser({ ...editUser, member_email: e.target.value })}
               placeholder="Email"
             />
+            <input
+              type="text"
+              value={editUser.member_industry}
+              onChange={(e) => setEditUser({ ...editUser, member_industry: e.target.value })}
+              placeholder="Industry"
+            />
+            <input
+              type="text"
+              value={editUser.employment_status}
+              onChange={(e) => setEditUser({ ...editUser, employment_status: e.target.value })}
+              placeholder="Employment Status"
+            />
+            <input
+              type="text"
+              value={editUser.member_country}
+              onChange={(e) => setEditUser({ ...editUser, member_country: e.target.value })}
+              placeholder="Country"
+            />
+
             <h4>Employment History:</h4>
             {editUser.employment_history.length > 0 ? (
               editUser.employment_history.map((job, index) => (
@@ -140,8 +157,8 @@ const PortfolioCard = ({ user, onUpdate, uploadProfileImage, fetchProfileImage }
             )}
 
             <button onClick={handleAddJob}>Add Employment History</button>
-            <button onClick={handleSaveDetails}>Save Details</button> {/* Save user details */}
-            <button onClick={handleSaveImage}>Save Image</button> {/* Save profile image */}
+            <button onClick={handleSaveDetails}>Save Details</button>
+            <button onClick={handleSaveImage}>Save Image</button>
             <button onClick={toggleEditMode}>Cancel</button>
           </div>
         </div>
@@ -149,9 +166,8 @@ const PortfolioCard = ({ user, onUpdate, uploadProfileImage, fetchProfileImage }
         <div className="card-content">
           <div className="left-section">
             <div className="profile-image-container">
-              {/* Display fetched profile image */}
               <img
-                src={profileImageUrl || 'https://via.placeholder.com/80'}
+                src={profileImageUrl || '/images/default.jpg'}
                 alt={`${user.first_name} ${user.family_name}`}
                 className="profile-image"
               />
@@ -162,9 +178,11 @@ const PortfolioCard = ({ user, onUpdate, uploadProfileImage, fetchProfileImage }
 
           <div className="right-section">
             <div className="info">
-              <p><strong>Mobile:</strong> {user.member_mobile}</p>
-              <p><strong>Email:</strong> {user.member_email}</p>
-              <p><strong>Industry:</strong> {user.member_industry}</p>
+              <p><strong>Mobile:</strong> {user.member_mobile || 'N/A'}</p>
+              <p><strong>Email:</strong> {user.member_email || 'N/A'}</p>
+              <p><strong>Industry:</strong> {user.member_industry || 'N/A'}</p>
+              <p><strong>Employment Status:</strong> {user.employment_status || 'N/A'}</p>
+              <p><strong>Country:</strong> {user.member_country || 'N/A'}</p>
             </div>
             <h4>Employment History:</h4>
             {user.employment_history && user.employment_history.length > 0 ? (

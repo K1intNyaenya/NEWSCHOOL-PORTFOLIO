@@ -4,6 +4,10 @@ from django.contrib.auth import authenticate
 from .models import NewSchoolMember, EmploymentHistory, ApplicationForm
 from django.contrib.auth.hashers import make_password
 import logging
+from django.db import transaction
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.auth.models import BaseUserManager
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +28,8 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'first_name', 'second_name', 'family_name', 'member_title', 
             'member_industry', 'employment_history', 
-            'member_mobile', 'member_email', 'username', 'password', 'role'
+            'member_mobile', 'member_email', 'username', 'password', 'role', 'employment_status',
+            'member_country'
         ]
         extra_kwargs = {
             'password': {'write_only': True, 'required': False},
@@ -70,6 +75,7 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
         instance.member_email = validated_data.get('member_email', instance.member_email)
         instance.username = validated_data.get('username', instance.username)
         instance.role = role
+        
 
         password = validated_data.pop('password', None)
         if password:
@@ -141,3 +147,53 @@ class ApplicationFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApplicationForm
         fields = '__all__'
+
+    def update(self, instance, validated_data):
+        approved = validated_data.get('approved', instance.approved)
+
+        if approved and not instance.approved:
+            # Only create a NewSchoolMember if approval status changes to True
+            try:
+                with transaction.atomic():
+                    # Generate password and create the member
+                    password = BaseUserManager().make_random_password()
+                    user = NewSchoolMember.objects.create_user(
+                        username=instance.member_email,
+                        member_email=instance.member_email,
+                        first_name=instance.first_name,
+                        second_name=instance.second_name,
+                        family_name=instance.family_name,
+                        password=password
+                    )
+                    logger.info(
+                        f"NewSchoolMember created from approved application. "
+                        f"Application ID: {instance.id}, Email: {instance.member_email}"
+                    )
+
+                    # (Optional) Send notification email
+                    if settings.EMAIL_HOST:
+                        try:
+                            send_mail(
+                                subject="Your Application Has Been Approved",
+                                message=(
+                                    f"Hello {instance.first_name},\n\n"
+                                    "Congratulations! Your application has been approved.\n"
+                                    f"Username: {instance.member_email}\n"
+                                    "Please use the 'Forgot Password' option to set your password initially.\n\n"
+                                    "Thank you!"
+                                ),
+                                from_email=settings.DEFAULT_FROM_EMAIL,
+                                recipient_list=[instance.member_email],
+                                fail_silently=False,
+                            )
+                            logger.info(f"Approval email sent to {instance.member_email}")
+                        except Exception as e:
+                            logger.error(f"Error sending approval email to {instance.member_email}: {e}")
+                            # Optionally, you could raise a warning or handle the failed email scenario differently
+
+            except Exception as e:
+                logger.error(f"Error creating NewSchoolMember from application ID {instance.id}: {e}")
+                raise serializers.ValidationError("An error occurred during member creation from application.")
+
+        # Save the application form with any updates
+        return super().update(instance, validated_data)

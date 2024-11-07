@@ -13,6 +13,7 @@ from .views import (
     send_password_reset_link,
     upload_profile_image,
     get_profile_image,
+    get_choices,
     health_check
 )
 
@@ -42,4 +43,7 @@ urlpatterns = [
 
     # Health check endpoint
     path('health-check/', health_check, name='health_check'),
+
+    #choices endpoint
+    path('choices/', get_choices, name='get_choices'),
 ]

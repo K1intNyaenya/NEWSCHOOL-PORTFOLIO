@@ -12,7 +12,7 @@ class NewSchoolMemberManager(BaseUserManager):
         if not member_email:
             raise ValueError('The Email must be set')
 
-        extra_fields.setdefault('role', 'member')  # Default role as 'member' for regular users
+        extra_fields.setdefault('role', 'member')
         user = self.model(username=username, member_email=member_email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
@@ -21,7 +21,7 @@ class NewSchoolMemberManager(BaseUserManager):
     def create_superuser(self, username, member_email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('role', 'admin')  # Set role as 'admin' for superusers
+        extra_fields.setdefault('role', 'admin')
 
         return self.create_user(username, member_email, password, **extra_fields)
 
@@ -30,7 +30,34 @@ class NewSchoolMember(AbstractBaseUser):
     ROLE_CHOICES = [
         ('admin', 'Admin'),
         ('member', 'Member'),
-        ('guest', 'Guest'),  # Additional roles can be added as needed
+        ('guest', 'Guest'),
+    ]
+
+    FULL_TIME = 'FT'
+    PART_TIME = 'PT'
+    CONTRACTOR = 'CT'
+    INTERN = 'IN'
+
+    EMPLOYMENT_STATUS_CHOICES = [
+        (FULL_TIME, 'Full-Time'),
+        (PART_TIME, 'Part-Time'),
+        (CONTRACTOR, 'Contractor'),
+        (INTERN, 'Intern'),
+    ]
+
+    COUNTRY_CHOICES = [
+        ('KE', 'Kenya'),
+        ('TZ', 'Tanzania'),
+        ('UG', 'Uganda'),
+        ('RW', 'Rwanda'),
+        ('ZW', 'Zimbabwe'),
+        ('SA', 'South Africa'),
+        ('MZ', 'Mozambique'),
+        ('GH', 'Ghana'),
+        ('UAE', 'United Arab Emirates'),
+        ('NO', 'Norway'),
+        ('FR', 'France'),
+        ('IT', 'Italy'),
     ]
 
     first_name = models.CharField(max_length=45)
@@ -49,12 +76,26 @@ class NewSchoolMember(AbstractBaseUser):
         )]
     )
 
+    employment_status = models.CharField(
+        max_length=75,
+        choices=EMPLOYMENT_STATUS_CHOICES,
+        blank=True,
+        null=True
+    )
+
+    member_country = models.CharField(
+        max_length=75,
+        choices=COUNTRY_CHOICES,
+        blank=True,
+        null=True
+    )
+
     member_email = models.EmailField(unique=True)
     username = models.CharField(max_length=100, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='member')  # New field for role-based access
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='member')
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['member_email']
@@ -140,7 +181,7 @@ class ProfileImage(models.Model):
         upload_to='profile_images/', 
         null=True, 
         blank=True, 
-        default='profile_images/default.jpg'  # Set the path relative to MEDIA_ROOT
+        default='http://localhost:5173/images/default.jpg'
     )
 
     def __str__(self):

@@ -253,3 +253,16 @@ def health_check(request):
     """
     logger.debug("Health check endpoint reached")
     return Response({"status": "Server is running"})
+
+@api_view(['GET'])
+def get_choices(request):
+    """
+    Returns choices for employment_status and member_country fields.
+    """
+    employment_status_choices = NewSchoolMember.EMPLOYMENT_STATUS_CHOICES
+    country_choices = NewSchoolMember.COUNTRY_CHOICES
+
+    return Response({
+        "employment_status_choices": employment_status_choices,
+        "member_country_choices": country_choices
+    })
