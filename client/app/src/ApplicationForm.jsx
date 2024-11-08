@@ -16,6 +16,8 @@ function ApplicationForm() {
     referred_by_mobile: '',
     vetted_by: '',
     member_joining_date: '',
+    employment_status: '',
+    member_country: '',
   });
   
   const [error, setError] = useState('');
@@ -163,6 +165,44 @@ function ApplicationForm() {
             onChange={handleChange}
             required
           />
+
+          <label htmlFor="employment_status">Employment Status: </label>
+          <select
+            id="employment_status"
+            name="employment_status"
+            value={formData.employment_status}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Status</option>
+            <option value="FT">Full-Time</option>
+            <option value="PT">Part-Time</option>
+            <option value="CT">Contractor</option>
+            <option value="IN">Intern</option>
+          </select>
+
+          <label htmlFor="member_country">Country: </label>
+          <select
+            id="member_country"
+            name="member_country"
+            value={formData.member_country}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Country</option>
+            <option value="Kenya">KE</option>
+            <option value="Tanzania">TZ</option>
+            <option value="Uganda">UG</option>
+            <option value="Rwanda">RW</option>
+            <option value="Zimbabwe">ZW</option>
+            <option value="South Africa">SA</option>
+            <option value="Mozambique">MZ</option>
+            <option value="Ghana">GH</option>
+            <option value="United Arab Emirates">UAE</option>
+            <option value="Norway">NO</option>
+            <option value="France">FR</option>
+            <option value="Italy">IT</option>
+          </select>
         </div>
       </fieldset>
 

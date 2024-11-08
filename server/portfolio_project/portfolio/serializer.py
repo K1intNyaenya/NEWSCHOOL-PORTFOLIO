@@ -14,10 +14,11 @@ logger = logging.getLogger(__name__)
 class EmploymentHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = EmploymentHistory
-        fields = ['id', 'employer', 'job_title']
+        fields = ['id', 'employer', 'job_title', 'tenant_id']
         extra_kwargs = {
             'employer': {'required': False, 'allow_blank': True},
             'job_title': {'required': False, 'allow_blank': True},
+            'tenant_id': {'read_only': True}
         }
 
 class NewSchoolMemberSerializer(serializers.ModelSerializer):
@@ -29,17 +30,20 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
             'id', 'first_name', 'second_name', 'family_name', 'member_title', 
             'member_industry', 'employment_history', 
             'member_mobile', 'member_email', 'username', 'password', 'role', 'employment_status',
-            'member_country'
+            'member_country', 'tenant_id'
         ]
         extra_kwargs = {
             'password': {'write_only': True, 'required': False},
-            'role': {'required': False}
+            'role': {'required': False},
+            'tenant': {'read_only': True}
         }
 
     def create(self, validated_data):
         employment_history_data = validated_data.pop('employment_history', [])
         validated_data['username'] = validated_data.get('username', validated_data.get('member_email'))
         validated_data['role'] = validated_data.get('role', 'member')
+        tenant_id = self.context['request'].tenant.id
+        validated_data['tenant_id'] = tenant_id
 
         password = validated_data.pop('password', None)
         member = NewSchoolMember(**validated_data)
@@ -52,7 +56,8 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
                 EmploymentHistory.objects.create(
                     member=member,
                     employer=job.get('employer', ''),
-                    job_title=job.get('job_title', '')
+                    job_title=job.get('job_title', ''),
+                    tenant_id=tenant_id
                 )
             return member
         except Exception as e:
@@ -84,12 +89,13 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
         instance.save()
 
         if employment_history_data is not None:
-            EmploymentHistory.objects.filter(member=instance).delete()
+            EmploymentHistory.objects.filter(member=instance, tenant_id=instance.tenant_id).delete()
             for job in employment_history_data:
                 EmploymentHistory.objects.create(
                     member=instance,
                     employer=job.get('employer', ''),
-                    job_title=job.get('job_title', '')
+                    job_title=job.get('job_title', ''),
+                    tenant_id=instance.tenant_id
                 )
 
         return instance
@@ -139,6 +145,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data = super().validate(attrs)
         refresh = self.get_token(user)
         data["role"] = user.role
+        data["tenant_id"] = user.tenant_id
 
         logger.info(f"Login successful for user: {username} with role: {user.role}")
         return data
@@ -163,7 +170,8 @@ class ApplicationFormSerializer(serializers.ModelSerializer):
                         first_name=instance.first_name,
                         second_name=instance.second_name,
                         family_name=instance.family_name,
-                        password=password
+                        password=password,
+                        tenant_id=instance.tenant_id
                     )
                     logger.info(
                         f"NewSchoolMember created from approved application. "

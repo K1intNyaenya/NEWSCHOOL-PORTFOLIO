@@ -34,7 +34,7 @@ def get_newschoolmember(request):
     """
     Retrieves all NewSchoolMembers with pagination.
     """
-    members = NewSchoolMember.objects.all()
+    members = NewSchoolMember.objects.filter(tenant=request.tenant)
     paginator = PageNumberPagination()
     page = paginator.paginate_queryset(members, request)
     if page is not None:
@@ -52,7 +52,7 @@ def add_newschoolmember(request):
     try:
         serializer = NewSchoolMemberSerializer(data=request.data)
         if serializer.is_valid():
-            member = serializer.save()
+            member = serializer.save(tenant=request.tenant)
             logger.info(f"New member created: {member.username}")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         logger.error(f"Add member failed: {serializer.errors}")
@@ -68,12 +68,12 @@ class MemberDetailView(APIView):
     permission_classes = [IsAuthenticated, IsSelfOrAdmin]
 
     def get(self, request, pk):
-        member = get_object_or_404(NewSchoolMember, pk=pk)
+        member = get_object_or_404(NewSchoolMember, pk=pk, tenant=request.tenant)
         serializer = NewSchoolMemberSerializer(member)
         return Response(serializer.data)
 
     def put(self, request, pk):
-        member = get_object_or_404(NewSchoolMember, pk=pk)
+        member = get_object_or_404(NewSchoolMember, pk=pk, tenant=request.tenant)
         serializer = NewSchoolMemberSerializer(member, data=request.data)
         if serializer.is_valid():
             if 'password' in request.data:
@@ -83,7 +83,7 @@ class MemberDetailView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        member = get_object_or_404(NewSchoolMember, pk=pk)
+        member = get_object_or_404(NewSchoolMember, pk=pk, tenant=request.tenant)
         member.delete()
         logger.info(f"Member deleted: {member.username}")
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -124,6 +124,7 @@ def submit_application_form(request):
     if request.method == "POST":
         data = json.loads(request.body)
         application = ApplicationForm.objects.create(
+            tenant=request.tenant,
             first_name=data['first_name'],
             second_name=data['second_name'],
             family_name=data['family_name'],
@@ -153,6 +154,7 @@ class ReviewApplication(APIView):
         application.save()
         if application.approved:
             member_data = {
+                'tenant': request.tenant,
                 'first_name': application.first_name,
                 'second_name': application.second_name,
                 'family_name': application.family_name,
@@ -204,7 +206,7 @@ def send_password_reset_link(request, email):
     """
     Sends a password reset link to the specified email.
     """
-    member = get_object_or_404(NewSchoolMember, member_email=email)
+    member = get_object_or_404(NewSchoolMember, member_email=email, tenant=request.tenant)
     reset_link = f"http://yourdomain.com/reset-password/{member.id}"
     send_mail(
         'Password Reset Request',

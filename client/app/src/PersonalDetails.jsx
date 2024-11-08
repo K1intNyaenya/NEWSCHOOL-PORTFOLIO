@@ -9,18 +9,18 @@ const employmentStatusOptions = [
 ];
 
 const countryOptions = [
-  { value: 'KE', label: 'Kenya' },
-  { value: 'TZ', label: 'Tanzania' },
-  { value: 'UG', label: 'Uganda' },
-  { value: 'RW', label: 'Rwanda' },
-  { value: 'ZW', label: 'Zimbabwe' },
-  { value: 'SA', label: 'South Africa' },
-  { value: 'MZ', label: 'Mozambique' },
-  { value: 'GH', label: 'Ghana' },
-  { value: 'UAE', label: 'United Arab Emirates' },
-  { value: 'NO', label: 'Norway' },
-  { value: 'FR', label: 'France' },
-  { value: 'IT', label: 'Italy' },
+  { value: 'Kenya', label: 'KE' },
+  { value: 'Tanzania', label: 'TZ' },
+  { value: 'Uganda', label: 'UG' },
+  { value: 'Rwanda', label: 'RW' },
+  { value: 'Zimbabwe', label: 'ZW' },
+  { value: 'South Africa', label: 'SA' },
+  { value: 'Mozambique', label: 'MZ' },
+  { value: 'Ghana', label: 'GH' },
+  { value: 'United Arab Emirates', label: 'UAE' },
+  { value: 'Norway', label: 'NO' },
+  { value: 'France', label: 'FR' },
+  { value: 'Italy', label: 'IT' },
 ];
 
 const PersonalDetails = ({ user, setUser, errors }) => {

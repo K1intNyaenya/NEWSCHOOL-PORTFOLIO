@@ -3,8 +3,21 @@ from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import uuid
 
 
+# Tenant model, defining each tenant's unique identifier and domain information
+class Tenant(models.Model):
+    tenant_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    tenant_name = models.CharField(max_length=255)
+    tenant_domain = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.tenant_name} - {self.tenant_id}"
+
+
+# Custom User Manager for handling NewSchoolMember creation and management
 class NewSchoolMemberManager(BaseUserManager):
     def create_user(self, username, member_email, password=None, **extra_fields):
         if not username:
@@ -26,6 +39,7 @@ class NewSchoolMemberManager(BaseUserManager):
         return self.create_user(username, member_email, password, **extra_fields)
 
 
+# NewSchoolMember model, extending AbstractBaseUser with custom fields for role, employment status, etc.
 class NewSchoolMember(AbstractBaseUser):
     ROLE_CHOICES = [
         ('admin', 'Admin'),
@@ -60,6 +74,7 @@ class NewSchoolMember(AbstractBaseUser):
         ('IT', 'Italy'),
     ]
 
+    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True)
     first_name = models.CharField(max_length=45)
     second_name = models.CharField(max_length=45)
     family_name = models.CharField(max_length=45)
@@ -106,6 +121,7 @@ class NewSchoolMember(AbstractBaseUser):
         return f"{self.first_name} {self.second_name} {self.family_name} ({self.username})"
 
 
+# EmploymentHistory model linked to NewSchoolMember with job details
 class EmploymentHistory(models.Model):
     member = models.ForeignKey(NewSchoolMember, related_name='employment_history', on_delete=models.CASCADE)
     employer = models.CharField(max_length=100)
@@ -115,8 +131,9 @@ class EmploymentHistory(models.Model):
         return f"{self.member.first_name} {self.member.family_name} - {self.job_title} at {self.employer}"
 
 
+# ApplicationForm model for handling application information before becoming a member
 class ApplicationForm(models.Model):
-    # Applicant's Information
+    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True)
     first_name = models.CharField(max_length=45)
     second_name = models.CharField(max_length=45)
     family_name = models.CharField(max_length=45)
@@ -132,7 +149,6 @@ class ApplicationForm(models.Model):
     member_industry = models.CharField(max_length=75, blank=True, null=True)
     employment_industry = models.CharField(max_length=75)
 
-    # Application Details
     date_of_application = models.DateField(auto_now_add=True)
     reason_for_joining = models.TextField(blank=True, null=True)
     referred_by_name = models.CharField(max_length=75, blank=True, null=True)
@@ -146,7 +162,6 @@ class ApplicationForm(models.Model):
         )]
     )
 
-    # Vetting and Approval
     vetted_by = models.CharField(max_length=100, blank=True, null=True)
     approved = models.BooleanField(default=False)
     member_joining_date = models.DateField(null=True, blank=True)
@@ -155,6 +170,7 @@ class ApplicationForm(models.Model):
         return f"Application by {self.first_name} {self.second_name} {self.family_name}"
 
 
+# Signal to create NewSchoolMember upon application approval
 @receiver(post_save, sender=ApplicationForm)
 def create_member_from_application(sender, instance, created, **kwargs):
     """
@@ -171,6 +187,7 @@ def create_member_from_application(sender, instance, created, **kwargs):
         )
 
 
+# ProfileImage model, allowing a one-to-one relationship with NewSchoolMember
 class ProfileImage(models.Model):
     member = models.OneToOneField(
         NewSchoolMember,
@@ -186,4 +203,3 @@ class ProfileImage(models.Model):
 
     def __str__(self):
         return f"Profile image for {self.member.username}"
-
