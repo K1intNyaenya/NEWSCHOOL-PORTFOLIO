@@ -17,7 +17,6 @@ from .serializer import NewSchoolMemberSerializer, CustomTokenObtainPairSerializ
 from .permissions import IsAdminUser, IsSelfOrAdmin
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
-from django.templatetags.static import static
 import json
 import base64
 import logging
@@ -30,7 +29,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsSelfOrAdmin])
-def get_newschoolmember(request):
+def get_newschoolmember(request, tenant_id):
     """
     Retrieves all NewSchoolMembers with pagination.
     """
@@ -67,14 +66,14 @@ class MemberDetailView(APIView):
     """
     permission_classes = [IsAuthenticated, IsSelfOrAdmin]
 
-    def get(self, request, pk):
-        member = get_object_or_404(NewSchoolMember, pk=pk, tenant=request.tenant)
+    def get(self, request, tenant_id, member_id):
+        member = get_object_or_404(NewSchoolMember, id=member_id, tenant_id=tenant_id)
         serializer = NewSchoolMemberSerializer(member)
         return Response(serializer.data)
 
-    def put(self, request, pk):
-        member = get_object_or_404(NewSchoolMember, pk=pk, tenant=request.tenant)
-        serializer = NewSchoolMemberSerializer(member, data=request.data)
+    def put(self, request, tenant_id, member_id):
+        member = get_object_or_404(NewSchoolMember, id=member_id, tenant_id=tenant_id)
+        serializer = NewSchoolMemberSerializer(member, data=request.data, partial=True)
         if serializer.is_valid():
             if 'password' in request.data:
                 member.set_password(request.data['password'])
@@ -82,8 +81,8 @@ class MemberDetailView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
-        member = get_object_or_404(NewSchoolMember, pk=pk, tenant=request.tenant)
+    def delete(self, request, tenant_id, member_id):
+        member = get_object_or_404(NewSchoolMember, id=member_id, tenant_id=tenant_id)
         member.delete()
         logger.info(f"Member deleted: {member.username}")
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -102,7 +101,7 @@ def login_view(request):
         return Response({'message': 'Provide both username and password'}, status=status.HTTP_400_BAD_REQUEST)
 
     user = authenticate(request, username=username, password=password)
-    if user:
+    if user and user.tenant == request.tenant:
         refresh = RefreshToken.for_user(user)
         return Response({
             'refresh': str(refresh),
@@ -110,8 +109,9 @@ def login_view(request):
             'user_id': user.id,
             'username': user.username,
             'email': user.email,
+            'tenant_id': user.tenant.tenant_id
         })
-    logger.warning("Login failed: Invalid credentials")
+    logger.warning("Login failed: Invalid credentials or tenant mismatch")
     return Response({'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 @csrf_exempt
@@ -149,7 +149,7 @@ class ReviewApplication(APIView):
 
     def post(self, request, application_id):
         data = json.loads(request.body)
-        application = get_object_or_404(ApplicationForm, id=application_id)
+        application = get_object_or_404(ApplicationForm, id=application_id, tenant=request.tenant)
         application.approved = data.get('approved', False)
         application.save()
         if application.approved:
@@ -181,7 +181,7 @@ class PendingApplicationsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        pending_applications = ApplicationForm.objects.filter(approved=False)
+        pending_applications = ApplicationForm.objects.filter(approved=False, tenant=request.tenant)
         applications_data = ApplicationFormSerializer(pending_applications, many=True).data
         return JsonResponse(applications_data, safe=False)
 
@@ -191,7 +191,7 @@ def send_application_form_email(request, applicant_email):
     """
     Sends the application form link to the applicant's email.
     """
-    application_link = f"http://localhost:5173/application-form?email={applicant_email}"
+    application_link = f"http://localhost:5173/application-form?email={applicant_email}&tenant_id={request.tenant.tenant_id}"
     send_mail(
         'NewSchool HR Application Form',
         f'Complete your application form here: {application_link}',
@@ -207,7 +207,7 @@ def send_password_reset_link(request, email):
     Sends a password reset link to the specified email.
     """
     member = get_object_or_404(NewSchoolMember, member_email=email, tenant=request.tenant)
-    reset_link = f"http://yourdomain.com/reset-password/{member.id}"
+    reset_link = f"http://localhost:5173/reset-password/{member.id}?tenant_id={request.tenant.tenant_id}"
     send_mail(
         'Password Reset Request',
         f'Please click the following link to reset your password: {reset_link}',
@@ -224,7 +224,7 @@ def upload_profile_image(request):
     """
     member_id = request.data.get('member_id')
     profile_image_data = request.data.get('profileImage')
-    member = get_object_or_404(NewSchoolMember, id=member_id)
+    member = get_object_or_404(NewSchoolMember, id=member_id, tenant=request.tenant)
     if profile_image_data:
         format, imgstr = profile_image_data.split(';base64,')
         image_data = ContentFile(base64.b64decode(imgstr), name=f"profile_{member.username}.{format.split('/')[-1]}")
@@ -238,7 +238,7 @@ def upload_profile_image(request):
 @permission_classes([IsAuthenticated, IsSelfOrAdmin])
 def get_profile_image(request, member_id):
     try:
-        member = NewSchoolMember.objects.get(id=member_id)
+        member = get_object_or_404(NewSchoolMember, id=member_id, tenant=request.tenant)
         profile_image = ProfileImage.objects.get(member=member)
         image_url = profile_image.image.url if profile_image.image else 'default_image_url'
         return Response({"profile_image_url": request.build_absolute_uri(image_url)}, status=200)

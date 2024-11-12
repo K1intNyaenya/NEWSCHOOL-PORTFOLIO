@@ -2,6 +2,7 @@ from pathlib import Path
 from decouple import config
 import os
 from datetime import timedelta
+from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -118,6 +119,14 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8080",
     # Add your production origin here
 ]
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'x-tenant-id',
+    'authorization',
+]
+
+CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"]
+
 
 # Logging configuration
 LOGGING = {

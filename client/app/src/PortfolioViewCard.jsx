@@ -36,22 +36,6 @@ const PortfolioViewCard = ({ user }) => {
     }
   }, [user.id]);
 
-  const renderEmploymentHistory = () => {
-    if (!user.employment_history || user.employment_history.length === 0) {
-      return <p>No employment history available.</p>;
-    }
-
-    return (
-      <ul>
-        {user.employment_history.map((job, index) => (
-          <li key={index}>
-            {job.job_title} at {job.employer}
-          </li>
-        ))}
-      </ul>
-    );
-  };
-
   return (
     <div className="portfolio-card">
       <div className="card-content">
@@ -64,6 +48,7 @@ const PortfolioViewCard = ({ user }) => {
                 src={profileImageUrl}
                 alt={`${user.first_name} ${user.family_name}'s profile`}
                 className="profile-image"
+                onError={() => setProfileImageUrl(DEFAULT_PROFILE_IMAGE_URL)}
               />
             )}
           </div>
@@ -80,7 +65,17 @@ const PortfolioViewCard = ({ user }) => {
             <p><strong>Country:</strong> {user.member_country || 'N/A'}</p>
           </div>
           <h4>Employment History:</h4>
-          {renderEmploymentHistory()}
+          {user.employment_history && user.employment_history.length > 0 ? (
+            <ul>
+              {user.employment_history.map((job, index) => (
+                <li key={index}>
+                  {job.job_title} at {job.employer}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No employment history available.</p>
+          )}
         </div>
       </div>
     </div>

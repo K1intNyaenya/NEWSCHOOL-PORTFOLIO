@@ -23,6 +23,7 @@ function ApplicationForm() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const tenantId = localStorage.getItem('tenant_id');
 
   // Set email from URL params if available
   useEffect(() => {
@@ -50,6 +51,11 @@ function ApplicationForm() {
       setLoading(false);
       return;
     }
+
+    const payload = {
+      ...formData,
+      tenant_id: tenantId,
+    };
 
     try {
       const response = await fetch('http://127.0.0.1:8080/portfolio/submit-application-form/', {

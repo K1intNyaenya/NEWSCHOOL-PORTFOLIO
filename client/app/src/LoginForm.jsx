@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './style/Lform.css';
 import { login } from './authService';
 
-const isDebug = true; // Enable debugging information
+const isDebug = true;
 
 function LoginForm() {
   const [username, setUsername] = useState('');

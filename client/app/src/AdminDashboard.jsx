@@ -43,6 +43,8 @@ function AdminDashboard() {
   const [pendingApplications, setPendingApplications] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [isPendingFormOpen, setIsPendingFormOpen] = useState(false);
+  const tenantId = localStorage.getItem('tenant_id');
+
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -58,25 +60,29 @@ function AdminDashboard() {
   const fetchPortfolios = async () => {
     console.log("Fetching portfolios...");
     try {
-      const response = await fetchWithAuth('http://127.0.0.1:8080/portfolio/NewSchoolMember/');
-      if (!response.ok) throw new Error('Error fetching portfolios');
-      const members = await response.json();
-  
-      const membersWithImages = await Promise.all(
-        members.map(async (member) => {
-          const imageResponse = await fetchProfileImage(member.id);
-          return { ...member, profile_image_url: imageResponse };
-        })
-      );
-  
-      setPortfolios(membersWithImages);
+        const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/NewSchoolMember/`);
+
+        // Since `fetchWithAuth` has likely already parsed `response`, no need to call `response.json()`
+        console.log("Portfolio fetch response:", response);
+
+        // Assuming `response` is now the parsed JSON data (array of members)
+        const members = response;
+
+        const membersWithImages = await Promise.all(
+            members.map(async (member) => {
+                const imageResponse = await fetchProfileImage(member.id);
+                return { ...member, profile_image_url: imageResponse };
+            })
+        );
+
+        setPortfolios(membersWithImages);
     } catch (error) {
-      console.error("Fetch Portfolios Error:", error);
-      setError('Failed to fetch portfolios. Please try again later.');
+        console.error("Fetch Portfolios Error:", error);
+        setError('Failed to fetch portfolios. Please try again later.');
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
 
 
   const togglePendingApplicationsModal = async () => {
@@ -84,7 +90,7 @@ function AdminDashboard() {
     setIsPendingModalOpen(!isPendingModalOpen);
     if (!isPendingModalOpen) {
       try {
-        const response = await fetchWithAuth('http://127.0.0.1:8080/portfolio/pending-applications/');
+        const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/pending-applications/`);
         if (!response.ok) throw new Error('Failed to fetch pending applications');
         const data = await response.json();
         setPendingApplications(data);
@@ -113,6 +119,7 @@ function AdminDashboard() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            tenant_id: tenantId,
             approved: isApproved,
             member_email: application.member_email,
             username: application.username,
@@ -159,7 +166,7 @@ function AdminDashboard() {
 
   const handleRejectApplication = async (id) => {
     try {
-      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/review-application/${id}/`, {
+      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/review-application/${id}/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ approved: false }),
@@ -179,7 +186,7 @@ function AdminDashboard() {
 
   const handleApproveApplication = async (id) => {
     try {
-      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/review-application/${id}/`, {
+      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/review-application/${id}/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ approved: true }),
@@ -201,7 +208,7 @@ function AdminDashboard() {
   const uploadProfileImage = async (memberId, base64Image) => {
     console.log(`Uploading profile image for member ID ${memberId}`);
     try {
-      const response = await fetchWithAuth('http://127.0.0.1:8080/portfolio/upload-profile-image/', {
+      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/upload-profile-image/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -224,7 +231,7 @@ function AdminDashboard() {
 
   const fetchProfileImage = async (memberId) => {
     try {
-      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/get-profile-image/${memberId}/`);
+      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/get-profile-image/${memberId}/`);
       if (response.status === 404) {
         console.warn(`No image found for member ID ${memberId}. Returning blank field.`);
         return ''; // Return empty string for missing images
@@ -256,6 +263,7 @@ function AdminDashboard() {
       employment_history: updatedEmploymentHistory,
       employment_status: newUser.employment_status,
       member_country: newUser.member_country,
+      tenant_id: tenantId,
   };
 
     if (portfolios.some(member => member.member_email === payload.member_email)) {
@@ -265,7 +273,7 @@ function AdminDashboard() {
     }
 
     try {
-      const response = await fetchWithAuth("http://127.0.0.1:8080/portfolio/NewSchoolMember/add/", {
+      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/NewSchoolMember/add/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -289,7 +297,7 @@ function AdminDashboard() {
 
   const handleUpdateUser = async (updatedUser) => {
     try {
-      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/NewSchoolMember/${updatedUser.id}/`, {
+      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/NewSchoolMember/${updatedUser.id}/`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedUser),
@@ -349,7 +357,7 @@ function AdminDashboard() {
     setError('');
     setSuccessMessage('');
     try {
-      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/send-application/${email}/`, {
+      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/send-application/${email}/`, {
         method: 'POST',
       });
       

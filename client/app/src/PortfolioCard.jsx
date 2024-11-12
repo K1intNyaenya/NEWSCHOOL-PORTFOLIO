@@ -7,54 +7,50 @@ const PortfolioCard = ({ user, onUpdate, uploadProfileImage, fetchProfileImage }
   const [selectedImage, setSelectedImage] = useState(null);
   const [profileImageUrl, setProfileImageUrl] = useState(user.profile_image_url || '');
 
-  // Fetch the profile image when the component loads if needed
+  // Fetch the profile image if not present
   useEffect(() => {
     const loadProfileImage = async () => {
-      try {
-        if (!user.profile_image_url) {
+      if (!user.profile_image_url && fetchProfileImage) {
+        try {
           const response = await fetchProfileImage(editUser.id);
-          if (response && response.profile_image_url) {
+          if (response?.profile_image_url) {
             setProfileImageUrl(response.profile_image_url);
           }
+        } catch (error) {
+          console.error('Error fetching profile image:', error);
         }
-      } catch (error) {
-        console.error('Error fetching profile image:', error);
       }
     };
-
-    if (editUser.id && !profileImageUrl) {
-      loadProfileImage();
-    }
-  }, [editUser.id, fetchProfileImage, profileImageUrl]);
+    loadProfileImage();
+  }, [editUser.id, fetchProfileImage, user.profile_image_url]);
 
   const toggleEditMode = () => {
     setIsEditing(!isEditing);
   };
 
   const handleJobChange = (index, field, value) => {
-    const updatedJobs = [...editUser.employment_history];
-    updatedJobs[index][field] = value;
-    setEditUser({ ...editUser, employment_history: updatedJobs });
+    setEditUser((prevUser) => {
+      const updatedHistory = [...prevUser.employment_history];
+      updatedHistory[index] = { ...updatedHistory[index], [field]: value };
+      return { ...prevUser, employment_history: updatedHistory };
+    });
   };
 
   const handleAddJob = () => {
-    const newJob = { employer: '', job_title: '' };
-    setEditUser((prevState) => ({
-      ...prevState,
-      employment_history: [...prevState.employment_history, newJob],
+    setEditUser((prevUser) => ({
+      ...prevUser,
+      employment_history: [...prevUser.employment_history, { employer: '', job_title: '' }],
     }));
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setSelectedImage(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setEditUser({
-          ...editUser,
-          profile_image: reader.result,
-        });
+        const base64Image = reader.result;
+        setEditUser({ ...editUser, profile_image: base64Image });
+        setSelectedImage(base64Image);
       };
       reader.readAsDataURL(file);
     }
@@ -62,22 +58,30 @@ const PortfolioCard = ({ user, onUpdate, uploadProfileImage, fetchProfileImage }
 
   const handleSaveImage = async () => {
     if (selectedImage) {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const base64Image = reader.result;
-        const response = await uploadProfileImage(editUser.id, base64Image);
-
-        if (response && response.profile_image_url) {
+      try {
+        const response = await uploadProfileImage(editUser.id, selectedImage);
+        if (response?.profile_image_url) {
           setProfileImageUrl(response.profile_image_url);
         }
-      };
-      reader.readAsDataURL(selectedImage);
+      } catch (error) {
+        console.error('Error saving profile image:', error);
+      }
     }
   };
 
   const handleSaveDetails = async () => {
-    onUpdate(editUser);
-    setIsEditing(false);
+    if (validateForm()) {
+      onUpdate(editUser);
+      setIsEditing(false);
+    }
+  };
+
+  const validateForm = () => {
+    if (!editUser.first_name || !editUser.member_email) {
+      alert('First Name and Email are required.');
+      return false;
+    }
+    return true;
   };
 
   return (
@@ -91,12 +95,7 @@ const PortfolioCard = ({ user, onUpdate, uploadProfileImage, fetchProfileImage }
                 alt={`${editUser.first_name} ${editUser.family_name}`}
                 className="profile-image"
               />
-              <input
-                type="file"
-                id="profileImageUpload"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
+              <input type="file" id="profileImageUpload" accept="image/*" onChange={handleImageChange} />
             </div>
             <h2>{editUser.first_name} {editUser.family_name}</h2>
             <p className="user-title">{editUser.member_title}</p>

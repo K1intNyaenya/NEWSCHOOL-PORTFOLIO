@@ -27,7 +27,8 @@ function PendingForm({ applicantData, onClose, onApprove, onReject }) {
   const handleApprovalSubmit = () => {
     if (validateForm()) {
       onApprove(applicantData.id, formData);
-      setShowApprovalForm(true); // Close the approval form after submission
+      setShowApprovalForm(false);
+      setFormData({ username: '', password: '', comments: '' });
     }
   };
 
@@ -84,8 +85,9 @@ function PendingForm({ applicantData, onClose, onApprove, onReject }) {
                 value={formData.username}
                 onChange={handleInputChange}
                 required
+                aria-live="assertive"
               />
-              {errors.username && <span className="error">{errors.username}</span>}
+              {errors.username && <span className="error" role="alert">{errors.username}</span>}
             </label>
             <label>
               Password:
@@ -95,8 +97,9 @@ function PendingForm({ applicantData, onClose, onApprove, onReject }) {
                 value={formData.password}
                 onChange={handleInputChange}
                 required
+                aria-live="assertive"
               />
-              {errors.password && <span className="error">{errors.password}</span>}
+              {errors.password && <span className="error" role="alert">{errors.password}</span>}
             </label>
             <label>
               Comments:
@@ -105,8 +108,9 @@ function PendingForm({ applicantData, onClose, onApprove, onReject }) {
                 value={formData.comments}
                 onChange={handleInputChange}
                 required
+                aria-live="assertive"
               ></textarea>
-              {errors.comments && <span className="error">{errors.comments}</span>}
+              {errors.comments && <span className="error" role="alert">{errors.comments}</span>}
             </label>
             <div className="button-container">
               <button className="approve-button" onClick={handleApprovalSubmit}>Submit Approval</button>

@@ -8,11 +8,15 @@ function Dashboard() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  
 
   useEffect(() => {
     const fetchPortfolios = async () => {
       setLoading(true);
+      setError(null);
+
       try {
+        const tenantId = getTenantId();
         const response = await fetchWithAuth("http://127.0.0.1:8080/portfolio/NewSchoolMember/");
         
         if (!response.ok) {

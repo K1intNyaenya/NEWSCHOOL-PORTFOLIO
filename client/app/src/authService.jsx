@@ -1,16 +1,22 @@
 const API_URL = 'http://localhost:8080/portfolio/token/';
 const ACCESS_TOKEN_KEY = 'access_token';
 
-// Unique log identifiers for easier debugging
+
 const logContext = (functionName) => `[AuthService: ${functionName}]`;
 
-// Helper to get access token
+export const getTenantId = () => {
+    const tenantId = localStorage.getItem('tenant_id');
+    console.log(`${logContext("getTenantId")} Retrieved tenant_id: ${tenantId}`);
+    return tenantId;
+};
+
+
 export const getAccessToken = () => {
     console.log(`${logContext("getAccessToken")} Retrieving access token from localStorage`);
     return localStorage.getItem('access_token');
 };
 
-// Check if token is expired
+
 const isTokenExpired = (token) => {
     console.log(`${logContext("isTokenExpired")} Checking if token is expired`);
     if (!token) return true;
@@ -25,7 +31,7 @@ const isTokenExpired = (token) => {
     }
 };
 
-// Function to handle refreshing access token
+
 export const refreshAccessToken = async () => {
     console.log(`${logContext("refreshAccessToken")} Attempting to refresh access token`);
     const refreshToken = localStorage.getItem('refresh_token');
@@ -35,7 +41,7 @@ export const refreshAccessToken = async () => {
     }
 
     try {
-        const response = await fetch(`${API_URL}refresh/`, {
+        const response = await fetch(`${API_URL}/refresh/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ refresh: refreshToken }),
@@ -58,47 +64,53 @@ export const refreshAccessToken = async () => {
     }
 };
 
-// Fetch wrapper to add Authorization header and handle token refresh
+
 export const fetchWithAuth = async (url, options = {}) => {
     let accessToken = getAccessToken();
+    const tenantId = getTenantId();
     
-    // Pre-check if token is expired
+    
     if (isTokenExpired(accessToken)) {
-      console.log('Access token expired, attempting to refresh');
-      const refreshSuccessful = await refreshAccessToken();
-      if (!refreshSuccessful) {
-        throw new Error('Unauthorized: Access token expired and refresh failed');
-      }
-      accessToken = getAccessToken(); // Update with new token after refresh
+        console.log('Access token expired, attempting to refresh');
+        const refreshSuccessful = await refreshAccessToken();
+        if (!refreshSuccessful) {
+            throw new Error('Unauthorized: Access token expired and refresh failed');
+        }
+        accessToken = getAccessToken();
     }
-  
-    options.headers = {
-      ...options.headers,
-      'Authorization': `Bearer ${accessToken}`,
-    };
-  
-    try {
-      const response = await fetch(url, options);
-  
-      // Check for 404 specifically for profile images
-      if (response.status === 404) {
-        console.warn(`[AuthService: fetchWithAuth] 404 Not Found for URL: ${url}`);
-        return { ok: false, status: 404 }; // Return a controlled response
-      }
-  
-      if (!response.ok) {
-        throw new Error(`Failed request with status ${response.status}: ${response.statusText}`);
-      }
-  
-      return response;
-    } catch (error) {
-      console.error('[AuthService: fetchWithAuth] Error during fetch:', error);
-      throw error;
-    }
-  };
-  
 
-// Login function to obtain tokens and user role
+    options.headers = {
+        ...options.headers,
+        'authorization': `Bearer ${accessToken}`,
+        'x-tenant-id': tenantId,
+    };
+    
+
+    try {
+        const response = await fetch(url, options);
+        
+        
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+            const data = await response.json();
+            if (response.status === 404) {
+                console.warn(`[AuthService: fetchWithAuth] 404 Not Found for URL: ${url}`);
+                return { ok: false, data }; 
+            }
+            if (!response.ok) {
+                throw new Error(`Failed request with status ${response.status}: ${response.statusText}`);
+            }
+            return data;
+        } else {
+            throw new Error("Received non-JSON response");
+        }
+    } catch (error) {
+        console.error('[AuthService: fetchWithAuth] Error during fetch:', error);
+        throw error;
+    }
+};
+
+
 export const login = async (username, password) => {
     console.log(`${logContext("login")} Attempting login with username: ${username}`);
     try {
@@ -116,6 +128,7 @@ export const login = async (username, password) => {
         const data = await response.json();
         localStorage.setItem('access_token', data.access);
         localStorage.setItem('refresh_token', data.refresh);
+        localStorage.setItem('tenant_id', data.tenant_id);
         const role = data.role || 'member'; 
         localStorage.setItem('user_role', role); 
 
@@ -127,24 +140,30 @@ export const login = async (username, password) => {
     }
 };
 
-// Logout function to clear tokens
+
 export const logout = () => {
     console.log(`${logContext("logout")} Logging out and clearing tokens`);
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('user_role');
+    localStorage.removeItem('tenant_id');
 };
 
-// Utility function to check if the user is authenticated
+
 export const isAuthenticated = () => {
-    console.log(`${logContext("isAuthenticated")} Checking authentication status`);
-    const accessToken = getAccessToken();
-    const authenticated = accessToken && !isTokenExpired(accessToken);
-    console.log(`${logContext("isAuthenticated")} Authenticated: ${authenticated}`);
-    return authenticated;
+    try {
+        console.log(`${logContext("isAuthenticated")} Checking authentication status`);
+        const accessToken = getAccessToken();
+        const authenticated = accessToken && !isTokenExpired(accessToken);
+        console.log(`${logContext("isAuthenticated")} Authenticated: ${authenticated}`);
+        return authenticated;
+    } catch (error) {
+        console.error(`${logContext("isAuthenticated")} Error checking authentication:`, error);
+        return false;
+    }
 };
 
-// Function to get user role from local storage
+
 export const getUserRole = () => {
     const role = localStorage.getItem('user_role') || null;
     console.log(`${logContext("getUserRole")} Retrieved user role: ${role}`);

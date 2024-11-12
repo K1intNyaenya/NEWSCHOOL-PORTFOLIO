@@ -90,12 +90,20 @@ h1 {
   font-weight: bold;
 }
 
-.loading, .error {
-  color: #ffd700;
-  font-size: 1.2em;
+.loading {
   text-align: center;
-  margin-top: 50px;
+  color: #007bff;
+  font-weight: bold;
+  margin-top: 20px;
 }
+
+.error {
+  text-align: center;
+  color: #dc3545;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
