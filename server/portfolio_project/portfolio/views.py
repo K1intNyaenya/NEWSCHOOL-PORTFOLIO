@@ -44,13 +44,13 @@ def get_newschoolmember(request, tenant_id):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsAdminUser])
-def add_newschoolmember(request):
+def add_newschoolmember(request, tenant_id):
     """
     Adds a new NewSchoolMember.
     """
     try:
         serializer = NewSchoolMemberSerializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(): 
             member = serializer.save(tenant=request.tenant)
             logger.info(f"New member created: {member.username}")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -73,13 +73,22 @@ class MemberDetailView(APIView):
 
     def put(self, request, tenant_id, member_id):
         member = get_object_or_404(NewSchoolMember, id=member_id, tenant_id=tenant_id)
-        serializer = NewSchoolMemberSerializer(member, data=request.data, partial=True)
+        
+        # Check that member_email is present
+        if 'member_email' not in request.data or not request.data.get('member_email'):
+            return Response({"error": "member_email is required and cannot be null."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Use the serializer with tenant context
+        serializer = NewSchoolMemberSerializer(
+            member, data=request.data, partial=True, context={'tenant': request.tenant}
+        )
         if serializer.is_valid():
-            if 'password' in request.data:
-                member.set_password(request.data['password'])
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
     def delete(self, request, tenant_id, member_id):
         member = get_object_or_404(NewSchoolMember, id=member_id, tenant_id=tenant_id)
@@ -187,11 +196,14 @@ class PendingApplicationsView(APIView):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsAdminUser])
-def send_application_form_email(request, applicant_email):
+def send_application_form_email(request, tenant_id, applicant_email):
     """
     Sends the application form link to the applicant's email.
     """
-    application_link = f"http://localhost:5173/application-form?email={applicant_email}&tenant_id={request.tenant.tenant_id}"
+    # Use tenant_id from request.tenant set by middleware
+    tenant_id = request.tenant.tenant_id
+
+    application_link = f"http://localhost:5173/application-form?email={applicant_email}&tenant_id={tenant_id}"
     send_mail(
         'NewSchool HR Application Form',
         f'Complete your application form here: {application_link}',
@@ -200,6 +212,7 @@ def send_application_form_email(request, applicant_email):
         fail_silently=False,
     )
     return JsonResponse({"message": f"Application form sent to {applicant_email}"})
+
 
 @csrf_exempt
 def send_password_reset_link(request, email):
@@ -237,6 +250,9 @@ def upload_profile_image(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsSelfOrAdmin])
 def get_profile_image(request, member_id):
+    # Access tenant ID from the request instead of function parameters
+    tenant_id = request.tenant.tenant_id  # Ensure tenant is set in request context
+
     try:
         member = get_object_or_404(NewSchoolMember, id=member_id, tenant=request.tenant)
         profile_image = ProfileImage.objects.get(member=member)

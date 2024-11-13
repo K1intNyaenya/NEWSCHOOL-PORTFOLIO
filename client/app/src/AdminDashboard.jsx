@@ -263,7 +263,6 @@ function AdminDashboard() {
       employment_history: updatedEmploymentHistory,
       employment_status: newUser.employment_status,
       member_country: newUser.member_country,
-      tenant_id: tenantId,
   };
 
     if (portfolios.some(member => member.member_email === payload.member_email)) {

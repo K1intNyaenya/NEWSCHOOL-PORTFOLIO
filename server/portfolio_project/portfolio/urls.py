@@ -24,7 +24,7 @@ urlpatterns = [
     
     # Member endpoints
     path('<str:tenant_id>/NewSchoolMember/', get_newschoolmember, name='get_newschoolmember'),
-    path('<str:tenant_id>/NewSchoolMember/add/', add_newschoolmember, name='add_newschoolmember'),
+    path('<uuid:tenant_id>/NewSchoolMember/add/', add_newschoolmember, name='add_newschoolmember'),
     path('<str:tenant_id>/NewSchoolMember/<int:member_id>/', MemberDetailView.as_view(), name='member_detail'),
 
     # Authentication and application endpoints

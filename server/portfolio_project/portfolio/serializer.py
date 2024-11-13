@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from .models import NewSchoolMember, EmploymentHistory, ApplicationForm
 from django.contrib.auth.hashers import make_password
 import logging
+from django.db import IntegrityError
 from django.db import transaction
 from django.core.mail import send_mail
 from django.conf import settings
@@ -14,11 +15,11 @@ logger = logging.getLogger(__name__)
 class EmploymentHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = EmploymentHistory
-        fields = ['id', 'employer', 'job_title', 'tenant_id']
+        fields = ['id', 'employer', 'job_title', 'tenant']
         extra_kwargs = {
             'employer': {'required': False, 'allow_blank': True},
             'job_title': {'required': False, 'allow_blank': True},
-            'tenant_id': {'read_only': True}
+            'tenant': {'read_only': True}
         }
 
 class NewSchoolMemberSerializer(serializers.ModelSerializer):
@@ -28,83 +29,99 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
         model = NewSchoolMember
         fields = [
             'id', 'first_name', 'second_name', 'family_name', 'member_title', 
-            'member_industry', 'employment_history', 
-            'member_mobile', 'member_email', 'username', 'password', 'role', 'employment_status',
+            'member_industry', 'employment_history', 'member_mobile', 
+            'member_email', 'username', 'password', 'role', 'employment_status',
             'member_country', 'tenant_id'
         ]
         extra_kwargs = {
             'password': {'write_only': True, 'required': False},
             'role': {'required': False},
-            'tenant': {'read_only': True}
+            'tenant': {'read_only': True},
+            'member_email': {'required': True, 'allow_null': False}
         }
 
+    def validate_employment_status(self, value):
+        valid_choices = [choice[0] for choice in NewSchoolMember.EMPLOYMENT_STATUS_CHOICES]
+        if value not in valid_choices:
+            raise serializers.ValidationError(
+                f"\"{value}\" is not a valid choice. Valid options are: {', '.join(valid_choices)}."
+            )
+        return value
+
     def create(self, validated_data):
+        tenant = self.context.get('tenant')
+        if tenant:
+            validated_data['tenant'] = tenant
+
         employment_history_data = validated_data.pop('employment_history', [])
         validated_data['username'] = validated_data.get('username', validated_data.get('member_email'))
         validated_data['role'] = validated_data.get('role', 'member')
-        tenant_id = self.context['request'].tenant.id
-        validated_data['tenant_id'] = tenant_id
 
         password = validated_data.pop('password', None)
-        member = NewSchoolMember(**validated_data)
-        if password:
-            member.set_password(password)
-        member.save()
-        
+
         try:
-            for job in employment_history_data:
+            member = NewSchoolMember(**validated_data)
+            if password:
+                member.set_password(password)
+            member.save()
+
+            for job_data in employment_history_data:
                 EmploymentHistory.objects.create(
                     member=member,
-                    employer=job.get('employer', ''),
-                    job_title=job.get('job_title', ''),
-                    tenant_id=tenant_id
+                    employer=job_data.get('employer', ''),
+                    job_title=job_data.get('job_title', ''),
+                    tenant=member.tenant
                 )
+
             return member
+        except IntegrityError as e:
+            logger.error(f"Integrity error during NewSchoolMember creation: {e}")
+            raise serializers.ValidationError("Duplicate entry for username or email.")
         except Exception as e:
-            logger.error(f"Error creating member: {e}")
+            logger.error(f"Unexpected error creating NewSchoolMember: {e}")
             raise serializers.ValidationError(f"Error creating member: {e}")
 
     def update(self, instance, validated_data):
-        employment_history_data = validated_data.pop('employment_history', None)
-        role = validated_data.get('role', instance.role)
+        # Ensure `member_email` is correctly set
+        member_email = validated_data.get('member_email', instance.member_email)
+        if member_email is None:
+            raise serializers.ValidationError("member_email cannot be null.")
+        instance.member_email = member_email
 
-        if instance.role != 'admin' and role == 'admin':
-            raise serializers.ValidationError("Only admins can assign the 'admin' role.")
+        # Update other fields except `employment_history`
+        for attr, value in validated_data.items():
+            if attr != 'employment_history' and attr != 'password':
+                setattr(instance, attr, value)
 
-        instance.first_name = validated_data.get('first_name', instance.first_name)
-        instance.second_name = validated_data.get('second_name', instance.second_name)
-        instance.family_name = validated_data.get('family_name', instance.family_name)
-        instance.member_title = validated_data.get('member_title', instance.member_title)
-        instance.member_industry = validated_data.get('member_industry', instance.member_industry)
-        instance.member_mobile = validated_data.get('member_mobile', instance.member_mobile)
-        instance.member_email = validated_data.get('member_email', instance.member_email)
-        instance.username = validated_data.get('username', instance.username)
-        instance.role = role
-        
-
-        password = validated_data.pop('password', None)
+        # Set password if provided
+        password = validated_data.get('password')
         if password:
             instance.set_password(password)
 
+        # Save the member instance
         instance.save()
 
+        # Update `employment_history` only if it's provided in the request
+        employment_history_data = validated_data.get('employment_history')
         if employment_history_data is not None:
-            EmploymentHistory.objects.filter(member=instance, tenant_id=instance.tenant_id).delete()
-            for job in employment_history_data:
+            instance.employment_history.clear()
+            for job_data in employment_history_data:
                 EmploymentHistory.objects.create(
                     member=instance,
-                    employer=job.get('employer', ''),
-                    job_title=job.get('job_title', ''),
-                    tenant_id=instance.tenant_id
+                    employer=job_data.get('employer', ''),
+                    job_title=job_data.get('job_title', ''),
+                    tenant=instance.tenant
                 )
 
         return instance
 
     def validate_username(self, value):
-        if self.instance and NewSchoolMember.objects.exclude(pk=self.instance.pk).filter(username=value).exists():
-            raise serializers.ValidationError("This username is already taken.")
-        elif not self.instance and NewSchoolMember.objects.filter(username=value).exists():
-            raise serializers.ValidationError("This username is already taken.")
+        if self.instance:
+            if NewSchoolMember.objects.exclude(pk=self.instance.pk).filter(username=value).exists():
+                raise serializers.ValidationError("This username is already taken.")
+        else:
+            if NewSchoolMember.objects.filter(username=value).exists():
+                raise serializers.ValidationError("This username is already taken.")
         return value
 
     def validate_member_email(self, value):
@@ -128,6 +145,7 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
             if 'employer' not in job or 'job_title' not in job:
                 raise serializers.ValidationError("Each job entry must include 'employer' and 'job_title'.")
         return value
+
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
@@ -159,10 +177,8 @@ class ApplicationFormSerializer(serializers.ModelSerializer):
         approved = validated_data.get('approved', instance.approved)
 
         if approved and not instance.approved:
-            # Only create a NewSchoolMember if approval status changes to True
             try:
                 with transaction.atomic():
-                    # Generate password and create the member
                     password = BaseUserManager().make_random_password()
                     user = NewSchoolMember.objects.create_user(
                         username=instance.member_email,
@@ -178,7 +194,6 @@ class ApplicationFormSerializer(serializers.ModelSerializer):
                         f"Application ID: {instance.id}, Email: {instance.member_email}"
                     )
 
-                    # (Optional) Send notification email
                     if settings.EMAIL_HOST:
                         try:
                             send_mail(
@@ -197,11 +212,9 @@ class ApplicationFormSerializer(serializers.ModelSerializer):
                             logger.info(f"Approval email sent to {instance.member_email}")
                         except Exception as e:
                             logger.error(f"Error sending approval email to {instance.member_email}: {e}")
-                            # Optionally, you could raise a warning or handle the failed email scenario differently
 
             except Exception as e:
                 logger.error(f"Error creating NewSchoolMember from application ID {instance.id}: {e}")
                 raise serializers.ValidationError("An error occurred during member creation from application.")
 
-        # Save the application form with any updates
         return super().update(instance, validated_data)
