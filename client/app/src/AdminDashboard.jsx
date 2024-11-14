@@ -85,21 +85,22 @@ function AdminDashboard() {
 };
 
 
-  const togglePendingApplicationsModal = async () => {
-    console.log("Toggling pending applications modal");
-    setIsPendingModalOpen(!isPendingModalOpen);
-    if (!isPendingModalOpen) {
+const togglePendingApplicationsModal = async () => {
+  if (!isPendingModalOpen) {
       try {
-        const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/pending-applications/`);
-        if (!response.ok) throw new Error('Failed to fetch pending applications');
-        const data = await response.json();
-        setPendingApplications(data);
+          const data = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/pending-applications/`);
+          if (data && data.ok === false) {
+              throw new Error('Failed to fetch pending applications');
+          }
+          setPendingApplications(data);
+          setIsPendingModalOpen(true);
       } catch (error) {
-        console.error("Error fetching pending applications:", error);
+          console.error("Error fetching pending applications:", error);
       }
-    }
-  };
-
+  } else {
+      setIsPendingModalOpen(false);
+  }
+};
 
   const handleViewApplication = (application) => {
     setSelectedApplication(application);

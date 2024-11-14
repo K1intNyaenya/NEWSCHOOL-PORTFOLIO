@@ -68,8 +68,7 @@ export const refreshAccessToken = async () => {
 export const fetchWithAuth = async (url, options = {}) => {
     let accessToken = getAccessToken();
     const tenantId = getTenantId();
-    
-    
+
     if (isTokenExpired(accessToken)) {
         console.log('Access token expired, attempting to refresh');
         const refreshSuccessful = await refreshAccessToken();
@@ -79,27 +78,31 @@ export const fetchWithAuth = async (url, options = {}) => {
         accessToken = getAccessToken();
     }
 
-    options.headers = {
-        ...options.headers,
+    // Prepare headers
+    const headers = {
         'authorization': `Bearer ${accessToken}`,
         'x-tenant-id': tenantId,
+        ...options.headers,
     };
-    
+
+    // Prepare fetch options
+    const fetchOptions = {
+        ...options,
+        headers,
+    };
 
     try {
-        const response = await fetch(url, options);
-        
-        
+        const response = await fetch(url, fetchOptions);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP error! Status: ${response.status}, Response: ${errorText}`);
+        }
+
+        // Check for JSON response
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
             const data = await response.json();
-            if (response.status === 404) {
-                console.warn(`[AuthService: fetchWithAuth] 404 Not Found for URL: ${url}`);
-                return { ok: false, data }; 
-            }
-            if (!response.ok) {
-                throw new Error(`Failed request with status ${response.status}: ${response.statusText}`);
-            }
             return data;
         } else {
             throw new Error("Received non-JSON response");

@@ -20,17 +20,26 @@ function ApplicationForm() {
     member_country: '',
   });
   
+  const [tenantId, setTenantId] = useState(localStorage.getItem('tenant_id') || '');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-  const tenantId = localStorage.getItem('tenant_id');
+  
 
-  // Set email from URL params if available
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const emailFromUrl = urlParams.get('email');
+    const tenantIdFromUrl = urlParams.get('tenant_id');
+
     if (emailFromUrl) {
       setFormData((prev) => ({ ...prev, member_email: emailFromUrl }));
+    }
+
+    if (tenantIdFromUrl) {
+      localStorage.setItem('tenant_id', tenantIdFromUrl);
+      setTenantId(tenantIdFromUrl);
+    } else if (!tenantId) {
+      setError('Tenant ID is missing from URL parameters.');
     }
   }, []);
 
@@ -46,31 +55,38 @@ function ApplicationForm() {
     setSuccessMessage('');
 
     // Client-side validation
+    if (!tenantId) {
+      setError('Tenant ID is missing.');
+      setLoading(false);
+      return;
+    }
+
     if (!formData.member_email || !/\S+@\S+\.\S+/.test(formData.member_email)) {
       setError('Invalid email format');
       setLoading(false);
       return;
     }
 
-    const payload = {
-      ...formData,
-      tenant_id: tenantId,
-    };
-
     try {
-      const response = await fetch('http://127.0.0.1:8080/portfolio/submit-application-form/', {
+      const response = await fetch(`http://127.0.0.1:8080/portfolio/${tenantId}/submit-application-form/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Failed to submit application');
+        let errorMessage = `Failed to submit application. Status code: ${response.status}`;
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.detail || errorData.error || errorMessage;
+        } catch (jsonError) {
+          console.error('Non-JSON response received');
+        }
+        throw new Error(errorMessage);
       }
 
       setSuccessMessage('Application submitted successfully!');
-      setFormData({ ...formData, reason_for_joining: '', vetted_by: '', member_joining_date: '' });
+      // Optionally reset form fields
     } catch (error) {
       console.error('Submission error:', error);
       setError(`Error: ${error.message}`);
@@ -137,7 +153,6 @@ function ApplicationForm() {
             value={formData.member_email}
             onChange={handleChange}
             required
-            readOnly={!!formData.member_email}
           />
 
           <label htmlFor="member_title">Member Title: </label>

@@ -46,4 +46,7 @@ urlpatterns = [
 
     # Choices endpoint
     path('<str:tenant_id>/choices/', get_choices, name='get_choices'),
+
+    path('<str:tenant_id>/api/login/', login_view, name='login'),
+
 ]

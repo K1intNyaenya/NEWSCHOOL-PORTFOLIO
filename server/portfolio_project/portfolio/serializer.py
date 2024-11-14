@@ -104,7 +104,8 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
         # Update `employment_history` only if it's provided in the request
         employment_history_data = validated_data.get('employment_history')
         if employment_history_data is not None:
-            instance.employment_history.clear()
+            # Delete existing employment history entries
+            instance.employment_history.all().delete()
             for job_data in employment_history_data:
                 EmploymentHistory.objects.create(
                     member=instance,
@@ -114,6 +115,7 @@ class NewSchoolMemberSerializer(serializers.ModelSerializer):
                 )
 
         return instance
+
 
     def validate_username(self, value):
         if self.instance:

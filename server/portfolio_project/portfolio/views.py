@@ -12,7 +12,7 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
-from .models import NewSchoolMember, ApplicationForm, EmploymentHistory, ProfileImage
+from .models import NewSchoolMember, ApplicationForm, EmploymentHistory, ProfileImage, Tenant
 from .serializer import NewSchoolMemberSerializer, CustomTokenObtainPairSerializer, ApplicationFormSerializer
 from .permissions import IsAdminUser, IsSelfOrAdmin
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -20,8 +20,14 @@ from django.contrib.auth.hashers import make_password
 import json
 import base64
 import logging
+from rest_framework import serializers
 
 logger = logging.getLogger(__name__)
+
+class ApplicationFormSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApplicationForm
+        fields = '__all__'
 
 # Custom token view for JWT
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -98,7 +104,7 @@ class MemberDetailView(APIView):
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
-def login_view(request):
+def login_view(request, tenant_id):
     """
     Handles user login, returning JWT tokens if credentials are valid.
     """
@@ -123,32 +129,21 @@ def login_view(request):
     logger.warning("Login failed: Invalid credentials or tenant mismatch")
     return Response({'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-@csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
-def submit_application_form(request):
-    """
-    Submits an application form for new users.
-    """
-    if request.method == "POST":
-        data = json.loads(request.body)
-        application = ApplicationForm.objects.create(
-            tenant=request.tenant,
-            first_name=data['first_name'],
-            second_name=data['second_name'],
-            family_name=data['family_name'],
-            mobile_number=data['mobile_number'],
-            member_title=data['member_title'],
-            member_email=data['member_email'],
-            member_industry=data['member_industry'],
-            employment_industry=data['employment_industry'],
-            reason_for_joining=data['reason_for_joining'],
-            referred_by_name=data['referred_by_name'],
-            referred_by_mobile=data['referred_by_mobile'],
-            vetted_by=data['vetted_by']
-        )
-        return JsonResponse({"message": "Application submitted successfully."}, status=201)
-    return JsonResponse({"error": "Use POST to submit the form."}, status=405)
+def submit_application_form(request, tenant_id):
+    # Get the tenant object
+    try:
+        tenant = Tenant.objects.get(tenant_id=tenant_id)
+    except Tenant.DoesNotExist:
+        return Response({"error": "Invalid tenant ID."}, status=status.HTTP_400_BAD_REQUEST)
+
+    serializer = ApplicationFormSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(tenant=tenant)
+        return Response({"message": "Application submitted successfully."}, status=status.HTTP_201_CREATED)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ReviewApplication(APIView):
     """
@@ -189,10 +184,13 @@ class PendingApplicationsView(APIView):
     """
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        pending_applications = ApplicationForm.objects.filter(approved=False, tenant=request.tenant)
+    def get(self, request, *args, **kwargs):
+        tenant_id = kwargs.get('tenant_id')
+        tenant = get_object_or_404(Tenant, tenant_id=tenant_id)
+        pending_applications = ApplicationForm.objects.filter(approved=False, tenant=tenant)
         applications_data = ApplicationFormSerializer(pending_applications, many=True).data
         return JsonResponse(applications_data, safe=False)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsAdminUser])
