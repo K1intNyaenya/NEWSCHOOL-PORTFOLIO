@@ -74,7 +74,7 @@ class NewSchoolMember(AbstractBaseUser):
         ('IT', 'Italy'),
     ]
 
-    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True)
+    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=45)
     second_name = models.CharField(max_length=45)
     family_name = models.CharField(max_length=45)

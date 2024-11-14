@@ -151,14 +151,20 @@ class ReviewApplication(APIView):
     """
     permission_classes = [IsAuthenticated, IsAdminUser]
 
-    def post(self, request, application_id):
+    def post(self, request, tenant_id, application_id):
         data = json.loads(request.body)
-        application = get_object_or_404(ApplicationForm, id=application_id, tenant=request.tenant)
+        
+        # Get tenant based on tenant_id
+        tenant = get_object_or_404(Tenant, tenant_id=tenant_id)
+        
+        # Retrieve the application for the specific tenant
+        application = get_object_or_404(ApplicationForm, id=application_id, tenant=tenant)
         application.approved = data.get('approved', False)
         application.save()
+
         if application.approved:
             member_data = {
-                'tenant': request.tenant,
+                'tenant': tenant,  # Ensure tenant is added to member_data
                 'first_name': application.first_name,
                 'second_name': application.second_name,
                 'family_name': application.family_name,
@@ -171,7 +177,7 @@ class ReviewApplication(APIView):
             }
             member_serializer = NewSchoolMemberSerializer(data=member_data)
             if member_serializer.is_valid():
-                member_serializer.save()
+                member_serializer.save(tenant=tenant)  # Save with tenant information
                 return JsonResponse({
                     'message': 'Application approved and member created'
                 }, status=201)
