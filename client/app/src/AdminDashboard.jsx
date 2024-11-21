@@ -8,7 +8,8 @@ import ApplicationForm from './ApplicationForm';
 import PendingForm from './PendingForm';
 import { fetchWithAuth, isAuthenticated } from './authService';
 import { useNavigate } from 'react-router-dom';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const initialNewUser = {
   first_name: '',
@@ -36,8 +37,6 @@ function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('personalDetails');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
   const [portfolios, setPortfolios] = useState([]);
   const [isPendingModalOpen, setIsPendingModalOpen] = useState(false);
   const [pendingApplications, setPendingApplications] = useState([]);
@@ -45,62 +44,56 @@ function AdminDashboard() {
   const [isPendingFormOpen, setIsPendingFormOpen] = useState(false);
   const tenantId = localStorage.getItem('tenant_id');
 
-
   useEffect(() => {
     if (!isAuthenticated()) {
       console.log("User not authenticated, redirecting to login.");
       navigate('/');
       return;
     }
-  
+
     fetchPortfolios();
   }, [navigate]);
-  
 
   const fetchPortfolios = async () => {
     console.log("Fetching portfolios...");
     try {
-        const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/NewSchoolMember/`);
+      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/NewSchoolMember/`);
+      console.log("Portfolio fetch response:", response);
+      const members = response;
 
-        // Since `fetchWithAuth` has likely already parsed `response`, no need to call `response.json()`
-        console.log("Portfolio fetch response:", response);
+      const membersWithImages = await Promise.all(
+        members.map(async (member) => {
+          const imageResponse = await fetchProfileImage(member.id);
+          return { ...member, profile_image_url: imageResponse };
+        })
+      );
 
-        // Assuming `response` is now the parsed JSON data (array of members)
-        const members = response;
-
-        const membersWithImages = await Promise.all(
-            members.map(async (member) => {
-                const imageResponse = await fetchProfileImage(member.id);
-                return { ...member, profile_image_url: imageResponse };
-            })
-        );
-
-        setPortfolios(membersWithImages);
+      setPortfolios(membersWithImages);
     } catch (error) {
-        console.error("Fetch Portfolios Error:", error);
-        setError('Failed to fetch portfolios. Please try again later.');
+      console.error("Fetch Portfolios Error:", error);
+      toast.error('Failed to fetch portfolios. Please try again later.');
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
-
-const togglePendingApplicationsModal = async () => {
-  if (!isPendingModalOpen) {
+  const togglePendingApplicationsModal = async () => {
+    if (!isPendingModalOpen) {
       try {
-          const data = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/pending-applications/`);
-          if (data && data.ok === false) {
-              throw new Error('Failed to fetch pending applications');
-          }
-          setPendingApplications(data);
-          setIsPendingModalOpen(true);
+        const data = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/pending-applications/`);
+        if (data && data.ok === false) {
+          throw new Error('Failed to fetch pending applications');
+        }
+        setPendingApplications(data);
+        setIsPendingModalOpen(true);
       } catch (error) {
-          console.error("Error fetching pending applications:", error);
+        console.error("Error fetching pending applications:", error);
+        toast.error('Failed to fetch pending applications.');
       }
-  } else {
+    } else {
       setIsPendingModalOpen(false);
-  }
-};
+    }
+  };
 
   const handleViewApplication = (application) => {
     setSelectedApplication(application);
@@ -128,7 +121,7 @@ const togglePendingApplicationsModal = async () => {
           }),
         }
       );
-      
+
       if (response.ok) {
         setPendingApplications(prev => prev.filter(app => app.id !== application.id));
         setIsPendingFormOpen(false);
@@ -138,12 +131,17 @@ const togglePendingApplicationsModal = async () => {
           setPortfolios(prevPortfolios => [...prevPortfolios, newMemberResponse]);
           console.log("New member added from approved application:", newMemberResponse);
           await sendPasswordResetLink(application.member_email);
+          toast.success('Application approved and member added.');
+        } else {
+          toast.success('Application rejected successfully.');
         }
       } else {
         console.error(`Failed to ${isApproved ? 'approve' : 'reject'} application ${application.id}`);
+        toast.error(`Failed to ${isApproved ? 'approve' : 'reject'} application.`);
       }
     } catch (error) {
       console.error(`Error ${isApproved ? 'approving' : 'rejecting'} application:`, error);
+      toast.error(`Error ${isApproved ? 'approving' : 'rejecting'} application.`);
     }
   };
 
@@ -157,106 +155,85 @@ const togglePendingApplicationsModal = async () => {
 
       if (response.ok) {
         console.log(`Password reset link sent to ${email}`);
+        toast.success('Password reset link sent to member.');
       } else {
         console.error(`Failed to send password reset link to ${email}`);
+        toast.error('Failed to send password reset link.');
       }
     } catch (error) {
       console.error("Error sending password reset link:", error);
+      toast.error('Error sending password reset link.');
     }
   };
 
   const handleRejectApplication = async (id) => {
-    try {
-      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/review-application/${id}/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ approved: false }),
-      });
-
-      if (response.ok) {
-        console.log(`Application ${id} rejected successfully`);
-        setPendingApplications(prevApplications => prevApplications.filter(app => app.id !== id));
-        setIsPendingFormOpen(false);
-      } else {
-        console.error(`Failed to reject application ${id}`);
-      }
-    } catch (error) {
-      console.error("Error rejecting application:", error);
-    }
+    await handleApplication({ id }, false);
   };
 
   const handleApproveApplication = async (id) => {
-    try {
-      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/review-application/${id}/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ approved: true }),
-      });
-  
-      if (response.ok) {
-        console.log(`Application ${id} approved successfully`);
-        // Remove the approved application from pending applications list
-        setPendingApplications(prevApplications => prevApplications.filter(app => app.id !== id));
-        setIsPendingFormOpen(false);
-      } else {
-        console.error(`Failed to approve application ${id}`);
-      }
-    } catch (error) {
-      console.error("Error approving application:", error);
-    }
-  };  
+    await handleApplication({ id }, true);
+  };
 
   const uploadProfileImage = async (memberId, base64Image) => {
     console.log(`Uploading profile image for member ID ${memberId}`);
     try {
-      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/upload-profile-image/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          member_id: memberId,
-          profileImage: base64Image,
-        }),
-      });
-
+      const response = await fetchWithAuth(
+        `http://127.0.0.1:8080/portfolio/${tenantId}/upload-profile-image/`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            member_id: memberId,
+            profileImage: base64Image,
+          }),
+        }
+      );
+  
       if (response.ok) {
+        const data = await response.json();
         console.log('Profile image uploaded successfully');
+        toast.success('Profile image uploaded successfully.');
+        return data.profile_image_url || '';
       } else {
-        console.error('Failed to upload profile image');
+        const errorText = await response.text();
+        console.error('Failed to upload profile image:', errorText);
+        toast.error('Failed to upload profile image.');
+        return null;
       }
     } catch (error) {
       console.error('Error uploading image:', error);
+      toast.error('Error uploading profile image.');
+      return null;
     }
-  };
+  };  
 
   const fetchProfileImage = async (memberId) => {
     try {
-      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/get-profile-image/${memberId}/`);
-      if (response.status === 404) {
-        console.warn(`No image found for member ID ${memberId}. Returning blank field.`);
-        return ''; // Return empty string for missing images
-      } else if (!response.ok) {
-        console.error(`Unexpected error fetching profile image for member ID ${memberId}. Status: ${response.status}`);
-        return null;
-      }
+      console.log(`Fetching profile image for member ID ${memberId}`);
+      const data = await fetchWithAuth(
+        `http://127.0.0.1:8080/portfolio/${tenantId}/get-profile-image/${memberId}/`
+      );
+      console.log(`Received data for member ID ${memberId}:`, data);
   
-      const data = await response.json();
-      return data.profile_image_url || '';
+      if (data && data.profile_image_url) {
+        console.log(`Profile image URL for member ID ${memberId}: ${data.profile_image_url}`);
+        return data.profile_image_url;
+      } else {
+        console.warn(`No profile image URL returned for member ID ${memberId}.`);
+        return '';
+      }
     } catch (error) {
       console.error(`Error fetching profile image for member ID ${memberId}:`, error);
       return null;
     }
   };
   
-  
-
   const handleAddUser = async () => {
     if (!validateForm()) return;
 
     setIsSubmitting(true);
-    setError('');
-    setSuccessMessage('');
 
     const updatedEmploymentHistory = newUser.employment_history.filter(job => job.employer && job.job_title);
     const payload = {
@@ -264,10 +241,10 @@ const togglePendingApplicationsModal = async () => {
       employment_history: updatedEmploymentHistory,
       employment_status: newUser.employment_status,
       member_country: newUser.member_country,
-  };
+    };
 
     if (portfolios.some(member => member.member_email === payload.member_email)) {
-      setError('Email already exists. Please use a different email address.');
+      toast.error('Email already exists. Please use a different email address.');
       setIsSubmitting(false);
       return;
     }
@@ -283,39 +260,58 @@ const togglePendingApplicationsModal = async () => {
         setPortfolios(prevPortfolios => [...prevPortfolios, newMember]);
         resetForm();
         setIsModalOpen(false);
-        setSuccessMessage("New member added successfully!");
+        toast.success("New member added successfully!");
       } else {
         throw new Error('Failed to add member');
       }
     } catch (error) {
       console.error("Error adding member:", error);
-      setError('Failed to add member. Please try again.');
+      toast.error('Failed to add member. Please try again.');
     } finally {
       setIsSubmitting(false);
-    } 
+    }
   };
 
   const handleUpdateUser = async (updatedUser) => {
     try {
-      const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/NewSchoolMember/${updatedUser.id}/`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedUser),
-      });
-  
-      if (!response.ok) throw new Error('Failed to update user');
-      const updatedData = await response.json();
-  
-      setPortfolios((prevPortfolios) =>
-        prevPortfolios.map((user) => (user.id === updatedData.id ? updatedData : user))
+      const response = await fetchWithAuth(
+        `http://127.0.0.1:8080/portfolio/${tenantId}/NewSchoolMember/${updatedUser.id}/`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedUser),
+        }
       );
-  
+
+      if (!response.ok) {
+        console.error('Server responded with an error:', response.status);
+        throw new Error('Failed to update user');
+      }
+
+      let updatedData;
+
+      if (response.status === 200 || response.status === 201) {
+        updatedData = await response.json();
+      } else if (response.status === 204) {
+        updatedData = updatedUser;
+      } else {
+        throw new Error(`Unexpected response status: ${response.status}`);
+      }
+
+      setPortfolios((prevPortfolios) =>
+        prevPortfolios.map((user) => (user.id === updatedUser.id ? updatedData : user))
+      );
+
       console.log("User updated successfully");
+      toast.success('Member updated successfully.');
+      
+      // Auto-reload portfolios after successful update
+      await fetchPortfolios();
     } catch (error) {
       console.error("Error updating user:", error);
+      toast.error('Failed to update member.');
     }
   };
-  
 
   const validateForm = () => {
     const formErrors = {};
@@ -331,18 +327,14 @@ const togglePendingApplicationsModal = async () => {
     return Object.keys(formErrors).length === 0;
   };
 
-
   const resetForm = () => {
     setNewUser(initialNewUser);
     setErrors({});
-    setSuccessMessage('');
   };
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
     setErrors({});
-    setError('');
-    setSuccessMessage('');
   };
 
   const toggleApplicationFormModal = () => setIsApplicationFormOpen(!isApplicationFormOpen);
@@ -354,27 +346,30 @@ const togglePendingApplicationsModal = async () => {
   };
 
   const handleSendEmail = async () => {
-    setError('');
-    setSuccessMessage('');
     try {
       const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/send-application/${email}/`, {
         method: 'POST',
       });
-      
+
       if (response.ok) {
         console.log('Email sent successfully');
+        toast.success('Application form sent via email.');
+        toggleEmailModal();
       } else {
         console.error('Failed to send email');
+        toast.error('Failed to send application form.');
       }
     } catch (error) {
       console.error('Error sending email:', error);
+      toast.error('Error sending application form.');
     }
   };
 
   return (
     <div className="admin-dashboard">
+      <ToastContainer />
       <h1>Admin Dashboard</h1>
-      
+
       <div className="controls-container">
         <input
           type="text"
@@ -387,7 +382,7 @@ const togglePendingApplicationsModal = async () => {
         <button className="open-application-form-button" onClick={toggleApplicationFormModal}>Open Application Form</button>
         <button className="view-pending-applications-button" onClick={togglePendingApplicationsModal}>View Pending Applications</button>
       </div>
-      
+
       <div className="portfolio-cards">
         {loading ? (
           <p>Loading portfolios...</p>
@@ -433,8 +428,8 @@ const togglePendingApplicationsModal = async () => {
               <PendingForm
                 applicantData={selectedApplication}
                 onClose={handleCloseForm}
-                onApprove={() => handleApproveApplication(selectedApplication.id)}
-                onReject={() => handleRejectApplication(selectedApplication.id)}
+                onApprove={() => handleApplication(selectedApplication, true)}
+                onReject={() => handleApplication(selectedApplication, false)}
               />
             )}
             <button className="close-button" onClick={togglePendingApplicationsModal}>Close</button>
@@ -451,35 +446,35 @@ const togglePendingApplicationsModal = async () => {
               <div className="tabs">
                 <button
                   type="button"
-                  className={activeTab === 'personalDetails' ? 'active' : ''} 
+                  className={activeTab === 'personalDetails' ? 'active' : ''}
                   onClick={() => setActiveTab('personalDetails')}
                 >
                   Personal Details
                 </button>
                 <button
                   type="button"
-                  className={activeTab === 'employmentHistory' ? 'active' : ''} 
+                  className={activeTab === 'employmentHistory' ? 'active' : ''}
                   onClick={() => setActiveTab('employmentHistory')}
                 >
                   Employment History
                 </button>
                 <button
                   type="button"
-                  className={activeTab === 'userCredentials' ? 'active' : ''} 
+                  className={activeTab === 'userCredentials' ? 'active' : ''}
                   onClick={() => setActiveTab('userCredentials')}
                 >
                   User Credentials
                 </button>
               </div>
-              
+
               {activeTab === 'personalDetails' && (
                 <PersonalDetails user={newUser} setUser={setNewUser} errors={errors} />
               )}
-              
+
               {activeTab === 'employmentHistory' && (
                 <EmploymentHistory user={newUser} setUser={setNewUser} />
               )}
-              
+
               {activeTab === 'userCredentials' && (
                 <div>
                   <UserCredentials user={newUser} setUser={setNewUser} />
@@ -489,9 +484,6 @@ const togglePendingApplicationsModal = async () => {
                 </div>
               )}
 
-              {error && <span className="error">{error}</span>}
-              {successMessage && <span className="success">{successMessage}</span>}
-              
               <button type="button" className="close-button" onClick={toggleModal}>Close</button>
             </form>
           </div>

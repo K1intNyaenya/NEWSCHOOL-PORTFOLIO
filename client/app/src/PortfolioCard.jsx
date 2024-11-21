@@ -13,8 +13,8 @@ const PortfolioCard = ({ user, onUpdate, uploadProfileImage, fetchProfileImage }
       if (!user.profile_image_url && fetchProfileImage) {
         try {
           const response = await fetchProfileImage(editUser.id);
-          if (response?.profile_image_url) {
-            setProfileImageUrl(response.profile_image_url);
+          if (response) {
+            setProfileImageUrl(response);
           }
         } catch (error) {
           console.error('Error fetching profile image:', error);
@@ -22,7 +22,7 @@ const PortfolioCard = ({ user, onUpdate, uploadProfileImage, fetchProfileImage }
       }
     };
     loadProfileImage();
-  }, [editUser.id, fetchProfileImage, user.profile_image_url]);
+  }, [editUser.id, fetchProfileImage, user.profile_image_url]);  
 
   const toggleEditMode = () => {
     setIsEditing(!isEditing);
@@ -59,15 +59,17 @@ const PortfolioCard = ({ user, onUpdate, uploadProfileImage, fetchProfileImage }
   const handleSaveImage = async () => {
     if (selectedImage) {
       try {
-        const response = await uploadProfileImage(editUser.id, selectedImage);
-        if (response?.profile_image_url) {
-          setProfileImageUrl(response.profile_image_url);
+        await uploadProfileImage(editUser.id, selectedImage);
+        const newProfileImageUrl = await fetchProfileImage(editUser.id);
+        if (newProfileImageUrl) {
+          setProfileImageUrl(newProfileImageUrl);
+          setSelectedImage(null);
         }
       } catch (error) {
         console.error('Error saving profile image:', error);
       }
     }
-  };
+  };  
 
   const handleSaveDetails = async () => {
     if (validateForm()) {
@@ -90,12 +92,12 @@ const PortfolioCard = ({ user, onUpdate, uploadProfileImage, fetchProfileImage }
         <div className="card-content">
           <div className="left-section">
             <div className="profile-image-container">
-              <img
-                src={editUser.profile_image || profileImageUrl || '/images/default.jpg'}
-                alt={`${editUser.first_name} ${editUser.family_name}`}
+            <img
+                src={profileImageUrl || '/images/default.jpg'}
+                alt={`${user.first_name} ${user.family_name}`}
                 className="profile-image"
-              />
-              <input type="file" id="profileImageUpload" accept="image/*" onChange={handleImageChange} />
+            />
+           <input type="file" id="profileImageUpload" accept="image/*" onChange={handleImageChange} />
             </div>
             <h2>{editUser.first_name} {editUser.family_name}</h2>
             <p className="user-title">{editUser.member_title}</p>

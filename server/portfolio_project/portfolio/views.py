@@ -21,6 +21,7 @@ import json
 import base64
 import logging
 from rest_framework import serializers
+from django.templatetags.static import static
 
 logger = logging.getLogger(__name__)
 
@@ -235,37 +236,52 @@ def send_password_reset_link(request, email):
     return JsonResponse({"message": f"Password reset link sent to {email}"}, status=200)
 
 @api_view(['POST'])
-def upload_profile_image(request):
-    """
-    Uploads and saves the profile image for a member.
-    """
+def upload_profile_image(request, tenant_id):
     member_id = request.data.get('member_id')
     profile_image_data = request.data.get('profileImage')
-    member = get_object_or_404(NewSchoolMember, id=member_id, tenant=request.tenant)
+    member = get_object_or_404(NewSchoolMember, id=member_id, tenant=tenant_id)
+
     if profile_image_data:
         format, imgstr = profile_image_data.split(';base64,')
-        image_data = ContentFile(base64.b64decode(imgstr), name=f"profile_{member.username}.{format.split('/')[-1]}")
-        profile_image, _ = ProfileImage.objects.get_or_create(member=member)
+        ext = format.split('/')[-1]
+        image_data = ContentFile(base64.b64decode(imgstr), name=f"profile_{member.username}.{ext}")
+
+        profile_image, created = ProfileImage.objects.get_or_create(member=member)
         profile_image.image.save(image_data.name, image_data)
         profile_image.save()
+
         return Response({"message": "Profile image uploaded"}, status=200)
-    return Response({"error": "No image data provided"}, status=400)
+    else:
+        return Response({"error": "No image data provided"}, status=400)
+
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated, IsSelfOrAdmin])
-def get_profile_image(request, member_id):
-    # Access tenant ID from the request instead of function parameters
-    tenant_id = request.tenant.tenant_id  # Ensure tenant is set in request context
+def get_profile_image(request, tenant_id, member_id):
+    # Verify the tenant
+    if str(tenant_id) != str(request.tenant.tenant_id):
+        return Response({"error": "Invalid tenant ID"}, status=403)
 
     try:
         member = get_object_or_404(NewSchoolMember, id=member_id, tenant=request.tenant)
         profile_image = ProfileImage.objects.get(member=member)
-        image_url = profile_image.image.url if profile_image.image else 'default_image_url'
-        return Response({"profile_image_url": request.build_absolute_uri(image_url)}, status=200)
+        
+        if profile_image.image:
+            image_url = profile_image.image.url
+            full_image_url = request.build_absolute_uri(image_url)
+        else:
+            # Use default image
+            default_image_url = static('images/default.jpg')
+            full_image_url = request.build_absolute_uri(default_image_url)
+        
+        return Response({'profile_image_url': full_image_url}, status=200)
+    except ProfileImage.DoesNotExist:
+        # Use default image
+        default_image_url = static('images/default.jpg')
+        full_image_url = request.build_absolute_uri(default_image_url)
+        return Response({'profile_image_url': full_image_url}, status=200)
     except NewSchoolMember.DoesNotExist:
         return Response({"error": "Member not found"}, status=404)
-    except ProfileImage.DoesNotExist:
-        return Response({"profile_image_url": request.build_absolute_uri('default_image_url')}, status=200)
+
 
 
 @api_view(['GET'])

@@ -198,8 +198,7 @@ class ProfileImage(models.Model):
     image = models.ImageField(
         upload_to='profile_images/', 
         null=True, 
-        blank=True, 
-        default='http://localhost:5173/images/default.jpg'
+        blank=True
     )
 
     def __str__(self):

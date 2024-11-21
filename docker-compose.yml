@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: newschool
+      MYSQL_USER: klint
+      MYSQL_PASSWORD: P0werm@n
+      MYSQL_ROOT_PASSWORD: P0werm@n
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - backend
+
+  backend:
+    build: ./backend
+    command: gunicorn your_django_project.wsgi:application --bind 0.0.0.0:8000
+    environment:
+      - DATABASE_URL=mysql://your_user:your_password@db:3306/your_database_name
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+    networks:
+      - backend
+
+  frontend:
+    build: ./frontend
+    command: npm start
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+    networks:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  db_data:
