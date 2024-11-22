@@ -1,7 +1,6 @@
 const API_URL = 'http://localhost:8080/portfolio/token/';
 const ACCESS_TOKEN_KEY = 'access_token';
 
-
 const logContext = (functionName) => `[AuthService: ${functionName}]`;
 
 export const getTenantId = () => {
@@ -10,12 +9,10 @@ export const getTenantId = () => {
     return tenantId;
 };
 
-
 export const getAccessToken = () => {
     console.log(`${logContext("getAccessToken")} Retrieving access token from localStorage`);
     return localStorage.getItem('access_token');
 };
-
 
 const isTokenExpired = (token) => {
     console.log(`${logContext("isTokenExpired")} Checking if token is expired`);
@@ -30,7 +27,6 @@ const isTokenExpired = (token) => {
         return true;
     }
 };
-
 
 export const refreshAccessToken = async () => {
     console.log(`${logContext("refreshAccessToken")} Attempting to refresh access token`);
@@ -51,6 +47,19 @@ export const refreshAccessToken = async () => {
             const data = await response.json();
             localStorage.setItem('access_token', data.access);
             console.log(`${logContext("refreshAccessToken")} Access token refreshed successfully`);
+
+            // Decode role from new access token
+            try {
+                const payload = JSON.parse(atob(data.access.split('.')[1]));
+                const role = payload.role || null;
+                if (role) {
+                    localStorage.setItem('user_role', role);
+                    console.log(`${logContext("refreshAccessToken")} Updated user role: ${role}`);
+                }
+            } catch (error) {
+                console.error(`${logContext("refreshAccessToken")} Error decoding access token:`, error);
+            }
+
             return true;
         } else {
             console.error(`${logContext("refreshAccessToken")} Failed to refresh access token`);
@@ -64,13 +73,12 @@ export const refreshAccessToken = async () => {
     }
 };
 
-
 export const fetchWithAuth = async (url, options = {}) => {
     let accessToken = getAccessToken();
     const tenantId = getTenantId();
 
     if (isTokenExpired(accessToken)) {
-        console.log('Access token expired, attempting to refresh');
+        console.log(`${logContext("fetchWithAuth")} Access token expired, attempting to refresh`);
         const refreshSuccessful = await refreshAccessToken();
         if (!refreshSuccessful) {
             throw new Error('Unauthorized: Access token expired and refresh failed');
@@ -108,11 +116,10 @@ export const fetchWithAuth = async (url, options = {}) => {
             throw new Error("Received non-JSON response");
         }
     } catch (error) {
-        console.error('[AuthService: fetchWithAuth] Error during fetch:', error);
+        console.error(`${logContext("fetchWithAuth")} Error during fetch:`, error);
         throw error;
     }
 };
-
 
 export const login = async (username, password) => {
     console.log(`${logContext("login")} Attempting login with username: ${username}`);
@@ -143,7 +150,6 @@ export const login = async (username, password) => {
     }
 };
 
-
 export const logout = () => {
     console.log(`${logContext("logout")} Logging out and clearing tokens`);
     localStorage.removeItem('access_token');
@@ -151,7 +157,6 @@ export const logout = () => {
     localStorage.removeItem('user_role');
     localStorage.removeItem('tenant_id');
 };
-
 
 export const isAuthenticated = () => {
     try {
@@ -165,7 +170,6 @@ export const isAuthenticated = () => {
         return false;
     }
 };
-
 
 export const getUserRole = () => {
     const role = localStorage.getItem('user_role') || null;

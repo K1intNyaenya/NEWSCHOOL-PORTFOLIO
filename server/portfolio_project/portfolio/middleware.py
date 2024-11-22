@@ -1,26 +1,38 @@
 from django.utils.deprecation import MiddlewareMixin
 from django.http import Http404
-from .models import Tenant
+from portfolio.models import Tenant
 import logging
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
 class TenantMiddleware(MiddlewareMixin):
     def process_request(self, request):
+        path = request.path_info.strip('/')
+        media_url = settings.MEDIA_URL.strip('/')
+        static_url = settings.STATIC_URL.strip('/')
+
+        logger.debug(f"Request path: {path}")
+        logger.debug(f"MEDIA_URL: {media_url}")
+        logger.debug(f"STATIC_URL: {static_url}")
+
+        if path.startswith(media_url) or path.startswith(static_url):
+            logger.debug("Skipping tenant processing for media/static files.")
+            return
+
         # List of paths to exclude from tenant lookup
         excluded_paths = [
-            '/portfolio/token', 
-            '/portfolio/token/refresh', 
-            '/portfolio/health-check'
+            'portfolio/token', 
+            'portfolio/token/refresh', 
+            'portfolio/health-check'
         ]
-        
-        # Skip tenant lookup for paths that don't require it
-        if any(request.path.startswith(path) for path in excluded_paths):
-            logger.debug(f"Skipping tenant lookup for path: {request.path}")
+
+        if any(path.startswith(excluded_path.strip('/')) for excluded_path in excluded_paths):
+            logger.debug(f"Skipping tenant lookup for path: {path}")
             return
 
         # Attempt to extract tenant_id from path
-        path_segments = request.path.strip('/').split('/')
+        path_segments = path.split('/')
         if len(path_segments) > 1:  # Ensures that we have a tenant_id segment
             tenant_id = path_segments[1]
             logger.debug(f"Extracted tenant_id from path: {tenant_id}")

@@ -59,16 +59,23 @@ function AdminDashboard() {
     try {
       const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/NewSchoolMember/`);
       console.log("Portfolio fetch response:", response);
-      const members = response;
 
-      const membersWithImages = await Promise.all(
-        members.map(async (member) => {
-          const imageResponse = await fetchProfileImage(member.id);
-          return { ...member, profile_image_url: imageResponse };
-        })
-      );
+      // Updated to handle the standardized response
+      if (response.success) {
+        const members = response.data;
 
-      setPortfolios(membersWithImages);
+        const membersWithImages = await Promise.all(
+          members.map(async (member) => {
+            const imageResponse = await fetchProfileImage(member.id);
+            return { ...member, profile_image_url: imageResponse };
+          })
+        );
+
+        setPortfolios(membersWithImages);
+      } else {
+        console.error("Failed to fetch portfolios:", response.message);
+        toast.error(response.message || 'Failed to fetch portfolios.');
+      }
     } catch (error) {
       console.error("Fetch Portfolios Error:", error);
       toast.error('Failed to fetch portfolios. Please try again later.');
@@ -80,12 +87,14 @@ function AdminDashboard() {
   const togglePendingApplicationsModal = async () => {
     if (!isPendingModalOpen) {
       try {
-        const data = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/pending-applications/`);
-        if (data && data.ok === false) {
-          throw new Error('Failed to fetch pending applications');
+        const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/${tenantId}/pending-applications/`);
+        if (response.success) {
+          setPendingApplications(response.data);
+          setIsPendingModalOpen(true);
+        } else {
+          console.error("Failed to fetch pending applications:", response.message);
+          toast.error(response.message || 'Failed to fetch pending applications.');
         }
-        setPendingApplications(data);
-        setIsPendingModalOpen(true);
       } catch (error) {
         console.error("Error fetching pending applications:", error);
         toast.error('Failed to fetch pending applications.');
@@ -108,12 +117,11 @@ function AdminDashboard() {
   const handleApplication = async (application, isApproved) => {
     try {
       const response = await fetchWithAuth(
-        `http://127.0.0.1:8080/portfolio/review-application/${application.id}/`,
+        `http://127.0.0.1:8080/portfolio/${tenantId}/review-application/${application.id}/`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            tenant_id: tenantId,
             approved: isApproved,
             member_email: application.member_email,
             username: application.username,
@@ -122,22 +130,24 @@ function AdminDashboard() {
         }
       );
 
-      if (response.ok) {
+      // Updated to handle the standardized response
+      if (response.success) {
         setPendingApplications(prev => prev.filter(app => app.id !== application.id));
         setIsPendingFormOpen(false);
 
         if (isApproved) {
-          const newMemberResponse = await response.json();
-          setPortfolios(prevPortfolios => [...prevPortfolios, newMemberResponse]);
-          console.log("New member added from approved application:", newMemberResponse);
+          toast.success(response.message || 'Application approved and member added.');
+
+          // Fetch the updated portfolios
+          await fetchPortfolios();
+
           await sendPasswordResetLink(application.member_email);
-          toast.success('Application approved and member added.');
         } else {
-          toast.success('Application rejected successfully.');
+          toast.success(response.message || 'Application rejected successfully.');
         }
       } else {
-        console.error(`Failed to ${isApproved ? 'approve' : 'reject'} application ${application.id}`);
-        toast.error(`Failed to ${isApproved ? 'approve' : 'reject'} application.`);
+        console.error(`Failed to ${isApproved ? 'approve' : 'reject'} application:`, response.message);
+        toast.error(response.message || `Failed to ${isApproved ? 'approve' : 'reject'} application.`);
       }
     } catch (error) {
       console.error(`Error ${isApproved ? 'approving' : 'rejecting'} application:`, error);
@@ -153,25 +163,18 @@ function AdminDashboard() {
         headers: { 'Content-Type': 'application/json' }
       });
 
-      if (response.ok) {
+      // Updated to handle the standardized response
+      if (response.success) {
         console.log(`Password reset link sent to ${email}`);
-        toast.success('Password reset link sent to member.');
+        toast.success(response.message || 'Password reset link sent to member.');
       } else {
-        console.error(`Failed to send password reset link to ${email}`);
-        toast.error('Failed to send password reset link.');
+        console.error(`Failed to send password reset link:`, response.message);
+        toast.error(response.message || 'Failed to send password reset link.');
       }
     } catch (error) {
       console.error("Error sending password reset link:", error);
       toast.error('Error sending password reset link.');
     }
-  };
-
-  const handleRejectApplication = async (id) => {
-    await handleApplication({ id }, false);
-  };
-
-  const handleApproveApplication = async (id) => {
-    await handleApplication({ id }, true);
   };
 
   const uploadProfileImage = async (memberId, base64Image) => {
@@ -190,16 +193,15 @@ function AdminDashboard() {
           }),
         }
       );
-  
-      if (response.ok) {
-        const data = await response.json();
+
+      // Updated to handle the standardized response
+      if (response.success && response.profile_image_url) {
         console.log('Profile image uploaded successfully');
-        toast.success('Profile image uploaded successfully.');
-        return data.profile_image_url || '';
+        toast.success(response.message || 'Profile image uploaded successfully.');
+        return response.profile_image_url || '';
       } else {
-        const errorText = await response.text();
-        console.error('Failed to upload profile image:', errorText);
-        toast.error('Failed to upload profile image.');
+        console.error('Failed to upload profile image:', response.message);
+        toast.error(response.message || 'Failed to upload profile image.');
         return null;
       }
     } catch (error) {
@@ -207,19 +209,20 @@ function AdminDashboard() {
       toast.error('Error uploading profile image.');
       return null;
     }
-  };  
+  };
 
   const fetchProfileImage = async (memberId) => {
     try {
       console.log(`Fetching profile image for member ID ${memberId}`);
-      const data = await fetchWithAuth(
+      const response = await fetchWithAuth(
         `http://127.0.0.1:8080/portfolio/${tenantId}/get-profile-image/${memberId}/`
       );
-      console.log(`Received data for member ID ${memberId}:`, data);
-  
-      if (data && data.profile_image_url) {
-        console.log(`Profile image URL for member ID ${memberId}: ${data.profile_image_url}`);
-        return data.profile_image_url;
+      console.log(`Received data for member ID ${memberId}:`, response);
+
+      // Updated to handle the standardized response
+      if (response.success && response.profile_image_url) {
+        console.log(`Profile image URL for member ID ${memberId}: ${response.profile_image_url}`);
+        return response.profile_image_url;
       } else {
         console.warn(`No profile image URL returned for member ID ${memberId}.`);
         return '';
@@ -229,7 +232,7 @@ function AdminDashboard() {
       return null;
     }
   };
-  
+
   const handleAddUser = async () => {
     if (!validateForm()) return;
 
@@ -255,14 +258,17 @@ function AdminDashboard() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (response.ok) {
-        const newMember = await response.json();
+
+      // Updated to handle the standardized response
+      if (response.success) {
+        const newMember = response.data;
         setPortfolios(prevPortfolios => [...prevPortfolios, newMember]);
         resetForm();
         setIsModalOpen(false);
-        toast.success("New member added successfully!");
+        toast.success(response.message || "New member added successfully!");
       } else {
-        throw new Error('Failed to add member');
+        console.error("Failed to add member:", response.message);
+        toast.error(response.message || 'Failed to add member. Please try again.');
       }
     } catch (error) {
       console.error("Error adding member:", error);
@@ -283,30 +289,22 @@ function AdminDashboard() {
         }
       );
 
-      if (!response.ok) {
-        console.error('Server responded with an error:', response.status);
-        throw new Error('Failed to update user');
-      }
+      // Updated to handle the standardized response
+      if (response.success) {
+        const updatedData = response.data;
+        setPortfolios((prevPortfolios) =>
+          prevPortfolios.map((user) => (user.id === updatedUser.id ? updatedData : user))
+        );
 
-      let updatedData;
+        console.log("User updated successfully");
+        toast.success(response.message || 'Member updated successfully.');
 
-      if (response.status === 200 || response.status === 201) {
-        updatedData = await response.json();
-      } else if (response.status === 204) {
-        updatedData = updatedUser;
+        // Auto-reload portfolios after successful update
+        await fetchPortfolios();
       } else {
-        throw new Error(`Unexpected response status: ${response.status}`);
+        console.error("Failed to update user:", response.message);
+        toast.error(response.message || 'Failed to update member.');
       }
-
-      setPortfolios((prevPortfolios) =>
-        prevPortfolios.map((user) => (user.id === updatedUser.id ? updatedData : user))
-      );
-
-      console.log("User updated successfully");
-      toast.success('Member updated successfully.');
-      
-      // Auto-reload portfolios after successful update
-      await fetchPortfolios();
     } catch (error) {
       console.error("Error updating user:", error);
       toast.error('Failed to update member.');
@@ -351,13 +349,14 @@ function AdminDashboard() {
         method: 'POST',
       });
 
-      if (response.ok) {
+      // Updated to handle the standardized response
+      if (response.success) {
         console.log('Email sent successfully');
-        toast.success('Application form sent via email.');
+        toast.success(response.message || 'Application form sent via email.');
         toggleEmailModal();
       } else {
-        console.error('Failed to send email');
-        toast.error('Failed to send application form.');
+        console.error('Failed to send email:', response.message);
+        toast.error(response.message || 'Failed to send application form.');
       }
     } catch (error) {
       console.error('Error sending email:', error);

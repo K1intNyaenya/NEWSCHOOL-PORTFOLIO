@@ -14,19 +14,19 @@ function ProtectedRoute({ requiredRole }) {
   }
 
   // Check if requiredRole is an array and if user role is within allowed roles
-  const hasRequiredRole = Array.isArray(requiredRole)
-    ? requiredRole.includes(userRole)
-    : userRole === requiredRole;
+  const hasRequiredRole = requiredRole
+    ? Array.isArray(requiredRole)
+      ? requiredRole.includes(userRole)
+      : userRole === requiredRole
+    : true; // If no requiredRole is specified, allow access
 
-  if (requiredRole && !hasRequiredRole) {
-    console.warn(`[ProtectedRoute] Access denied: User does not have required role(s) ${requiredRole}`);
-
-    // Redirect admin users to admin dashboard, other users to dashboard
-    return userRole === 'admin' ? (
-      <Navigate to="/admin-dashboard" replace />
-    ) : (
-      <Navigate to="/dashboard" replace />
+  if (!hasRequiredRole) {
+    console.warn(
+      `[ProtectedRoute] Access denied: User role '${userRole}' does not match required role(s) ${requiredRole}`
     );
+
+    // Redirect to an unauthorized page or show a message
+    return <Navigate to="/unauthorized" replace />;
   }
 
   // Render the component if the user is authenticated and has the correct role

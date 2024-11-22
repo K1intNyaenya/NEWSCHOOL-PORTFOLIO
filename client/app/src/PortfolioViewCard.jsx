@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './style/PortfolioCard.css';
-import { fetchWithAuth } from './authService';
+import { fetchWithAuth, getTenantId } from './authService';
 
 // Updated default image path to point to "images/default.jpg"
 const DEFAULT_PROFILE_IMAGE_URL = 'http://localhost:5173/images/default.jpg';
@@ -12,19 +12,22 @@ const PortfolioViewCard = ({ user }) => {
   useEffect(() => {
     const fetchProfileImage = async () => {
       try {
-        const response = await fetchWithAuth(`http://127.0.0.1:8080/portfolio/get-profile-image/${user.id}/`);
-        if (response.ok) {
-          const data = await response.json();
-          setProfileImageUrl(data.profile_image_url || DEFAULT_PROFILE_IMAGE_URL);
-        } else if (response.status === 404) {
-          console.warn(`Profile image not found for user ID ${user.id}, using default image.`);
-          setProfileImageUrl(DEFAULT_PROFILE_IMAGE_URL);
+        const tenantId = getTenantId(); // Get tenant_id from authService or localStorage
+        const response = await fetchWithAuth(
+          `http://127.0.0.1:8080/portfolio/${tenantId}/get-profile-image/${user.id}/`
+        );
+
+        console.log(`Profile image response for user ID ${user.id}:`, response);
+
+        // Handle the standardized response
+        if (response.success && response.profile_image_url) {
+          setProfileImageUrl(response.profile_image_url);
         } else {
-          console.error('Failed to fetch profile image');
+          console.warn(`Failed to fetch profile image for user ID ${user.id}: ${response.message}`);
           setProfileImageUrl(DEFAULT_PROFILE_IMAGE_URL);
         }
       } catch (error) {
-        console.error('Error fetching profile image:', error);
+        console.error(`Error fetching profile image for user ID ${user.id}:`, error);
         setProfileImageUrl(DEFAULT_PROFILE_IMAGE_URL);
       } finally {
         setIsLoading(false);

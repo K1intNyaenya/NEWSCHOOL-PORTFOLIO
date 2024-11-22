@@ -1,0 +1,51 @@
+/* UnauthorizedPage.css */
+
+.unauthorized-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f8d7da; /* Light red background */
+  }
+  
+  .unauthorized-content {
+    text-align: center;
+    background-color: #ffffff; /* White background */
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .unauthorized-content h1 {
+    font-size: 2.5rem;
+    color: #721c24; /* Dark red color */
+    margin-bottom: 20px;
+  }
+  
+  .unauthorized-content p {
+    font-size: 1.2rem;
+    color: #721c24;
+    margin-bottom: 30px;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #ffffff;
+    background-color: #dc3545; /* Bootstrap danger color */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn:hover {
+    background-color: #c82333; /* Darker red on hover */
+  }
+  
