@@ -17,8 +17,7 @@ const UnauthorizedPage = () => {
   return (
     <div className="unauthorized-container">
       <div className="unauthorized-content">
-        <h1>403 - Unauthorized Access</h1>
-        <p>You do not have permission to view this page.</p>
+        <h1>Login Again Tokens Experied</h1>
         <div className="button-group">
           <button onClick={handleGoBack} className="btn">
             Go Back

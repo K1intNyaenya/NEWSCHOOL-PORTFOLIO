@@ -192,7 +192,9 @@ def login_view(request, tenant_id):
                     'user_id': user.id,
                     'username': user.username,
                     'email': user.email,
-                    'tenant_id': user.tenant.tenant_id
+                    'tenant_id': user.tenant.tenant_id,
+                    'first_name': user.first_name,
+                    'tenant_name': user.tenant.tenant_name
                 },
                 "message": "Login successful."
             }, status=status.HTTP_200_OK)

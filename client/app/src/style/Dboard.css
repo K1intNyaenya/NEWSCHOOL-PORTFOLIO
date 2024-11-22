@@ -119,3 +119,58 @@ h1 {
     width: 90%;
   }
 }
+
+.user-info {
+  background-color: #333; /* Match the background of other cards */
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.user-info h2 {
+  color: #ffd700; /* Gold color for the user name */
+  font-size: 1.8em;
+  margin-bottom: 8px;
+}
+
+.user-info p {
+  color: #b8860b; /* Slightly darker gold for tenant info */
+  font-size: 1.2em;
+  margin: 0;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.search-container {
+  flex: 1;
+  max-width: 600px;
+}
+
+.user-info {
+  margin-left: 20px;
+  text-align: right;
+}
+
+.welcome-text {
+  display: block;
+  color: #ffd700; /* Gold color for the user name */
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.tenant-text {
+  display: block;
+  color: #b8860b; /* Slightly darker gold for tenant info */
+  font-size: 0.95em;
+}

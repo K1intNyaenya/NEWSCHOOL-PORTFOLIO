@@ -140,7 +140,8 @@ export const login = async (username, password) => {
         localStorage.setItem('refresh_token', data.refresh);
         localStorage.setItem('tenant_id', data.tenant_id);
         const role = data.role || 'member'; 
-        localStorage.setItem('user_role', role); 
+        localStorage.setItem('user_role', role);
+        
 
         console.log(`${logContext("login")} User logged in with role: ${role}`);
         return role;
