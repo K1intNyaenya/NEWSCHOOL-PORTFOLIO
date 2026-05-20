@@ -1,0 +1,191 @@
+ERROR 2024-11-18 08:51:05,738 middleware No tenant_id found in path
+ERROR 2024-11-18 08:58:10,395 basehttp You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2024-11-18 08:58:10,400 basehttp You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2024-11-18 08:58:12,809 basehttp You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2024-11-18 08:58:12,813 basehttp You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2024-11-18 09:07:40,548 middleware No tenant_id found in path
+ERROR 2024-11-18 09:08:16,280 middleware No tenant_id found in path
+ERROR 2024-11-18 09:10:22,677 basehttp You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2024-11-18 09:10:22,678 basehttp You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2024-11-18 09:11:00,267 middleware No tenant_id found in path
+ERROR 2024-11-18 09:15:08,929 middleware No tenant_id found in path
+ERROR 2024-11-18 09:16:40,063 middleware No tenant_id found in path
+ERROR 2024-11-18 09:18:20,129 middleware No tenant_id found in path
+ERROR 2024-11-18 09:19:16,420 middleware No tenant_id found in path
+ERROR 2024-11-18 09:19:23,492 middleware No tenant_id found in path
+ERROR 2024-11-18 09:23:39,644 middleware No tenant_id found in path
+ERROR 2024-11-18 09:26:00,853 middleware Tenant not found for tenant_id: api
+ERROR 2024-11-18 09:26:22,106 middleware Tenant not found for tenant_id: portfolio
+ERROR 2024-11-18 09:30:40,638 middleware Tenant not found for tenant_id: portfolio
+ERROR 2024-11-18 09:30:40,691 middleware No tenant_id found in path
+ERROR 2024-11-18 09:35:04,404 middleware No tenant_id found in path
+ERROR 2024-11-18 09:35:04,475 middleware No tenant_id found in path
+ERROR 2024-11-18 09:45:01,040 middleware No tenant_id found in path
+ERROR 2024-11-18 10:02:47,274 log Internal Server Error: /portfolio/ec0a01b5-1c03-4f49-9e39-62cd27174227/get-profile-image/1/
+Traceback (most recent call last):
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+TypeError: get_profile_image() got an unexpected keyword argument 'tenant_id'
+ERROR 2024-11-18 10:02:47,326 log Internal Server Error: /portfolio/ec0a01b5-1c03-4f49-9e39-62cd27174227/get-profile-image/2/
+Traceback (most recent call last):
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+TypeError: get_profile_image() got an unexpected keyword argument 'tenant_id'
+ERROR 2024-11-18 10:02:47,327 log Internal Server Error: /portfolio/ec0a01b5-1c03-4f49-9e39-62cd27174227/get-profile-image/3/
+Traceback (most recent call last):
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+TypeError: get_profile_image() got an unexpected keyword argument 'tenant_id'
+ERROR 2024-11-18 10:24:26,769 log Internal Server Error: /portfolio/ec0a01b5-1c03-4f49-9e39-62cd27174227/get-profile-image/3/
+Traceback (most recent call last):
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+TypeError: get_profile_image() got an unexpected keyword argument 'tenant_id'
+ERROR 2024-11-18 10:24:26,770 log Internal Server Error: /portfolio/ec0a01b5-1c03-4f49-9e39-62cd27174227/get-profile-image/2/
+Traceback (most recent call last):
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+TypeError: get_profile_image() got an unexpected keyword argument 'tenant_id'
+ERROR 2024-11-18 10:24:26,770 log Internal Server Error: /portfolio/ec0a01b5-1c03-4f49-9e39-62cd27174227/get-profile-image/1/
+Traceback (most recent call last):
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nyaenya/klint-workspace/NEWSCHOOL-PORTFOLIO/server/.venv/lib/python3.12/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+TypeError: get_profile_image() got an unexpected keyword argument 'tenant_id'

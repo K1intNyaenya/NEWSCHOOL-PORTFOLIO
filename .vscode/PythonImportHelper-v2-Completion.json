@@ -1,0 +1,1531 @@
+[
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "stringify",
+        "importPath": "flatted",
+        "description": "flatted",
+        "isExtraImport": true,
+        "detail": "flatted",
+        "documentation": {}
+    },
+    {
+        "label": "parse",
+        "importPath": "flatted",
+        "description": "flatted",
+        "isExtraImport": true,
+        "detail": "flatted",
+        "documentation": {}
+    },
+    {
+        "label": "BaseCommand",
+        "importPath": "django.core.management.base",
+        "description": "django.core.management.base",
+        "isExtraImport": true,
+        "detail": "django.core.management.base",
+        "documentation": {}
+    },
+    {
+        "label": "BaseCommand",
+        "importPath": "django.core.management.base",
+        "description": "django.core.management.base",
+        "isExtraImport": true,
+        "detail": "django.core.management.base",
+        "documentation": {}
+    },
+    {
+        "label": "NewSchoolMember",
+        "importPath": "portfolio.models",
+        "description": "portfolio.models",
+        "isExtraImport": true,
+        "detail": "portfolio.models",
+        "documentation": {}
+    },
+    {
+        "label": "Tenant",
+        "importPath": "portfolio.models",
+        "description": "portfolio.models",
+        "isExtraImport": true,
+        "detail": "portfolio.models",
+        "documentation": {}
+    },
+    {
+        "label": "uuid",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "uuid",
+        "description": "uuid",
+        "detail": "uuid",
+        "documentation": {}
+    },
+    {
+        "label": "django.core.validators",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "django.core.validators",
+        "description": "django.core.validators",
+        "detail": "django.core.validators",
+        "documentation": {}
+    },
+    {
+        "label": "RegexValidator",
+        "importPath": "django.core.validators",
+        "description": "django.core.validators",
+        "isExtraImport": true,
+        "detail": "django.core.validators",
+        "documentation": {}
+    },
+    {
+        "label": "django.db.models.deletion",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "django.db.models.deletion",
+        "description": "django.db.models.deletion",
+        "detail": "django.db.models.deletion",
+        "documentation": {}
+    },
+    {
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
+        "isExtraImport": true,
+        "detail": "django.conf",
+        "documentation": {}
+    },
+    {
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
+        "isExtraImport": true,
+        "detail": "django.conf",
+        "documentation": {}
+    },
+    {
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
+        "isExtraImport": true,
+        "detail": "django.conf",
+        "documentation": {}
+    },
+    {
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
+        "isExtraImport": true,
+        "detail": "django.conf",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "IntegrityError",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "transaction",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "MiddlewareMixin",
+        "importPath": "django.utils.deprecation",
+        "description": "django.utils.deprecation",
+        "isExtraImport": true,
+        "detail": "django.utils.deprecation",
+        "documentation": {}
+    },
+    {
+        "label": "Http404",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "JsonResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "HttpResponse",
+        "importPath": "django.http",
+        "description": "django.http",
+        "isExtraImport": true,
+        "detail": "django.http",
+        "documentation": {}
+    },
+    {
+        "label": "logging",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
+        "documentation": {}
+    },
+    {
+        "label": "AbstractBaseUser",
+        "importPath": "django.contrib.auth.models",
+        "description": "django.contrib.auth.models",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth.models",
+        "documentation": {}
+    },
+    {
+        "label": "BaseUserManager",
+        "importPath": "django.contrib.auth.models",
+        "description": "django.contrib.auth.models",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth.models",
+        "documentation": {}
+    },
+    {
+        "label": "BaseUserManager",
+        "importPath": "django.contrib.auth.models",
+        "description": "django.contrib.auth.models",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth.models",
+        "documentation": {}
+    },
+    {
+        "label": "post_save",
+        "importPath": "django.db.models.signals",
+        "description": "django.db.models.signals",
+        "isExtraImport": true,
+        "detail": "django.db.models.signals",
+        "documentation": {}
+    },
+    {
+        "label": "receiver",
+        "importPath": "django.dispatch",
+        "description": "django.dispatch",
+        "isExtraImport": true,
+        "detail": "django.dispatch",
+        "documentation": {}
+    },
+    {
+        "label": "BasePermission",
+        "importPath": "rest_framework.permissions",
+        "description": "rest_framework.permissions",
+        "isExtraImport": true,
+        "detail": "rest_framework.permissions",
+        "documentation": {}
+    },
+    {
+        "label": "SAFE_METHODS",
+        "importPath": "rest_framework.permissions",
+        "description": "rest_framework.permissions",
+        "isExtraImport": true,
+        "detail": "rest_framework.permissions",
+        "documentation": {}
+    },
+    {
+        "label": "AllowAny",
+        "importPath": "rest_framework.permissions",
+        "description": "rest_framework.permissions",
+        "isExtraImport": true,
+        "detail": "rest_framework.permissions",
+        "documentation": {}
+    },
+    {
+        "label": "IsAuthenticated",
+        "importPath": "rest_framework.permissions",
+        "description": "rest_framework.permissions",
+        "isExtraImport": true,
+        "detail": "rest_framework.permissions",
+        "documentation": {}
+    },
+    {
+        "label": "TokenObtainPairSerializer",
+        "importPath": "rest_framework_simplejwt.serializers",
+        "description": "rest_framework_simplejwt.serializers",
+        "isExtraImport": true,
+        "detail": "rest_framework_simplejwt.serializers",
+        "documentation": {}
+    },
+    {
+        "label": "serializers",
+        "importPath": "rest_framework",
+        "description": "rest_framework",
+        "isExtraImport": true,
+        "detail": "rest_framework",
+        "documentation": {}
+    },
+    {
+        "label": "status",
+        "importPath": "rest_framework",
+        "description": "rest_framework",
+        "isExtraImport": true,
+        "detail": "rest_framework",
+        "documentation": {}
+    },
+    {
+        "label": "serializers",
+        "importPath": "rest_framework",
+        "description": "rest_framework",
+        "isExtraImport": true,
+        "detail": "rest_framework",
+        "documentation": {}
+    },
+    {
+        "label": "authenticate",
+        "importPath": "django.contrib.auth",
+        "description": "django.contrib.auth",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth",
+        "documentation": {}
+    },
+    {
+        "label": "authenticate",
+        "importPath": "django.contrib.auth",
+        "description": "django.contrib.auth",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth",
+        "documentation": {}
+    },
+    {
+        "label": "make_password",
+        "importPath": "django.contrib.auth.hashers",
+        "description": "django.contrib.auth.hashers",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth.hashers",
+        "documentation": {}
+    },
+    {
+        "label": "make_password",
+        "importPath": "django.contrib.auth.hashers",
+        "description": "django.contrib.auth.hashers",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth.hashers",
+        "documentation": {}
+    },
+    {
+        "label": "send_mail",
+        "importPath": "django.core.mail",
+        "description": "django.core.mail",
+        "isExtraImport": true,
+        "detail": "django.core.mail",
+        "documentation": {}
+    },
+    {
+        "label": "send_mail",
+        "importPath": "django.core.mail",
+        "description": "django.core.mail",
+        "isExtraImport": true,
+        "detail": "django.core.mail",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "include",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "TokenRefreshView",
+        "importPath": "rest_framework_simplejwt.views",
+        "description": "rest_framework_simplejwt.views",
+        "isExtraImport": true,
+        "detail": "rest_framework_simplejwt.views",
+        "documentation": {}
+    },
+    {
+        "label": "TokenObtainPairView",
+        "importPath": "rest_framework_simplejwt.views",
+        "description": "rest_framework_simplejwt.views",
+        "isExtraImport": true,
+        "detail": "rest_framework_simplejwt.views",
+        "documentation": {}
+    },
+    {
+        "label": "api_view",
+        "importPath": "rest_framework.decorators",
+        "description": "rest_framework.decorators",
+        "isExtraImport": true,
+        "detail": "rest_framework.decorators",
+        "documentation": {}
+    },
+    {
+        "label": "permission_classes",
+        "importPath": "rest_framework.decorators",
+        "description": "rest_framework.decorators",
+        "isExtraImport": true,
+        "detail": "rest_framework.decorators",
+        "documentation": {}
+    },
+    {
+        "label": "Response",
+        "importPath": "rest_framework.response",
+        "description": "rest_framework.response",
+        "isExtraImport": true,
+        "detail": "rest_framework.response",
+        "documentation": {}
+    },
+    {
+        "label": "PageNumberPagination",
+        "importPath": "rest_framework.pagination",
+        "description": "rest_framework.pagination",
+        "isExtraImport": true,
+        "detail": "rest_framework.pagination",
+        "documentation": {}
+    },
+    {
+        "label": "APIView",
+        "importPath": "rest_framework.views",
+        "description": "rest_framework.views",
+        "isExtraImport": true,
+        "detail": "rest_framework.views",
+        "documentation": {}
+    },
+    {
+        "label": "RefreshToken",
+        "importPath": "rest_framework_simplejwt.tokens",
+        "description": "rest_framework_simplejwt.tokens",
+        "isExtraImport": true,
+        "detail": "rest_framework_simplejwt.tokens",
+        "documentation": {}
+    },
+    {
+        "label": "get_object_or_404",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "ContentFile",
+        "importPath": "django.core.files.base",
+        "description": "django.core.files.base",
+        "isExtraImport": true,
+        "detail": "django.core.files.base",
+        "documentation": {}
+    },
+    {
+        "label": "csrf_exempt",
+        "importPath": "django.views.decorators.csrf",
+        "description": "django.views.decorators.csrf",
+        "isExtraImport": true,
+        "detail": "django.views.decorators.csrf",
+        "documentation": {}
+    },
+    {
+        "label": "base64",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "base64",
+        "description": "base64",
+        "detail": "base64",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "get_asgi_application",
+        "importPath": "django.core.asgi",
+        "description": "django.core.asgi",
+        "isExtraImport": true,
+        "detail": "django.core.asgi",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "config",
+        "importPath": "decouple",
+        "description": "decouple",
+        "isExtraImport": true,
+        "detail": "decouple",
+        "documentation": {}
+    },
+    {
+        "label": "timedelta",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "default_headers",
+        "importPath": "corsheaders.defaults",
+        "description": "corsheaders.defaults",
+        "isExtraImport": true,
+        "detail": "corsheaders.defaults",
+        "documentation": {}
+    },
+    {
+        "label": "static",
+        "importPath": "django.conf.urls.static",
+        "description": "django.conf.urls.static",
+        "isExtraImport": true,
+        "detail": "django.conf.urls.static",
+        "documentation": {}
+    },
+    {
+        "label": "get_wsgi_application",
+        "importPath": "django.core.wsgi",
+        "description": "django.core.wsgi",
+        "isExtraImport": true,
+        "detail": "django.core.wsgi",
+        "documentation": {}
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "_Known",
+        "kind": 6,
+        "importPath": "client.app.node_modules.flatted.python.flatted",
+        "description": "client.app.node_modules.flatted.python.flatted",
+        "peekOfCode": "class _Known:\n    def __init__(self):\n        self.key = []\n        self.value = []\nclass _String:\n    def __init__(self, value):\n        self.value = value\ndef _array_keys(value):\n    keys = []\n    i = 0",
+        "detail": "client.app.node_modules.flatted.python.flatted",
+        "documentation": {}
+    },
+    {
+        "label": "_String",
+        "kind": 6,
+        "importPath": "client.app.node_modules.flatted.python.flatted",
+        "description": "client.app.node_modules.flatted.python.flatted",
+        "peekOfCode": "class _String:\n    def __init__(self, value):\n        self.value = value\ndef _array_keys(value):\n    keys = []\n    i = 0\n    for _ in value:\n        keys.append(i)\n        i += 1\n    return keys",
+        "detail": "client.app.node_modules.flatted.python.flatted",
+        "documentation": {}
+    },
+    {
+        "label": "parse",
+        "kind": 2,
+        "importPath": "client.app.node_modules.flatted.python.flatted",
+        "description": "client.app.node_modules.flatted.python.flatted",
+        "peekOfCode": "def parse(value, *args, **kwargs):\n    json = _json.loads(value, *args, **kwargs)\n    wrapped = []\n    for value in json:\n        wrapped.append(_wrap(value))\n    input = []\n    for value in wrapped:\n        if isinstance(value, _String):\n            input.append(value.value)\n        else:",
+        "detail": "client.app.node_modules.flatted.python.flatted",
+        "documentation": {}
+    },
+    {
+        "label": "stringify",
+        "kind": 2,
+        "importPath": "client.app.node_modules.flatted.python.flatted",
+        "description": "client.app.node_modules.flatted.python.flatted",
+        "peekOfCode": "def stringify(value, *args, **kwargs):\n    known = _Known()\n    input = []\n    output = []\n    i = int(_index(known, input, value))\n    while i < len(input):\n        output.append(_transform(known, input, input[i]))\n        i += 1\n    return _json.dumps(output, *args, **kwargs)",
+        "detail": "client.app.node_modules.flatted.python.flatted",
+        "documentation": {}
+    },
+    {
+        "label": "stringify",
+        "kind": 2,
+        "importPath": "client.app.node_modules.flatted.python.test",
+        "description": "client.app.node_modules.flatted.python.test",
+        "peekOfCode": "def stringify(value):\n    return _stringify(value, separators=(',', ':'))\nassert stringify([None, None]) == '[[null,null]]'\na = []\no = {}\nassert stringify(a) == '[[]]'\nassert stringify(o) == '[{}]'\na.append(a)\no['o'] = o\nassert stringify(a) == '[[\"0\"]]'",
+        "detail": "client.app.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "a",
+        "kind": 5,
+        "importPath": "client.app.node_modules.flatted.python.test",
+        "description": "client.app.node_modules.flatted.python.test",
+        "peekOfCode": "a = []\no = {}\nassert stringify(a) == '[[]]'\nassert stringify(o) == '[{}]'\na.append(a)\no['o'] = o\nassert stringify(a) == '[[\"0\"]]'\nassert stringify(o) == '[{\"o\":\"0\"}]'\nb = parse(stringify(a))\nassert isinstance(b, list) and b[0] == b",
+        "detail": "client.app.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o",
+        "kind": 5,
+        "importPath": "client.app.node_modules.flatted.python.test",
+        "description": "client.app.node_modules.flatted.python.test",
+        "peekOfCode": "o = {}\nassert stringify(a) == '[[]]'\nassert stringify(o) == '[{}]'\na.append(a)\no['o'] = o\nassert stringify(a) == '[[\"0\"]]'\nassert stringify(o) == '[{\"o\":\"0\"}]'\nb = parse(stringify(a))\nassert isinstance(b, list) and b[0] == b\na.append(1)",
+        "detail": "client.app.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o['o']",
+        "kind": 5,
+        "importPath": "client.app.node_modules.flatted.python.test",
+        "description": "client.app.node_modules.flatted.python.test",
+        "peekOfCode": "o['o'] = o\nassert stringify(a) == '[[\"0\"]]'\nassert stringify(o) == '[{\"o\":\"0\"}]'\nb = parse(stringify(a))\nassert isinstance(b, list) and b[0] == b\na.append(1)\na.append('two')\na.append(True)\no['one'] = 1\no['two'] = 'two'",
+        "detail": "client.app.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "b",
+        "kind": 5,
+        "importPath": "client.app.node_modules.flatted.python.test",
+        "description": "client.app.node_modules.flatted.python.test",
+        "peekOfCode": "b = parse(stringify(a))\nassert isinstance(b, list) and b[0] == b\na.append(1)\na.append('two')\na.append(True)\no['one'] = 1\no['two'] = 'two'\no['three'] = True\nassert stringify(a) == '[[\"0\",1,\"1\",true],\"two\"]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true},\"two\"]'",
+        "detail": "client.app.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o['one']",
+        "kind": 5,
+        "importPath": "client.app.node_modules.flatted.python.test",
+        "description": "client.app.node_modules.flatted.python.test",
+        "peekOfCode": "o['one'] = 1\no['two'] = 'two'\no['three'] = True\nassert stringify(a) == '[[\"0\",1,\"1\",true],\"two\"]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true},\"two\"]'\na.append(o)\no['a'] = a\nassert stringify(a) == '[[\"0\",1,\"1\",true,\"2\"],\"two\",{\"o\":\"2\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"0\"}]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"2\"},\"two\",[\"2\",1,\"1\",true,\"0\"]]'\na.append({'test': 'OK'})",
+        "detail": "client.app.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o['two']",
+        "kind": 5,
+        "importPath": "client.app.node_modules.flatted.python.test",
+        "description": "client.app.node_modules.flatted.python.test",
+        "peekOfCode": "o['two'] = 'two'\no['three'] = True\nassert stringify(a) == '[[\"0\",1,\"1\",true],\"two\"]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true},\"two\"]'\na.append(o)\no['a'] = a\nassert stringify(a) == '[[\"0\",1,\"1\",true,\"2\"],\"two\",{\"o\":\"2\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"0\"}]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"2\"},\"two\",[\"2\",1,\"1\",true,\"0\"]]'\na.append({'test': 'OK'})\na.append([1, 2, 3])",
+        "detail": "client.app.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o['three']",
+        "kind": 5,
+        "importPath": "client.app.node_modules.flatted.python.test",
+        "description": "client.app.node_modules.flatted.python.test",
+        "peekOfCode": "o['three'] = True\nassert stringify(a) == '[[\"0\",1,\"1\",true],\"two\"]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true},\"two\"]'\na.append(o)\no['a'] = a\nassert stringify(a) == '[[\"0\",1,\"1\",true,\"2\"],\"two\",{\"o\":\"2\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"0\"}]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"2\"},\"two\",[\"2\",1,\"1\",true,\"0\"]]'\na.append({'test': 'OK'})\na.append([1, 2, 3])\no['test'] = {'test': 'OK'}",
+        "detail": "client.app.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o['a']",
+        "kind": 5,
+        "importPath": "client.app.node_modules.flatted.python.test",
+        "description": "client.app.node_modules.flatted.python.test",
+        "peekOfCode": "o['a'] = a\nassert stringify(a) == '[[\"0\",1,\"1\",true,\"2\"],\"two\",{\"o\":\"2\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"0\"}]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"2\"},\"two\",[\"2\",1,\"1\",true,\"0\"]]'\na.append({'test': 'OK'})\na.append([1, 2, 3])\no['test'] = {'test': 'OK'}\no['array'] = [1, 2, 3]\nassert stringify(a) == '[[\"0\",1,\"1\",true,\"2\",\"3\",\"4\"],\"two\",{\"o\":\"2\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"0\",\"test\":\"3\",\"array\":\"4\"},{\"test\":\"5\"},[1,2,3],\"OK\"]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"2\",\"test\":\"3\",\"array\":\"4\"},\"two\",[\"2\",1,\"1\",true,\"0\",\"3\",\"4\"],{\"test\":\"5\"},[1,2,3],\"OK\"]'\na2 = parse(stringify(a));",
+        "detail": "client.app.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o['test']",
+        "kind": 5,
+        "importPath": "client.app.node_modules.flatted.python.test",
+        "description": "client.app.node_modules.flatted.python.test",
+        "peekOfCode": "o['test'] = {'test': 'OK'}\no['array'] = [1, 2, 3]\nassert stringify(a) == '[[\"0\",1,\"1\",true,\"2\",\"3\",\"4\"],\"two\",{\"o\":\"2\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"0\",\"test\":\"3\",\"array\":\"4\"},{\"test\":\"5\"},[1,2,3],\"OK\"]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"2\",\"test\":\"3\",\"array\":\"4\"},\"two\",[\"2\",1,\"1\",true,\"0\",\"3\",\"4\"],{\"test\":\"5\"},[1,2,3],\"OK\"]'\na2 = parse(stringify(a));\no2 = parse(stringify(o));\nassert a2[0] == a2\nassert o2['o'] == o2\nassert a2[1] == 1 and a2[2] == 'two' and a2[3] == True and isinstance(a2[4], dict)\nassert a2[4] == a2[4]['o'] and a2 == a2[4]['o']['a']",
+        "detail": "client.app.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o['array']",
+        "kind": 5,
+        "importPath": "client.app.node_modules.flatted.python.test",
+        "description": "client.app.node_modules.flatted.python.test",
+        "peekOfCode": "o['array'] = [1, 2, 3]\nassert stringify(a) == '[[\"0\",1,\"1\",true,\"2\",\"3\",\"4\"],\"two\",{\"o\":\"2\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"0\",\"test\":\"3\",\"array\":\"4\"},{\"test\":\"5\"},[1,2,3],\"OK\"]'\nassert stringify(o) == '[{\"o\":\"0\",\"one\":1,\"two\":\"1\",\"three\":true,\"a\":\"2\",\"test\":\"3\",\"array\":\"4\"},\"two\",[\"2\",1,\"1\",true,\"0\",\"3\",\"4\"],{\"test\":\"5\"},[1,2,3],\"OK\"]'\na2 = parse(stringify(a));\no2 = parse(stringify(o));\nassert a2[0] == a2\nassert o2['o'] == o2\nassert a2[1] == 1 and a2[2] == 'two' and a2[3] == True and isinstance(a2[4], dict)\nassert a2[4] == a2[4]['o'] and a2 == a2[4]['o']['a']\nstr = parse('[{\"prop\":\"1\",\"a\":\"2\",\"b\":\"3\"},{\"value\":123},[\"4\",\"5\"],{\"e\":\"6\",\"t\":\"7\",\"p\":4},{},{\"b\":\"8\"},\"f\",{\"a\":\"9\"},[\"10\"],\"sup\",{\"a\":1,\"d\":2,\"c\":\"7\",\"z\":\"11\",\"h\":1},{\"g\":2,\"a\":\"7\",\"b\":\"12\",\"f\":6},{\"r\":4,\"u\":\"7\",\"c\":5}]')",
+        "detail": "client.app.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "a2",
+        "kind": 5,
+        "importPath": "client.app.node_modules.flatted.python.test",
+        "description": "client.app.node_modules.flatted.python.test",
+        "peekOfCode": "a2 = parse(stringify(a));\no2 = parse(stringify(o));\nassert a2[0] == a2\nassert o2['o'] == o2\nassert a2[1] == 1 and a2[2] == 'two' and a2[3] == True and isinstance(a2[4], dict)\nassert a2[4] == a2[4]['o'] and a2 == a2[4]['o']['a']\nstr = parse('[{\"prop\":\"1\",\"a\":\"2\",\"b\":\"3\"},{\"value\":123},[\"4\",\"5\"],{\"e\":\"6\",\"t\":\"7\",\"p\":4},{},{\"b\":\"8\"},\"f\",{\"a\":\"9\"},[\"10\"],\"sup\",{\"a\":1,\"d\":2,\"c\":\"7\",\"z\":\"11\",\"h\":1},{\"g\":2,\"a\":\"7\",\"b\":\"12\",\"f\":6},{\"r\":4,\"u\":\"7\",\"c\":5}]')\nassert str['b']['t']['a'] == 'sup' and str['a'][1]['b'][0]['c'] == str['b']['t']\noo = parse('[{\"a\":\"1\",\"b\":\"0\",\"c\":\"2\"},{\"aa\":\"3\"},{\"ca\":\"4\",\"cb\":\"5\",\"cc\":\"6\",\"cd\":\"7\",\"ce\":\"8\",\"cf\":\"9\"},{\"aaa\":\"10\"},{\"caa\":\"4\"},{\"cba\":\"5\"},{\"cca\":\"2\"},{\"cda\":\"4\"},\"value2\",\"value3\",\"value1\"]');\nassert oo['a']['aa']['aaa'] == 'value1' and oo == oo['b'] and oo['c']['ca']['caa'] == oo['c']['ca']",
+        "detail": "client.app.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "o2",
+        "kind": 5,
+        "importPath": "client.app.node_modules.flatted.python.test",
+        "description": "client.app.node_modules.flatted.python.test",
+        "peekOfCode": "o2 = parse(stringify(o));\nassert a2[0] == a2\nassert o2['o'] == o2\nassert a2[1] == 1 and a2[2] == 'two' and a2[3] == True and isinstance(a2[4], dict)\nassert a2[4] == a2[4]['o'] and a2 == a2[4]['o']['a']\nstr = parse('[{\"prop\":\"1\",\"a\":\"2\",\"b\":\"3\"},{\"value\":123},[\"4\",\"5\"],{\"e\":\"6\",\"t\":\"7\",\"p\":4},{},{\"b\":\"8\"},\"f\",{\"a\":\"9\"},[\"10\"],\"sup\",{\"a\":1,\"d\":2,\"c\":\"7\",\"z\":\"11\",\"h\":1},{\"g\":2,\"a\":\"7\",\"b\":\"12\",\"f\":6},{\"r\":4,\"u\":\"7\",\"c\":5}]')\nassert str['b']['t']['a'] == 'sup' and str['a'][1]['b'][0]['c'] == str['b']['t']\noo = parse('[{\"a\":\"1\",\"b\":\"0\",\"c\":\"2\"},{\"aa\":\"3\"},{\"ca\":\"4\",\"cb\":\"5\",\"cc\":\"6\",\"cd\":\"7\",\"ce\":\"8\",\"cf\":\"9\"},{\"aaa\":\"10\"},{\"caa\":\"4\"},{\"cba\":\"5\"},{\"cca\":\"2\"},{\"cda\":\"4\"},\"value2\",\"value3\",\"value1\"]');\nassert oo['a']['aa']['aaa'] == 'value1' and oo == oo['b'] and oo['c']['ca']['caa'] == oo['c']['ca']\nprint('OK')",
+        "detail": "client.app.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "str",
+        "kind": 5,
+        "importPath": "client.app.node_modules.flatted.python.test",
+        "description": "client.app.node_modules.flatted.python.test",
+        "peekOfCode": "str = parse('[{\"prop\":\"1\",\"a\":\"2\",\"b\":\"3\"},{\"value\":123},[\"4\",\"5\"],{\"e\":\"6\",\"t\":\"7\",\"p\":4},{},{\"b\":\"8\"},\"f\",{\"a\":\"9\"},[\"10\"],\"sup\",{\"a\":1,\"d\":2,\"c\":\"7\",\"z\":\"11\",\"h\":1},{\"g\":2,\"a\":\"7\",\"b\":\"12\",\"f\":6},{\"r\":4,\"u\":\"7\",\"c\":5}]')\nassert str['b']['t']['a'] == 'sup' and str['a'][1]['b'][0]['c'] == str['b']['t']\noo = parse('[{\"a\":\"1\",\"b\":\"0\",\"c\":\"2\"},{\"aa\":\"3\"},{\"ca\":\"4\",\"cb\":\"5\",\"cc\":\"6\",\"cd\":\"7\",\"ce\":\"8\",\"cf\":\"9\"},{\"aaa\":\"10\"},{\"caa\":\"4\"},{\"cba\":\"5\"},{\"cca\":\"2\"},{\"cda\":\"4\"},\"value2\",\"value3\",\"value1\"]');\nassert oo['a']['aa']['aaa'] == 'value1' and oo == oo['b'] and oo['c']['ca']['caa'] == oo['c']['ca']\nprint('OK')",
+        "detail": "client.app.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "oo",
+        "kind": 5,
+        "importPath": "client.app.node_modules.flatted.python.test",
+        "description": "client.app.node_modules.flatted.python.test",
+        "peekOfCode": "oo = parse('[{\"a\":\"1\",\"b\":\"0\",\"c\":\"2\"},{\"aa\":\"3\"},{\"ca\":\"4\",\"cb\":\"5\",\"cc\":\"6\",\"cd\":\"7\",\"ce\":\"8\",\"cf\":\"9\"},{\"aaa\":\"10\"},{\"caa\":\"4\"},{\"cba\":\"5\"},{\"cca\":\"2\"},{\"cda\":\"4\"},\"value2\",\"value3\",\"value1\"]');\nassert oo['a']['aa']['aaa'] == 'value1' and oo == oo['b'] and oo['c']['ca']['caa'] == oo['c']['ca']\nprint('OK')",
+        "detail": "client.app.node_modules.flatted.python.test",
+        "documentation": {}
+    },
+    {
+        "label": "Command",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.management.commands.create_admin",
+        "description": "server.portfolio_project.portfolio.management.commands.create_admin",
+        "peekOfCode": "class Command(BaseCommand):\n    help = \"Creates a new admin user for a specific tenant.\"\n    def add_arguments(self, parser):\n        parser.add_argument(\"username\", type=str, help=\"The admin's username\")\n        parser.add_argument(\"member_email\", type=str, help=\"The admin's email\")\n        parser.add_argument(\"password\", type=str, help=\"The admin's password\")\n        parser.add_argument(\"tenant_id\", type=str, help=\"The tenant ID for the admin\")\n    def handle(self, *args, **options):\n        username = options[\"username\"]\n        member_email = options[\"member_email\"]",
+        "detail": "server.portfolio_project.portfolio.management.commands.create_admin",
+        "documentation": {}
+    },
+    {
+        "label": "Command",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.management.commands.create_tenant",
+        "description": "server.portfolio_project.portfolio.management.commands.create_tenant",
+        "peekOfCode": "class Command(BaseCommand):\n    help = 'Create a new tenant with a unique tenant ID and domain'\n    def add_arguments(self, parser):\n        parser.add_argument('tenant_name', type=str, help='The name of the tenant')\n        parser.add_argument('--tenant_id', type=str, help='Unique tenant ID', default=str(uuid.uuid4()))\n        parser.add_argument('--tenant_domain', type=str, help='The unique domain for the tenant', required=True)\n    def handle(self, *args, **kwargs):\n        tenant_name = kwargs['tenant_name']\n        tenant_id = kwargs['tenant_id']\n        tenant_domain = kwargs['tenant_domain']",
+        "detail": "server.portfolio_project.portfolio.management.commands.create_tenant",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.migrations.0001_initial",
+        "description": "server.portfolio_project.portfolio.migrations.0001_initial",
+        "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='NewSchoolMember',\n            fields=[\n                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),\n                ('password', models.CharField(max_length=128, verbose_name='password')),",
+        "detail": "server.portfolio_project.portfolio.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "NewSchoolMemberAdmin",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.admin",
+        "description": "server.portfolio_project.portfolio.admin",
+        "peekOfCode": "class NewSchoolMemberAdmin(admin.ModelAdmin):\n    def get_queryset(self, request):\n        qs = super().get_queryset(request)\n        # Show all data for superusers, filter by tenant for other users\n        if request.user.is_superuser:\n            return qs\n        return qs.filter(tenant=request.tenant)  # Filter data by tenant\n    # You can also add fields, filters, and other configurations here\n    list_display = ('first_name', 'family_name', 'username', 'role', 'tenant')\n    search_fields = ('username', 'member_email')",
+        "detail": "server.portfolio_project.portfolio.admin",
+        "documentation": {}
+    },
+    {
+        "label": "PortfolioConfig",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.apps",
+        "description": "server.portfolio_project.portfolio.apps",
+        "peekOfCode": "class PortfolioConfig(AppConfig):\n    default_auto_field = 'django.db.models.BigAutoField'\n    name = 'portfolio'",
+        "detail": "server.portfolio_project.portfolio.apps",
+        "documentation": {}
+    },
+    {
+        "label": "TenantMiddleware",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.middleware",
+        "description": "server.portfolio_project.portfolio.middleware",
+        "peekOfCode": "class TenantMiddleware(MiddlewareMixin):\n    def process_request(self, request):\n        # List of paths to exclude from tenant lookup\n        excluded_paths = [\n            '/portfolio/token', \n            '/portfolio/token/refresh', \n            '/portfolio/health-check'\n        ]\n        # Skip tenant lookup for paths that don't require it\n        if any(request.path.startswith(path) for path in excluded_paths):",
+        "detail": "server.portfolio_project.portfolio.middleware",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio.middleware",
+        "description": "server.portfolio_project.portfolio.middleware",
+        "peekOfCode": "logger = logging.getLogger(__name__)\nclass TenantMiddleware(MiddlewareMixin):\n    def process_request(self, request):\n        # List of paths to exclude from tenant lookup\n        excluded_paths = [\n            '/portfolio/token', \n            '/portfolio/token/refresh', \n            '/portfolio/health-check'\n        ]\n        # Skip tenant lookup for paths that don't require it",
+        "detail": "server.portfolio_project.portfolio.middleware",
+        "documentation": {}
+    },
+    {
+        "label": "Tenant",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.models",
+        "description": "server.portfolio_project.portfolio.models",
+        "peekOfCode": "class Tenant(models.Model):\n    tenant_id = models.CharField(primary_key=True, max_length=50, unique=True, editable=False)\n    tenant_name = models.CharField(max_length=255)\n    tenant_domain = models.CharField(max_length=255, unique=True)\n    created_at = models.DateTimeField(auto_now_add=True)\n    def __str__(self):\n        return f\"{self.tenant_name} - {self.tenant_id}\"\n# Custom User Manager for handling NewSchoolMember creation and management\nclass NewSchoolMemberManager(BaseUserManager):\n    def create_user(self, username, member_email, password=None, **extra_fields):",
+        "detail": "server.portfolio_project.portfolio.models",
+        "documentation": {}
+    },
+    {
+        "label": "NewSchoolMemberManager",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.models",
+        "description": "server.portfolio_project.portfolio.models",
+        "peekOfCode": "class NewSchoolMemberManager(BaseUserManager):\n    def create_user(self, username, member_email, password=None, **extra_fields):\n        if not username:\n            raise ValueError('The Username must be set')\n        if not member_email:\n            raise ValueError('The Email must be set')\n        extra_fields.setdefault('role', 'member')\n        user = self.model(username=username, member_email=member_email, **extra_fields)\n        user.set_password(password)\n        user.save(using=self._db)",
+        "detail": "server.portfolio_project.portfolio.models",
+        "documentation": {}
+    },
+    {
+        "label": "NewSchoolMember",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.models",
+        "description": "server.portfolio_project.portfolio.models",
+        "peekOfCode": "class NewSchoolMember(AbstractBaseUser):\n    ROLE_CHOICES = [\n        ('admin', 'Admin'),\n        ('member', 'Member'),\n        ('guest', 'Guest'),\n    ]\n    FULL_TIME = 'FT'\n    PART_TIME = 'PT'\n    CONTRACTOR = 'CT'\n    INTERN = 'IN'",
+        "detail": "server.portfolio_project.portfolio.models",
+        "documentation": {}
+    },
+    {
+        "label": "EmploymentHistory",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.models",
+        "description": "server.portfolio_project.portfolio.models",
+        "peekOfCode": "class EmploymentHistory(models.Model):\n    member = models.ForeignKey(NewSchoolMember, related_name='employment_history', on_delete=models.CASCADE)\n    employer = models.CharField(max_length=100)\n    job_title = models.CharField(max_length=100)\n    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True)\n    def __str__(self):\n        return f\"{self.member.first_name} {self.member.family_name} - {self.job_title} at {self.employer}\"\n# ApplicationForm model for handling application information before becoming a member\nclass ApplicationForm(models.Model):\n    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True)",
+        "detail": "server.portfolio_project.portfolio.models",
+        "documentation": {}
+    },
+    {
+        "label": "ApplicationForm",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.models",
+        "description": "server.portfolio_project.portfolio.models",
+        "peekOfCode": "class ApplicationForm(models.Model):\n    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True)\n    first_name = models.CharField(max_length=45)\n    second_name = models.CharField(max_length=45)\n    family_name = models.CharField(max_length=45)\n    mobile_number = models.CharField(\n        max_length=15,\n        validators=[RegexValidator(\n            regex=r'^\\+?1?\\d{9,15}$',\n            message=\"Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.\"",
+        "detail": "server.portfolio_project.portfolio.models",
+        "documentation": {}
+    },
+    {
+        "label": "ProfileImage",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.models",
+        "description": "server.portfolio_project.portfolio.models",
+        "peekOfCode": "class ProfileImage(models.Model):\n    member = models.OneToOneField(\n        NewSchoolMember,\n        related_name='profile_image',\n        on_delete=models.CASCADE\n    )\n    image = models.ImageField(\n        upload_to='profile_images/', \n        null=True, \n        blank=True, ",
+        "detail": "server.portfolio_project.portfolio.models",
+        "documentation": {}
+    },
+    {
+        "label": "create_member_from_application",
+        "kind": 2,
+        "importPath": "server.portfolio_project.portfolio.models",
+        "description": "server.portfolio_project.portfolio.models",
+        "peekOfCode": "def create_member_from_application(sender, instance, created, **kwargs):\n    \"\"\"\n    Signal to create a NewSchoolMember upon application approval.\n    \"\"\"\n    if created and instance.approved:\n        NewSchoolMember.objects.create_user(\n            username=instance.member_email,\n            member_email=instance.member_email,\n            first_name=instance.first_name,\n            second_name=instance.second_name,",
+        "detail": "server.portfolio_project.portfolio.models",
+        "documentation": {}
+    },
+    {
+        "label": "IsAdminUser",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.permissions",
+        "description": "server.portfolio_project.portfolio.permissions",
+        "peekOfCode": "class IsAdminUser(BasePermission):\n    \"\"\"\n    Custom permission to grant access only to admin users.\n    Users must be authenticated and either have is_staff=True or a role set to 'admin'.\n    \"\"\"\n    def has_permission(self, request, view):\n        # Check if the user is authenticated and either staff or has the role 'admin'\n        return request.user.is_authenticated and (request.user.is_staff or getattr(request.user, 'role', '') == 'admin')\nclass IsSelfOrAdmin(BasePermission):\n    \"\"\"",
+        "detail": "server.portfolio_project.portfolio.permissions",
+        "documentation": {}
+    },
+    {
+        "label": "IsSelfOrAdmin",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.permissions",
+        "description": "server.portfolio_project.portfolio.permissions",
+        "peekOfCode": "class IsSelfOrAdmin(BasePermission):\n    \"\"\"\n    Custom permission to allow access to the object only to the user themselves or an admin.\n    Users must be authenticated and either be the object owner or have admin privileges.\n    \"\"\"\n    def has_object_permission(self, request, view, obj):\n        # Check if the user is authenticated and is the object owner or has admin access\n        return request.user.is_authenticated and (request.user == obj or request.user.is_staff or getattr(request.user, 'role', '') == 'admin')",
+        "detail": "server.portfolio_project.portfolio.permissions",
+        "documentation": {}
+    },
+    {
+        "label": "EmploymentHistorySerializer",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.serializer",
+        "description": "server.portfolio_project.portfolio.serializer",
+        "peekOfCode": "class EmploymentHistorySerializer(serializers.ModelSerializer):\n    class Meta:\n        model = EmploymentHistory\n        fields = ['id', 'employer', 'job_title', 'tenant']\n        extra_kwargs = {\n            'employer': {'required': False, 'allow_blank': True},\n            'job_title': {'required': False, 'allow_blank': True},\n            'tenant': {'read_only': True}\n        }\nclass NewSchoolMemberSerializer(serializers.ModelSerializer):",
+        "detail": "server.portfolio_project.portfolio.serializer",
+        "documentation": {}
+    },
+    {
+        "label": "NewSchoolMemberSerializer",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.serializer",
+        "description": "server.portfolio_project.portfolio.serializer",
+        "peekOfCode": "class NewSchoolMemberSerializer(serializers.ModelSerializer):\n    employment_history = EmploymentHistorySerializer(many=True, required=False)\n    class Meta:\n        model = NewSchoolMember\n        fields = [\n            'id', 'first_name', 'second_name', 'family_name', 'member_title', \n            'member_industry', 'employment_history', 'member_mobile', \n            'member_email', 'username', 'password', 'role', 'employment_status',\n            'member_country', 'tenant_id'\n        ]",
+        "detail": "server.portfolio_project.portfolio.serializer",
+        "documentation": {}
+    },
+    {
+        "label": "CustomTokenObtainPairSerializer",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.serializer",
+        "description": "server.portfolio_project.portfolio.serializer",
+        "peekOfCode": "class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):\n    def validate(self, attrs):\n        username = attrs.get(\"username\")\n        password = attrs.get(\"password\")\n        if username and password:\n            user = authenticate(request=self.context.get('request'), username=username, password=password)\n            if not user:\n                logger.warning(f\"Failed login attempt for username: {username}\")\n                raise serializers.ValidationError(\"Invalid credentials\")\n        else:",
+        "detail": "server.portfolio_project.portfolio.serializer",
+        "documentation": {}
+    },
+    {
+        "label": "ApplicationFormSerializer",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.serializer",
+        "description": "server.portfolio_project.portfolio.serializer",
+        "peekOfCode": "class ApplicationFormSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = ApplicationForm\n        fields = '__all__'\n    def update(self, instance, validated_data):\n        approved = validated_data.get('approved', instance.approved)\n        if approved and not instance.approved:\n            try:\n                with transaction.atomic():\n                    password = BaseUserManager().make_random_password()",
+        "detail": "server.portfolio_project.portfolio.serializer",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio.serializer",
+        "description": "server.portfolio_project.portfolio.serializer",
+        "peekOfCode": "logger = logging.getLogger(__name__)\nclass EmploymentHistorySerializer(serializers.ModelSerializer):\n    class Meta:\n        model = EmploymentHistory\n        fields = ['id', 'employer', 'job_title', 'tenant']\n        extra_kwargs = {\n            'employer': {'required': False, 'allow_blank': True},\n            'job_title': {'required': False, 'allow_blank': True},\n            'tenant': {'read_only': True}\n        }",
+        "detail": "server.portfolio_project.portfolio.serializer",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio.urls",
+        "description": "server.portfolio_project.portfolio.urls",
+        "peekOfCode": "urlpatterns = [\n    # JWT token endpoints\n    path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),\n    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),\n    # Member endpoints\n    path('<str:tenant_id>/NewSchoolMember/', get_newschoolmember, name='get_newschoolmember'),\n    path('<uuid:tenant_id>/NewSchoolMember/add/', add_newschoolmember, name='add_newschoolmember'),\n    path('<str:tenant_id>/NewSchoolMember/<int:member_id>/', MemberDetailView.as_view(), name='member_detail'),\n    # Authentication and application endpoints\n    path('<str:tenant_id>/api/login/', login_view, name='login'),",
+        "detail": "server.portfolio_project.portfolio.urls",
+        "documentation": {}
+    },
+    {
+        "label": "ApplicationFormSerializer",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.views",
+        "description": "server.portfolio_project.portfolio.views",
+        "peekOfCode": "class ApplicationFormSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = ApplicationForm\n        fields = '__all__'\n# Custom token view for JWT\nclass CustomTokenObtainPairView(TokenObtainPairView):\n    serializer_class = CustomTokenObtainPairSerializer\n@api_view(['GET'])\n@permission_classes([IsAuthenticated, IsSelfOrAdmin])\ndef get_newschoolmember(request, tenant_id):",
+        "detail": "server.portfolio_project.portfolio.views",
+        "documentation": {}
+    },
+    {
+        "label": "CustomTokenObtainPairView",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.views",
+        "description": "server.portfolio_project.portfolio.views",
+        "peekOfCode": "class CustomTokenObtainPairView(TokenObtainPairView):\n    serializer_class = CustomTokenObtainPairSerializer\n@api_view(['GET'])\n@permission_classes([IsAuthenticated, IsSelfOrAdmin])\ndef get_newschoolmember(request, tenant_id):\n    \"\"\"\n    Retrieves all NewSchoolMembers with pagination.\n    \"\"\"\n    members = NewSchoolMember.objects.filter(tenant=request.tenant)\n    paginator = PageNumberPagination()",
+        "detail": "server.portfolio_project.portfolio.views",
+        "documentation": {}
+    },
+    {
+        "label": "MemberDetailView",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.views",
+        "description": "server.portfolio_project.portfolio.views",
+        "peekOfCode": "class MemberDetailView(APIView):\n    \"\"\"\n    Handles GET, PUT, and DELETE requests for a single NewSchoolMember.\n    \"\"\"\n    permission_classes = [IsAuthenticated, IsSelfOrAdmin]\n    def get(self, request, tenant_id, member_id):\n        member = get_object_or_404(NewSchoolMember, id=member_id, tenant_id=tenant_id)\n        serializer = NewSchoolMemberSerializer(member)\n        return Response(serializer.data)\n    def put(self, request, tenant_id, member_id):",
+        "detail": "server.portfolio_project.portfolio.views",
+        "documentation": {}
+    },
+    {
+        "label": "ReviewApplication",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.views",
+        "description": "server.portfolio_project.portfolio.views",
+        "peekOfCode": "class ReviewApplication(APIView):\n    \"\"\"\n    Reviews an application, approves it, and creates a NewSchoolMember if approved.\n    \"\"\"\n    permission_classes = [IsAuthenticated, IsAdminUser]\n    def post(self, request, tenant_id, application_id):\n        data = json.loads(request.body)\n        # Get tenant based on tenant_id\n        tenant = get_object_or_404(Tenant, tenant_id=tenant_id)\n        # Retrieve the application for the specific tenant",
+        "detail": "server.portfolio_project.portfolio.views",
+        "documentation": {}
+    },
+    {
+        "label": "PendingApplicationsView",
+        "kind": 6,
+        "importPath": "server.portfolio_project.portfolio.views",
+        "description": "server.portfolio_project.portfolio.views",
+        "peekOfCode": "class PendingApplicationsView(APIView):\n    \"\"\"\n    Retrieves all pending applications.\n    \"\"\"\n    permission_classes = [IsAuthenticated]\n    def get(self, request, *args, **kwargs):\n        tenant_id = kwargs.get('tenant_id')\n        tenant = get_object_or_404(Tenant, tenant_id=tenant_id)\n        pending_applications = ApplicationForm.objects.filter(approved=False, tenant=tenant)\n        applications_data = ApplicationFormSerializer(pending_applications, many=True).data",
+        "detail": "server.portfolio_project.portfolio.views",
+        "documentation": {}
+    },
+    {
+        "label": "get_newschoolmember",
+        "kind": 2,
+        "importPath": "server.portfolio_project.portfolio.views",
+        "description": "server.portfolio_project.portfolio.views",
+        "peekOfCode": "def get_newschoolmember(request, tenant_id):\n    \"\"\"\n    Retrieves all NewSchoolMembers with pagination.\n    \"\"\"\n    members = NewSchoolMember.objects.filter(tenant=request.tenant)\n    paginator = PageNumberPagination()\n    page = paginator.paginate_queryset(members, request)\n    if page is not None:\n        serializer = NewSchoolMemberSerializer(page, many=True)\n        return paginator.get_paginated_response(serializer.data)",
+        "detail": "server.portfolio_project.portfolio.views",
+        "documentation": {}
+    },
+    {
+        "label": "add_newschoolmember",
+        "kind": 2,
+        "importPath": "server.portfolio_project.portfolio.views",
+        "description": "server.portfolio_project.portfolio.views",
+        "peekOfCode": "def add_newschoolmember(request, tenant_id):\n    \"\"\"\n    Adds a new NewSchoolMember.\n    \"\"\"\n    try:\n        serializer = NewSchoolMemberSerializer(data=request.data)\n        if serializer.is_valid(): \n            member = serializer.save(tenant=request.tenant)\n            logger.info(f\"New member created: {member.username}\")\n            return Response(serializer.data, status=status.HTTP_201_CREATED)",
+        "detail": "server.portfolio_project.portfolio.views",
+        "documentation": {}
+    },
+    {
+        "label": "login_view",
+        "kind": 2,
+        "importPath": "server.portfolio_project.portfolio.views",
+        "description": "server.portfolio_project.portfolio.views",
+        "peekOfCode": "def login_view(request, tenant_id):\n    \"\"\"\n    Handles user login, returning JWT tokens if credentials are valid.\n    \"\"\"\n    username, password = request.data.get('username'), request.data.get('password')\n    logger.info(f\"Login attempt for username: {username}\")\n    if not username or not password:\n        logger.warning(\"Login failed: Missing username or password\")\n        return Response({'message': 'Provide both username and password'}, status=status.HTTP_400_BAD_REQUEST)\n    user = authenticate(request, username=username, password=password)",
+        "detail": "server.portfolio_project.portfolio.views",
+        "documentation": {}
+    },
+    {
+        "label": "submit_application_form",
+        "kind": 2,
+        "importPath": "server.portfolio_project.portfolio.views",
+        "description": "server.portfolio_project.portfolio.views",
+        "peekOfCode": "def submit_application_form(request, tenant_id):\n    # Get the tenant object\n    try:\n        tenant = Tenant.objects.get(tenant_id=tenant_id)\n    except Tenant.DoesNotExist:\n        return Response({\"error\": \"Invalid tenant ID.\"}, status=status.HTTP_400_BAD_REQUEST)\n    serializer = ApplicationFormSerializer(data=request.data)\n    if serializer.is_valid():\n        serializer.save(tenant=tenant)\n        return Response({\"message\": \"Application submitted successfully.\"}, status=status.HTTP_201_CREATED)",
+        "detail": "server.portfolio_project.portfolio.views",
+        "documentation": {}
+    },
+    {
+        "label": "send_application_form_email",
+        "kind": 2,
+        "importPath": "server.portfolio_project.portfolio.views",
+        "description": "server.portfolio_project.portfolio.views",
+        "peekOfCode": "def send_application_form_email(request, tenant_id, applicant_email):\n    \"\"\"\n    Sends the application form link to the applicant's email.\n    \"\"\"\n    # Use tenant_id from request.tenant set by middleware\n    tenant_id = request.tenant.tenant_id\n    application_link = f\"http://localhost:5173/application-form?email={applicant_email}&tenant_id={tenant_id}\"\n    send_mail(\n        'NewSchool HR Application Form',\n        f'Complete your application form here: {application_link}',",
+        "detail": "server.portfolio_project.portfolio.views",
+        "documentation": {}
+    },
+    {
+        "label": "send_password_reset_link",
+        "kind": 2,
+        "importPath": "server.portfolio_project.portfolio.views",
+        "description": "server.portfolio_project.portfolio.views",
+        "peekOfCode": "def send_password_reset_link(request, email):\n    \"\"\"\n    Sends a password reset link to the specified email.\n    \"\"\"\n    member = get_object_or_404(NewSchoolMember, member_email=email, tenant=request.tenant)\n    reset_link = f\"http://localhost:5173/reset-password/{member.id}?tenant_id={request.tenant.tenant_id}\"\n    send_mail(\n        'Password Reset Request',\n        f'Please click the following link to reset your password: {reset_link}',\n        settings.DEFAULT_FROM_EMAIL,",
+        "detail": "server.portfolio_project.portfolio.views",
+        "documentation": {}
+    },
+    {
+        "label": "upload_profile_image",
+        "kind": 2,
+        "importPath": "server.portfolio_project.portfolio.views",
+        "description": "server.portfolio_project.portfolio.views",
+        "peekOfCode": "def upload_profile_image(request):\n    \"\"\"\n    Uploads and saves the profile image for a member.\n    \"\"\"\n    member_id = request.data.get('member_id')\n    profile_image_data = request.data.get('profileImage')\n    member = get_object_or_404(NewSchoolMember, id=member_id, tenant=request.tenant)\n    if profile_image_data:\n        format, imgstr = profile_image_data.split(';base64,')\n        image_data = ContentFile(base64.b64decode(imgstr), name=f\"profile_{member.username}.{format.split('/')[-1]}\")",
+        "detail": "server.portfolio_project.portfolio.views",
+        "documentation": {}
+    },
+    {
+        "label": "get_profile_image",
+        "kind": 2,
+        "importPath": "server.portfolio_project.portfolio.views",
+        "description": "server.portfolio_project.portfolio.views",
+        "peekOfCode": "def get_profile_image(request, member_id):\n    # Access tenant ID from the request instead of function parameters\n    tenant_id = request.tenant.tenant_id  # Ensure tenant is set in request context\n    try:\n        member = get_object_or_404(NewSchoolMember, id=member_id, tenant=request.tenant)\n        profile_image = ProfileImage.objects.get(member=member)\n        image_url = profile_image.image.url if profile_image.image else 'default_image_url'\n        return Response({\"profile_image_url\": request.build_absolute_uri(image_url)}, status=200)\n    except NewSchoolMember.DoesNotExist:\n        return Response({\"error\": \"Member not found\"}, status=404)",
+        "detail": "server.portfolio_project.portfolio.views",
+        "documentation": {}
+    },
+    {
+        "label": "health_check",
+        "kind": 2,
+        "importPath": "server.portfolio_project.portfolio.views",
+        "description": "server.portfolio_project.portfolio.views",
+        "peekOfCode": "def health_check(request):\n    \"\"\"\n    Health check endpoint for verifying server status.\n    \"\"\"\n    logger.debug(\"Health check endpoint reached\")\n    return Response({\"status\": \"Server is running\"})\n@api_view(['GET'])\ndef get_choices(request):\n    \"\"\"\n    Returns choices for employment_status and member_country fields.",
+        "detail": "server.portfolio_project.portfolio.views",
+        "documentation": {}
+    },
+    {
+        "label": "get_choices",
+        "kind": 2,
+        "importPath": "server.portfolio_project.portfolio.views",
+        "description": "server.portfolio_project.portfolio.views",
+        "peekOfCode": "def get_choices(request):\n    \"\"\"\n    Returns choices for employment_status and member_country fields.\n    \"\"\"\n    employment_status_choices = NewSchoolMember.EMPLOYMENT_STATUS_CHOICES\n    country_choices = NewSchoolMember.COUNTRY_CHOICES\n    return Response({\n        \"employment_status_choices\": employment_status_choices,\n        \"member_country_choices\": country_choices\n    })",
+        "detail": "server.portfolio_project.portfolio.views",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio.views",
+        "description": "server.portfolio_project.portfolio.views",
+        "peekOfCode": "logger = logging.getLogger(__name__)\nclass ApplicationFormSerializer(serializers.ModelSerializer):\n    class Meta:\n        model = ApplicationForm\n        fields = '__all__'\n# Custom token view for JWT\nclass CustomTokenObtainPairView(TokenObtainPairView):\n    serializer_class = CustomTokenObtainPairSerializer\n@api_view(['GET'])\n@permission_classes([IsAuthenticated, IsSelfOrAdmin])",
+        "detail": "server.portfolio_project.portfolio.views",
+        "documentation": {}
+    },
+    {
+        "label": "application",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.asgi",
+        "description": "server.portfolio_project.portfolio_project.asgi",
+        "peekOfCode": "application = get_asgi_application()",
+        "detail": "server.portfolio_project.portfolio_project.asgi",
+        "documentation": {}
+    },
+    {
+        "label": "BASE_DIR",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "BASE_DIR = Path(__file__).resolve().parent.parent\n# Quick-start development settings - unsuitable for production\nSECRET_KEY = config('SECRET_KEY', default='123456')\nDEBUG = False\nALLOWED_HOSTS = ['your-domain.com', 'localhost', '127.0.0.1']\nSECURE_HSTS_SECONDS = 3600\nSECURE_SSL_REDIRECT = False\nSESSION_COOKIE_SECURE = not DEBUG\nCSRF_COOKIE_SECURE = not DEBUG\nSECURE_BROWSER_XSS_FILTER = True",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "SECRET_KEY",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "SECRET_KEY = config('SECRET_KEY', default='123456')\nDEBUG = False\nALLOWED_HOSTS = ['your-domain.com', 'localhost', '127.0.0.1']\nSECURE_HSTS_SECONDS = 3600\nSECURE_SSL_REDIRECT = False\nSESSION_COOKIE_SECURE = not DEBUG\nCSRF_COOKIE_SECURE = not DEBUG\nSECURE_BROWSER_XSS_FILTER = True\nSECURE_CONTENT_TYPE_NOSNIFF = True\nSECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "DEBUG",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "DEBUG = False\nALLOWED_HOSTS = ['your-domain.com', 'localhost', '127.0.0.1']\nSECURE_HSTS_SECONDS = 3600\nSECURE_SSL_REDIRECT = False\nSESSION_COOKIE_SECURE = not DEBUG\nCSRF_COOKIE_SECURE = not DEBUG\nSECURE_BROWSER_XSS_FILTER = True\nSECURE_CONTENT_TYPE_NOSNIFF = True\nSECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')\n# Application definition",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "ALLOWED_HOSTS",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "ALLOWED_HOSTS = ['your-domain.com', 'localhost', '127.0.0.1']\nSECURE_HSTS_SECONDS = 3600\nSECURE_SSL_REDIRECT = False\nSESSION_COOKIE_SECURE = not DEBUG\nCSRF_COOKIE_SECURE = not DEBUG\nSECURE_BROWSER_XSS_FILTER = True\nSECURE_CONTENT_TYPE_NOSNIFF = True\nSECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')\n# Application definition\nINSTALLED_APPS = [",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "SECURE_HSTS_SECONDS",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "SECURE_HSTS_SECONDS = 3600\nSECURE_SSL_REDIRECT = False\nSESSION_COOKIE_SECURE = not DEBUG\nCSRF_COOKIE_SECURE = not DEBUG\nSECURE_BROWSER_XSS_FILTER = True\nSECURE_CONTENT_TYPE_NOSNIFF = True\nSECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')\n# Application definition\nINSTALLED_APPS = [\n    'django.contrib.admin',",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "SECURE_SSL_REDIRECT",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "SECURE_SSL_REDIRECT = False\nSESSION_COOKIE_SECURE = not DEBUG\nCSRF_COOKIE_SECURE = not DEBUG\nSECURE_BROWSER_XSS_FILTER = True\nSECURE_CONTENT_TYPE_NOSNIFF = True\nSECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')\n# Application definition\nINSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "SESSION_COOKIE_SECURE",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "SESSION_COOKIE_SECURE = not DEBUG\nCSRF_COOKIE_SECURE = not DEBUG\nSECURE_BROWSER_XSS_FILTER = True\nSECURE_CONTENT_TYPE_NOSNIFF = True\nSECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')\n# Application definition\nINSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "CSRF_COOKIE_SECURE",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "CSRF_COOKIE_SECURE = not DEBUG\nSECURE_BROWSER_XSS_FILTER = True\nSECURE_CONTENT_TYPE_NOSNIFF = True\nSECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')\n# Application definition\nINSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "SECURE_BROWSER_XSS_FILTER",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "SECURE_BROWSER_XSS_FILTER = True\nSECURE_CONTENT_TYPE_NOSNIFF = True\nSECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')\n# Application definition\nINSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "SECURE_CONTENT_TYPE_NOSNIFF",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "SECURE_CONTENT_TYPE_NOSNIFF = True\nSECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')\n# Application definition\nINSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "SECURE_PROXY_SSL_HEADER",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')\n# Application definition\nINSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',\n    'rest_framework',",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "INSTALLED_APPS",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "INSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',\n    'rest_framework',\n    'corsheaders',\n    'rest_framework_simplejwt',",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "REST_FRAMEWORK",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "REST_FRAMEWORK = {\n    'DEFAULT_RENDERER_CLASSES': [\n        'rest_framework.renderers.JSONRenderer',\n        'rest_framework.renderers.TemplateHTMLRenderer',\n    ],\n    'DEFAULT_AUTHENTICATION_CLASSES': (\n        'rest_framework.authentication.SessionAuthentication',\n        'rest_framework.authentication.BasicAuthentication',\n        'rest_framework_simplejwt.authentication.JWTAuthentication',\n    ),",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "SIMPLE_JWT",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "SIMPLE_JWT = {\n    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=120),\n    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),\n    'ROTATE_REFRESH_TOKENS': True,\n    'BLACKLIST_AFTER_ROTATION': True,\n    'UPDATE_LAST_LOGIN': True,\n    'ALGORITHM': 'HS256',\n    'SIGNING_KEY': SECRET_KEY,\n    'AUTH_HEADER_TYPES': ('Bearer',),\n}",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "MIDDLEWARE",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "MIDDLEWARE = [\n    'django.middleware.security.SecurityMiddleware',\n    'django.contrib.sessions.middleware.SessionMiddleware',\n    'corsheaders.middleware.CorsMiddleware',\n    'django.middleware.common.CommonMiddleware',\n    'django.middleware.csrf.CsrfViewMiddleware',\n    'django.contrib.auth.middleware.AuthenticationMiddleware',\n    'django.contrib.messages.middleware.MessageMiddleware',\n    'django.middleware.clickjacking.XFrameOptionsMiddleware',\n    'portfolio.middleware.TenantMiddleware',",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "ROOT_URLCONF",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "ROOT_URLCONF = 'portfolio_project.urls'\nTEMPLATES = [\n    {\n        'BACKEND': 'django.template.backends.django.DjangoTemplates',\n        'DIRS': [],\n        'APP_DIRS': True,\n        'OPTIONS': {\n            'context_processors': [\n                'django.template.context_processors.debug',\n                'django.template.context_processors.request',",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "TEMPLATES",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "TEMPLATES = [\n    {\n        'BACKEND': 'django.template.backends.django.DjangoTemplates',\n        'DIRS': [],\n        'APP_DIRS': True,\n        'OPTIONS': {\n            'context_processors': [\n                'django.template.context_processors.debug',\n                'django.template.context_processors.request',\n                'django.contrib.auth.context_processors.auth',",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "WSGI_APPLICATION",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "WSGI_APPLICATION = 'portfolio_project.wsgi.application'\n# Database configuration\nDATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.mysql',\n        'NAME': config('DB_NAME', default='newschool'),\n        'USER': config('DB_USER', default='klint'),\n        'PASSWORD': config('DB_PASSWORD', default='P0werm@n'),\n        'HOST': config('DB_HOST', default='localhost'),\n        'PORT': config('DB_PORT', default='3306'),",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "DATABASES",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "DATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.mysql',\n        'NAME': config('DB_NAME', default='newschool'),\n        'USER': config('DB_USER', default='klint'),\n        'PASSWORD': config('DB_PASSWORD', default='P0werm@n'),\n        'HOST': config('DB_HOST', default='localhost'),\n        'PORT': config('DB_PORT', default='3306'),\n        'OPTIONS': {\n            'sql_mode': 'STRICT_TRANS_TABLES',",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "AUTH_PASSWORD_VALIDATORS",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "AUTH_PASSWORD_VALIDATORS = [\n    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},\n    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},\n    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},\n    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},\n]\n# Internationalization\nLANGUAGE_CODE = 'en-us'\nTIME_ZONE = 'UTC'\nUSE_I18N = True",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "LANGUAGE_CODE",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "LANGUAGE_CODE = 'en-us'\nTIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\nSTATIC_URL = '/static/'\nMEDIA_URL = '/media/'\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')\nSTATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "TIME_ZONE",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "TIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\nSTATIC_URL = '/static/'\nMEDIA_URL = '/media/'\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')\nSTATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nCORS_ALLOW_ALL_ORIGINS = False",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "USE_I18N",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "USE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\nSTATIC_URL = '/static/'\nMEDIA_URL = '/media/'\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')\nSTATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nCORS_ALLOW_ALL_ORIGINS = False\nCORS_ALLOW_CREDENTIALS = True",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "USE_TZ",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "USE_TZ = True\n# Static files (CSS, JavaScript, Images)\nSTATIC_URL = '/static/'\nMEDIA_URL = '/media/'\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')\nSTATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nCORS_ALLOW_ALL_ORIGINS = False\nCORS_ALLOW_CREDENTIALS = True\nCORS_ALLOWED_ORIGINS = [",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "STATIC_URL",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "STATIC_URL = '/static/'\nMEDIA_URL = '/media/'\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')\nSTATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nCORS_ALLOW_ALL_ORIGINS = False\nCORS_ALLOW_CREDENTIALS = True\nCORS_ALLOWED_ORIGINS = [\n    \"http://localhost:5173\",\n    \"http://127.0.0.1:5173\",",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "MEDIA_URL",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "MEDIA_URL = '/media/'\nMEDIA_ROOT = os.path.join(BASE_DIR, 'media')\nSTATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nCORS_ALLOW_ALL_ORIGINS = False\nCORS_ALLOW_CREDENTIALS = True\nCORS_ALLOWED_ORIGINS = [\n    \"http://localhost:5173\",\n    \"http://127.0.0.1:5173\",\n    \"http://localhost:8080\",",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "MEDIA_ROOT",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "MEDIA_ROOT = os.path.join(BASE_DIR, 'media')\nSTATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nCORS_ALLOW_ALL_ORIGINS = False\nCORS_ALLOW_CREDENTIALS = True\nCORS_ALLOWED_ORIGINS = [\n    \"http://localhost:5173\",\n    \"http://127.0.0.1:5173\",\n    \"http://localhost:8080\",\n    \"http://127.0.0.1:8080\",",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "STATIC_ROOT",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nCORS_ALLOW_ALL_ORIGINS = False\nCORS_ALLOW_CREDENTIALS = True\nCORS_ALLOWED_ORIGINS = [\n    \"http://localhost:5173\",\n    \"http://127.0.0.1:5173\",\n    \"http://localhost:8080\",\n    \"http://127.0.0.1:8080\",\n    \"http://localhost\"",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "DEFAULT_AUTO_FIELD",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\nCORS_ALLOW_ALL_ORIGINS = False\nCORS_ALLOW_CREDENTIALS = True\nCORS_ALLOWED_ORIGINS = [\n    \"http://localhost:5173\",\n    \"http://127.0.0.1:5173\",\n    \"http://localhost:8080\",\n    \"http://127.0.0.1:8080\",\n    \"http://localhost\"\n    # Add your production origin here",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "CORS_ALLOW_ALL_ORIGINS",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "CORS_ALLOW_ALL_ORIGINS = False\nCORS_ALLOW_CREDENTIALS = True\nCORS_ALLOWED_ORIGINS = [\n    \"http://localhost:5173\",\n    \"http://127.0.0.1:5173\",\n    \"http://localhost:8080\",\n    \"http://127.0.0.1:8080\",\n    \"http://localhost\"\n    # Add your production origin here\n]",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "CORS_ALLOW_CREDENTIALS",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "CORS_ALLOW_CREDENTIALS = True\nCORS_ALLOWED_ORIGINS = [\n    \"http://localhost:5173\",\n    \"http://127.0.0.1:5173\",\n    \"http://localhost:8080\",\n    \"http://127.0.0.1:8080\",\n    \"http://localhost\"\n    # Add your production origin here\n]\nCORS_ALLOW_HEADERS = list(default_headers) + [",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "CORS_ALLOWED_ORIGINS",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "CORS_ALLOWED_ORIGINS = [\n    \"http://localhost:5173\",\n    \"http://127.0.0.1:5173\",\n    \"http://localhost:8080\",\n    \"http://127.0.0.1:8080\",\n    \"http://localhost\"\n    # Add your production origin here\n]\nCORS_ALLOW_HEADERS = list(default_headers) + [\n    'x-tenant-id',",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "CORS_ALLOW_HEADERS",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "CORS_ALLOW_HEADERS = list(default_headers) + [\n    'x-tenant-id',\n    'authorization',\n]\nCORS_ALLOW_METHODS = [\"GET\", \"POST\", \"PUT\", \"DELETE\", \"OPTIONS\", \"PATCH\"]\n# Logging configuration\nLOGGING = {\n    'version': 1,\n    'disable_existing_loggers': False,\n    'formatters': {",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "CORS_ALLOW_METHODS",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "CORS_ALLOW_METHODS = [\"GET\", \"POST\", \"PUT\", \"DELETE\", \"OPTIONS\", \"PATCH\"]\n# Logging configuration\nLOGGING = {\n    'version': 1,\n    'disable_existing_loggers': False,\n    'formatters': {\n        'verbose': {'format': '{levelname} {asctime} {module} {message}', 'style': '{'},\n        'simple': {'format': '{levelname} {message}', 'style': '{'},\n    },\n    'handlers': {",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "LOGGING",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "LOGGING = {\n    'version': 1,\n    'disable_existing_loggers': False,\n    'formatters': {\n        'verbose': {'format': '{levelname} {asctime} {module} {message}', 'style': '{'},\n        'simple': {'format': '{levelname} {message}', 'style': '{'},\n    },\n    'handlers': {\n        'file': {\n            'level': 'ERROR' if not DEBUG else 'DEBUG',",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_BACKEND",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'\nEMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_USE_TLS = True\nEMAIL_HOST_USER = config('EMAIL_HOST_USER', default='klint.tasks@gmail.com')\nEMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='odkk rwlm eons ikto')\nDEFAULT_FROM_EMAIL = EMAIL_HOST_USER\n# Ensuring all sensitive information is loaded securely\nAUTH_USER_MODEL = 'portfolio.NewSchoolMember'",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_HOST",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "EMAIL_HOST = 'smtp.gmail.com'\nEMAIL_PORT = 587\nEMAIL_USE_TLS = True\nEMAIL_HOST_USER = config('EMAIL_HOST_USER', default='klint.tasks@gmail.com')\nEMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='odkk rwlm eons ikto')\nDEFAULT_FROM_EMAIL = EMAIL_HOST_USER\n# Ensuring all sensitive information is loaded securely\nAUTH_USER_MODEL = 'portfolio.NewSchoolMember'",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_PORT",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "EMAIL_PORT = 587\nEMAIL_USE_TLS = True\nEMAIL_HOST_USER = config('EMAIL_HOST_USER', default='klint.tasks@gmail.com')\nEMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='odkk rwlm eons ikto')\nDEFAULT_FROM_EMAIL = EMAIL_HOST_USER\n# Ensuring all sensitive information is loaded securely\nAUTH_USER_MODEL = 'portfolio.NewSchoolMember'",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_USE_TLS",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "EMAIL_USE_TLS = True\nEMAIL_HOST_USER = config('EMAIL_HOST_USER', default='klint.tasks@gmail.com')\nEMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='odkk rwlm eons ikto')\nDEFAULT_FROM_EMAIL = EMAIL_HOST_USER\n# Ensuring all sensitive information is loaded securely\nAUTH_USER_MODEL = 'portfolio.NewSchoolMember'",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_HOST_USER",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='klint.tasks@gmail.com')\nEMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='odkk rwlm eons ikto')\nDEFAULT_FROM_EMAIL = EMAIL_HOST_USER\n# Ensuring all sensitive information is loaded securely\nAUTH_USER_MODEL = 'portfolio.NewSchoolMember'",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_HOST_PASSWORD",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='odkk rwlm eons ikto')\nDEFAULT_FROM_EMAIL = EMAIL_HOST_USER\n# Ensuring all sensitive information is loaded securely\nAUTH_USER_MODEL = 'portfolio.NewSchoolMember'",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "DEFAULT_FROM_EMAIL",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "DEFAULT_FROM_EMAIL = EMAIL_HOST_USER\n# Ensuring all sensitive information is loaded securely\nAUTH_USER_MODEL = 'portfolio.NewSchoolMember'",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "AUTH_USER_MODEL",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.settings",
+        "description": "server.portfolio_project.portfolio_project.settings",
+        "peekOfCode": "AUTH_USER_MODEL = 'portfolio.NewSchoolMember'",
+        "detail": "server.portfolio_project.portfolio_project.settings",
+        "documentation": {}
+    },
+    {
+        "label": "home_view",
+        "kind": 2,
+        "importPath": "server.portfolio_project.portfolio_project.urls",
+        "description": "server.portfolio_project.portfolio_project.urls",
+        "peekOfCode": "def home_view(request):\n    return HttpResponse(\"Welcome to the Django application!\")\nurlpatterns = [\n    path('admin/', admin.site.urls),\n    path('portfolio/', include('portfolio.urls')),\n    path('', home_view, name='home'),  # Add root route\n]\nif settings.DEBUG:\n    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)",
+        "detail": "server.portfolio_project.portfolio_project.urls",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.urls",
+        "description": "server.portfolio_project.portfolio_project.urls",
+        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n    path('portfolio/', include('portfolio.urls')),\n    path('', home_view, name='home'),  # Add root route\n]\nif settings.DEBUG:\n    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)",
+        "detail": "server.portfolio_project.portfolio_project.urls",
+        "documentation": {}
+    },
+    {
+        "label": "application",
+        "kind": 5,
+        "importPath": "server.portfolio_project.portfolio_project.wsgi",
+        "description": "server.portfolio_project.portfolio_project.wsgi",
+        "peekOfCode": "application = get_wsgi_application()",
+        "detail": "server.portfolio_project.portfolio_project.wsgi",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "server.portfolio_project.manage",
+        "description": "server.portfolio_project.manage",
+        "peekOfCode": "def main():\n    \"\"\"Run administrative tasks.\"\"\"\n    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'portfolio_project.settings')\n    try:\n        from django.core.management import execute_from_command_line\n    except ImportError as exc:\n        raise ImportError(\n            \"Couldn't import Django. Are you sure it's installed and \"\n            \"available on your PYTHONPATH environment variable? Did you \"\n            \"forget to activate a virtual environment?\"",
+        "detail": "server.portfolio_project.manage",
+        "documentation": {}
+    }
+]

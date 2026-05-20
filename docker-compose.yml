@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  backend:
+    image: newschool-backend
+    container_name: newschool-backend
+    environment:
+      SECRET_KEY: "your-production-secret-key"  # CHANGE in real production
+      DB_NAME: "newschool"
+      DB_USER: "klint"
+      DB_PASSWORD: "P0werm@n"                  # CHANGE in real production
+      DB_HOST: "db"                            # overridden in dev compose
+      DB_PORT: "3306"
+      EMAIL_HOST_USER: "klint.tasks@gmail.com"
+      EMAIL_HOST_PASSWORD: "change-me"         # CHANGE in real production
+    ports:
+      - "8000:8000"
+
+  frontend:
+    image: newschool-frontend
+    container_name: newschool-frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"

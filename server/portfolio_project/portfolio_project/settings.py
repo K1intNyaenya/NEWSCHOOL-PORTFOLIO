@@ -8,11 +8,21 @@ from corsheaders.defaults import default_headers
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
-SECRET_KEY = config('SECRET_KEY', default='123456')  # Load secret key from environment variable
+SECRET_KEY = config('SECRET_KEY', default='123456')
 
-DEBUG = config('DEBUG', default=False, cast=bool)  # Load DEBUG from environment variable
 
+DEBUG = False
 ALLOWED_HOSTS = ['your-domain.com', 'localhost', '127.0.0.1']
+
+SECURE_HSTS_SECONDS = 3600
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
 
 # Application definition
 INSTALLED_APPS = [
@@ -29,18 +39,29 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.TemplateHTMLRenderer',
+    ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',  # Require authentication globally
+        'rest_framework.permissions.IsAuthenticated', 
     ),
 }
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=120),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    # Optional: 'ROTATE_REFRESH_TOKENS': True,
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
 MIDDLEWARE = [
@@ -79,11 +100,15 @@ WSGI_APPLICATION = 'portfolio_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('DB_NAME', default='newschool'),  # Load from environment variable
-        'USER': config('DB_USER', default='root'),        # Load from environment variable
-        'PASSWORD': config('DB_PASSWORD', default='P0werm@n'),  # Load from environment variable
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': config('DB_NAME', default='newschool'),
+        'USER': config('DB_USER', default='klint'),
+        'PASSWORD': config('DB_PASSWORD', default='P0werm@n'),
+        'HOST': config('DB_HOST', default='localhost'),
+        'PORT': config('DB_PORT', default='3306'),
+        'OPTIONS': {
+            'sql_mode': 'STRICT_TRANS_TABLES',
+            'charset': 'utf8mb4',
+        },
     }
 }
 
@@ -105,18 +130,19 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Add STATIC_ROOT for production
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS settings: Set to False and use CORS_ALLOWED_ORIGINS in production
-CORS_ALLOW_ALL_ORIGINS = DEBUG  # Enable all origins only in development
+
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:8080",
     "http://127.0.0.1:8080",
+    "http://localhost"
     # Add your production origin here
 ]
 
@@ -138,9 +164,11 @@ LOGGING = {
     },
     'handlers': {
         'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'serverlog.log'),  # Log file within BASE_DIR
+            'level': 'ERROR' if not DEBUG else 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'serverlog.log'),
+            'when': 'midnight',
+            'backupCount': 7,
             'formatter': 'verbose',
         },
         'console': {
@@ -153,6 +181,7 @@ LOGGING = {
         'portfolio': {'handlers': ['file'], 'level': 'DEBUG', 'propagate': True},
     },
 }
+
 
 # Email backend configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

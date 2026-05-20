@@ -42,16 +42,15 @@ function Dashboard() {
     user.member_industry.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (loading) {
-    return <div className="loading">Loading...</div>;
-  }
-
-  if (error) {
-    return <div className="error">{error}</div>;
-  }
-
   return (
     <div className="dashboard">
+      <header className="dashboard-header">
+        <div>
+          <h1 className="dashboard-title">Member Directory</h1>
+          <p className="dashboard-subtitle">Search and browse all approved members.</p>
+        </div>
+      </header>
+
       <div className="search-container">
         <input 
           type="text" 
@@ -61,14 +60,16 @@ function Dashboard() {
           className="search-bar"
         />
       </div>
-      
+
+      {loading && <div className="loading">Loading members...</div>}
+      {error && !loading && <div className="error">{error}</div>}
       <div className="portfolio-cards-container">
-        {filteredPortfolios.length > 0 ? (
+        {!loading && !error && filteredPortfolios.length > 0 ? (
           filteredPortfolios.map((user) => (
             <PortfolioViewCard key={user.id} user={user} />
           ))
         ) : (
-          <p>No portfolios available.</p>
+          !loading && !error && <p>No portfolios available.</p>
         )}
       </div>
     </div>

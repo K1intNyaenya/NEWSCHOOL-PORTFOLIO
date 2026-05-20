@@ -62,8 +62,12 @@ function LoginForm() {
   };
 
   return (
-    <div className={`login-container ${theme}`}>
-      <h2>New School HR Login</h2>
+    <main className={`login-page`}>
+      <div className={`login-container ${theme}`}>
+        <header className="login-header">
+          <h1 className="login-title">New School HR</h1>
+          <p className="login-subtitle">Sign in to manage members and portfolios.</p>
+        </header>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="username">Member Username:</label>
@@ -96,6 +100,12 @@ function LoginForm() {
         </button>
       </form>
 
+      <div className="theme-toggle">
+        <button type="button" onClick={toggleTheme}>
+          {theme === 'light-theme' ? 'Switch to dark mode' : 'Switch to light mode'}
+        </button>
+      </div>
+
       {loading && <div className="loading-bar" aria-live="polite">Loading...</div>}
       
       {isDebug && debugInfo && (
@@ -104,7 +114,8 @@ function LoginForm() {
           <pre>{debugInfo}</pre>
         </div>
       )}
-    </div>
+      </div>
+    </main>
   );
 }
 

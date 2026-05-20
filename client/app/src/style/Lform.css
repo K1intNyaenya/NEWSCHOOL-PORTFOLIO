@@ -1,15 +1,12 @@
-/* Full-screen background styling */
-body, html {
-  height: 100%;
-  margin: 0;
-  font-family: Arial, sans-serif;
+/* Page shell (global background now lives in index.css) */
+.login-page {
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #000000, #333333); /* Black background gradient */
+  padding: 24px;
 }
 
-/* Login container styling */
 .login-container {
   background-color: #1a1a1a;
   max-width: 380px;
@@ -22,11 +19,21 @@ body, html {
   box-sizing: border-box;
 }
 
-.login-container h2 {
-  font-size: 1.8em;
-  color: #b8860b; /* Dark gold */
+.login-header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+}
+
+.login-title {
+  font-size: 2rem;
+  color: #b8860b; /* Dark gold */
+  margin: 0 0 4px;
+}
+
+.login-subtitle {
+  font-size: 0.9rem;
+  color: #d1d1d1;
+  margin: 0;
 }
 
 /* Form group styling with icons */
